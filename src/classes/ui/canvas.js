@@ -6,7 +6,10 @@ export class Canvas extends HTMLCustomElement {
 
     constructor() {
         super('canvas');
-        this.cvs = this.element;
-        if (this.cvs) this.ctx = this.cvs.getContext('2d');
+        const canvas = this.element;
+        if (canvas) {
+            Canvas.cvs = canvas;
+            Canvas.ctx = canvas.getContext('2d');
+        }
     }
 }
