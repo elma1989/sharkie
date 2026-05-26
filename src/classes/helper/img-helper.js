@@ -3,6 +3,22 @@ export class ImgHelper {
         water: [
             '00_Background/00_water/D1.png',
             '00_Background/00_water/D2.png'
+        ],
+        layer0: [
+            '00_Background/01_layer0/D1.png',
+            '00_Background/01_layer0/D2.png'
+        ],
+        layer1: [
+            '00_Background/02_layer1/D1.png',
+            '00_Background/02_layer1/D2.png'
+        ],
+        floor: [
+            '00_Background/03_floor/D1.png',
+            '00_Background/03_floor/D2.png'
+        ],
+        light: [
+            '00_Background/04_light/1.png',
+            '00_Background/04_light/2.png'
         ]
     }
 
