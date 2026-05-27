@@ -1,5 +1,6 @@
 import { Background } from "./abstract/background.js";
 import { DrawableObject } from "./abstract/drawable-object.js";
+import { GameConfig } from "./game-config.js";
 import { Floor } from "./model/floor.js";
 import { Layer0 } from "./model/layer0.js";
 import { Layer1 } from "./model/layer1.js";
@@ -11,10 +12,12 @@ import { Canvas } from "./ui/canvas.js";
 export class Level {
     #drawings = [];
     #backgrounds = [];
+    #ctx;
 
-    constructor() {
+    constructor(ctx) {
         this.#backgrounds = this.#createBackgrounds();
         this.#drawings = this.#createDrawings();
+        this.#ctx = ctx;
     }
 
     /**
@@ -43,13 +46,12 @@ export class Level {
 
     /** Calls for all drawings the load()-method. */
     async loadDrawings() {
-        Promise.all(this.#drawings.map(drawing => drawing.load()));
+        await Promise.all(this.#drawings.map(drawing => drawing.load()));
     }
 
     /** Draws all drawings. */
     drawAll() {
-        this.#drawings.forEach(drawing => drawing.draw());
-        const self = this;
-        requestAnimationFrame(() => self.drawAll());
+        this.#ctx.clearRect(0, 0, GameConfig.WIDTH, GameConfig.HEIGHT);
+        this.#drawings.forEach(drawing => drawing.draw(this.#ctx));
     }
 }
