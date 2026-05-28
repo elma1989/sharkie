@@ -69,12 +69,8 @@ export class DrawableObject {
     // #endregion
 
     /** Draws an object. */
-    draw() {
-        const canvas = Canvas.cvs;
-        if (!canvas || !this.img) return;
-        const ctx = Canvas.ctx;
-        if (!ctx) return;
-        ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
+    draw(ctx) {
+        if (ctx) ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
     }
     // #endregion
 }

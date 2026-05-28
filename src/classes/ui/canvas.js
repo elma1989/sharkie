@@ -1,15 +1,18 @@
+import { GameConfig } from "../game-config.js";
 import { HTMLCustomElement } from "./html-custom.js";
 
 export class Canvas extends HTMLCustomElement {
-    static cvs = null;
-    static ctx = null;
+    #ctx;
 
     constructor() {
         super('canvas');
         const canvas = this.element;
         if (canvas) {
-            Canvas.cvs = canvas;
-            Canvas.ctx = canvas.getContext('2d');
+            canvas.width = GameConfig.WIDTH;
+            canvas.height = GameConfig.HEIGHT;
+            this.#ctx = canvas.getContext('2d');
         }
     }
+
+    get ctx() { return this.#ctx; }
 }

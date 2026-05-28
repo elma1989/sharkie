@@ -1,5 +1,4 @@
 import { Level } from "./level.js";
-import { Water } from "./model/water.js";
 import { UI } from "./ui/ui.js";
 
 /** Mages the full game. */
@@ -9,7 +8,7 @@ export class Game {
 
     constructor() {
         this.#ui = new UI();
-        this.#level = new Level();
+        this.#level = new Level(this.#ui.canvas.ctx);
     }
     // #region Methods
     /** Will be executed after create of game. */

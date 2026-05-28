@@ -1,3 +1,4 @@
+import { GameConfig } from "../game-config.js";
 import { Canvas } from "../ui/canvas.js";
 import { DrawableObject } from "./drawable-object.js";
 
@@ -10,8 +11,7 @@ export class Background extends DrawableObject {
      * @param {number} offset - Offset of background
      */
     constructor(offset) {
-        const canvas = Canvas.cvs;
-        super(Background.calcX(offset), 0, canvas ? canvas.width : 0, canvas ? canvas.height : 0);
+        super(Background.calcX(offset), 0, GameConfig.WIDTH,  GameConfig.HEIGHT);
         this.#offset = offset;
     }
 
@@ -23,7 +23,6 @@ export class Background extends DrawableObject {
      * @returns {number} X-Pos for background.
      */
     static calcX(offset) {
-        const canvas = Canvas.cvs;
-        return canvas ? canvas.width * offset : 0;
+        return offset * GameConfig.WIDTH;
     }
 }
