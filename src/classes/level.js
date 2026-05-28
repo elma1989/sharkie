@@ -1,21 +1,26 @@
 import { Background } from "./abstract/background.js";
 import { DrawableObject } from "./abstract/drawable-object.js";
 import { GameConfig } from "./game-config.js";
+import { BottomBarrier } from "./model/bottom-barrier.js";
 import { Floor } from "./model/floor.js";
 import { Layer0 } from "./model/layer0.js";
 import { Layer1 } from "./model/layer1.js";
 import { Light } from "./model/light.js";
+import { RightBarrier } from "./model/right-barrier.js";
+import { TopButtomBarrier } from "./model/top-button-barrier.js";
 import { Water } from "./model/water.js";
 import { Canvas } from "./ui/canvas.js";
 
 /** Manges inner cnavas objects. */
 export class Level {
+    #ctx;
     #drawings = [];
     #backgrounds = [];
-    #ctx;
+    #barries = []
 
     constructor(ctx) {
         this.#backgrounds = this.#createBackgrounds();
+        this.#barries = this.#createBarries();
         this.#drawings = this.#createDrawings();
         this.#ctx = ctx;
     }
@@ -34,13 +39,18 @@ export class Level {
         ]
     }
 
+    #createBarries() {
+        return [new TopButtomBarrier(), new BottomBarrier(), new RightBarrier()]
+    }
+
     /**
      * Combines all object-lists to a huge list.
      * @returns {DrawableObject[]} All drawings.
      */
     #createDrawings() {
         return [
-            ...this.#backgrounds
+            ...this.#backgrounds,
+            ...this.#barries
         ]
     }
 
@@ -53,5 +63,6 @@ export class Level {
     drawAll() {
         this.#ctx.clearRect(0, 0, GameConfig.WIDTH, GameConfig.HEIGHT);
         this.#drawings.forEach(drawing => drawing.draw(this.#ctx));
+        requestAnimationFrame(() => this.drawAll());    
     }
 }
