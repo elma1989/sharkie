@@ -19,7 +19,12 @@ export class ImgHelper {
         light: [
             '00_Background/04_light/1.png',
             '00_Background/04_light/2.png'
-        ]
+        ],
+        barrier: {
+            topButton: '00_Background/05_barrier/tb.png',
+            bottom: '00_Background/05_barrier/b.png',
+            right: '00_Background/05_barrier/r.png'
+        }
     }
 
     static get background() { return this.#BACKGROUND; }
