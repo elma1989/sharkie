@@ -27,7 +27,15 @@ export class ImgHelper {
         }
     }
 
+    static #SHARKIE = {
+        idle: [
+            '01_Sharkie/00_idle/1.png'
+        ]
+    }
+
     static get background() { return this.#BACKGROUND; }
+
+    static get sharkie() { return this.#SHARKIE; }
 
     /**
      * Gets url from file.
