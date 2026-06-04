@@ -8,7 +8,7 @@ import { Layer1 } from "./model/layer1.js";
 import { Light } from "./model/light.js";
 import { RightBarrier } from "./model/right-barrier.js";
 import { Sharkie } from "./model/sharkie.js";
-import { TopButtomBarrier } from "./model/top-button-barrier.js";
+import { TopButtomBarrier } from "./model/top-bottom-barrier.js";
 import { Water } from "./model/water.js";
 import { Canvas } from "./ui/canvas.js";
 

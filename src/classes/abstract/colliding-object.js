@@ -1,13 +1,9 @@
 import { DrawableObject } from './drawable-object.js'
 
+/** @typedef {import(../types.js).Offset} Offset */
+
 /**
  * Represents an object, which has collision.
- * @typedef Offset
- * @type {object}
- * @property {number} top - Top of offset.
- * @property {number} right - Right of offset.
- * @property {number} bottom - Bottom of offset.
- * @property {number} left - Left of offset.
  */
 export class CollidingObject extends DrawableObject {
     /** @type {Offset} */
