@@ -27,7 +27,15 @@ export class ImgHelper {
         }
     }
 
+    static #SHARKIE = {
+        idle: [
+            '01_Sharkie/00_idle/1.png'
+        ]
+    }
+
     static get background() { return this.#BACKGROUND; }
+
+    static get sharkie() { return this.#SHARKIE; }
 
     /**
      * Gets url from file.
@@ -36,7 +44,7 @@ export class ImgHelper {
      */
     static url(file) {
         const host = location.hostname;
-        const local = host == 'localhost' || '127.0.0.1';
+        const local = host == 'localhost' || host == '127.0.0.1';
         const daServer = host.endsWith('developerakademie.net');
         const prefix = local ? '/' : (daServer ? '/sharkie/' : '/static/sharkie/');
         return prefix + 'assets/img/' + file;

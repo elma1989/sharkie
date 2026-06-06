@@ -7,18 +7,22 @@ import { Layer0 } from "./model/layer0.js";
 import { Layer1 } from "./model/layer1.js";
 import { Light } from "./model/light.js";
 import { RightBarrier } from "./model/right-barrier.js";
-import { TopButtomBarrier } from "./model/top-button-barrier.js";
+import { Sharkie } from "./model/sharkie.js";
+import { TopButtomBarrier } from "./model/top-bottom-barrier.js";
 import { Water } from "./model/water.js";
 import { Canvas } from "./ui/canvas.js";
 
 /** Manges inner cnavas objects. */
 export class Level {
     #ctx;
+    /** @type{Sharkie} */
+    #sharkie;
     #drawings = [];
     #backgrounds = [];
     #barries = []
 
     constructor(ctx) {
+        this.#sharkie = new Sharkie();
         this.#backgrounds = this.#createBackgrounds();
         this.#barries = this.#createBarries();
         this.#drawings = this.#createDrawings();
@@ -50,6 +54,7 @@ export class Level {
     #createDrawings() {
         return [
             ...this.#backgrounds,
+            this.#sharkie,
             ...this.#barries
         ]
     }
