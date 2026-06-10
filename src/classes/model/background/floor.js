@@ -1,5 +1,5 @@
-import { Background } from "../abstract/background.js";
-import { ImgHelper } from "../helper/img-helper.js";
+import { Background } from "../../abstract/background.js";
+import { ImgHelper } from "../../helper/img-helper.js";
 
 export class Floor extends Background {
     constructor(offset) {

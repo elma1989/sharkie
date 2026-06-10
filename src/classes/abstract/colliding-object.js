@@ -1,13 +1,15 @@
-import { DrawableObject } from './drawable-object.js'
+import { DrawableObject } from './drawable-object.js';
+import { Barrier } from './barrier.js';
 
 /** @typedef {import(../types.js).Offset} Offset */
+/** @typedef {import(../types.js).Hitbox} */
 
 /**
  * Represents an object, which has collision.
  */
 export class CollidingObject extends DrawableObject {
     /** @type {Offset} */
-    offset;
+    #offset;
     #rX;
     #rY;
     #rWidth;
@@ -22,7 +24,7 @@ export class CollidingObject extends DrawableObject {
      */
     constructor(x, y, width, height, offset) {
         super(x, y, width, height);
-        this.offset = offset;
+        this.#offset = offset;
         this.#rX = x + offset.left;
         this.#rY = y + offset.top;
         this.#rWidth = width - offset.left - offset.right;
@@ -36,6 +38,15 @@ export class CollidingObject extends DrawableObject {
     get rWidth() { return this.#rWidth; }
 
     get rHeight() { return this.#rHeight; }
+
+    get hitbox() {
+        return {
+            x: this.x + this.#offset.left,
+            y: this.y + this.#offset.top,
+            width: this.width - this.#offset.left - this.#offset.right,
+            height: this.height - this.#offset.top - this.#offset.bottom
+        }
+    }
 
     /**
      * Draws a full frame around the object.
@@ -55,8 +66,23 @@ export class CollidingObject extends DrawableObject {
         ctx.strokeStyle = 'red';
         ctx.lineWidth = 3;
         ctx.strokeRect(
-            this.rX, this.rY, this.rWidth, this.rHeight
+            this.hitbox.x, this.hitbox.y, this.hitbox.width, this.hitbox.height
         );
+    }
+
+    /**
+     * Calculates a hitbox form coordinaties.
+     * @param {number} x - X-Pos for hitbox.
+     * @param {number} y - Y-Pos for hitbox.
+     * @returns {Hitbox} - Hitbox from coorinations.
+     */
+    hitboxAt(x, y) {
+        return {
+            x: x + this.#offset.left,
+            y: y + this.#offset.top,
+            width: this.width - this.#offset.left - this.#offset.right,
+            height: this.height - this.#offset.top - this.#offset.bottom
+        }
     }
 
     /**
@@ -69,5 +95,18 @@ export class CollidingObject extends DrawableObject {
             && this.rX <= other.rX + other.rWidth
             && this.rY + this.rHeight >= other.rY
             && this.rY <= other.rY + other.rHeight;
+    }
+
+    /**
+     * Checks, if coorinates of an object has collision with barrier.
+     * @param {Hitbox} hitbox - Hit-Box of oject.
+     * @param {Barrier} barrier - Barrier to check.
+     * @returns {boolean} - True, if it has collision.
+     */
+    collidesAt(hitbox, barrier) {
+        return hitbox.x + hitbox.width >= barrier.hitbox.x
+            && hitbox.x <= barrier.hitbox.x + barrier.hitbox.width
+            && hitbox.y + hitbox.height >= barrier.hitbox.y
+            && hitbox.y <= barrier.hitbox.y + barrier.hitbox.height
     }
 }

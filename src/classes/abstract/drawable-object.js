@@ -25,7 +25,11 @@ export class DrawableObject {
     // #region Methods
     get x() { return this.#x; }
 
+    set x(value) { this.#x = value; }
+
     get y() { return this.#y; }
+
+    set y(value) {this.#y = value;}
 
     get width() { return this.#width; }
 
