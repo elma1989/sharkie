@@ -18,6 +18,7 @@ import { RightBarrier } from "./model/barrier/right.js";
 
 /** Manges inner cnavas objects. */
 export class Level {
+    /** @type{CanvasRenderingContext2D} */
     #ctx;
     /** @type{Sharkie} */
     #sharkie;
@@ -29,6 +30,8 @@ export class Level {
     #drawings = [];
     /** @type{MovalbelObject[]} */
     #movables = [];
+    #lastTime = 0;
+    #translationX = 0;
 
     constructor(ctx, ctrl) {
         this.#sharkie = new Sharkie(this, ctrl);
@@ -38,6 +41,13 @@ export class Level {
         this.#drawings = this.#createDrawings();
         this.#movables = this.#createMovables();
         this.#ctx = ctx;
+    }
+
+    get translationX() {return this.#translationX; }
+
+    set translationX(value) {
+        if (value < 0 || value > 5730) return;
+        this.#translationX = value;
     }
 
     /**
@@ -95,10 +105,28 @@ export class Level {
     }
 
     /** Draws all drawings. */
-    drawAll() {
+    #drawAll() {
         this.#ctx.clearRect(0, 0, GameConfig.WIDTH, GameConfig.HEIGHT);
+        this.#ctx.translate(-this.#translationX, 0);
         this.#drawings.forEach(drawing => drawing.draw(this.#ctx));
-        requestAnimationFrame(() => this.drawAll());    
+        this.#ctx.translate(this.#translationX, 0);
+    }
+
+    /**
+     * Executes update-method for all movable objects.
+     * @param {number} timedelta - Time to next frame.
+     */
+    #updateAll(timedelta) {
+        this.#movables.forEach(mov => mov.update(timedelta));
+    }
+
+    /** Adds tranlation event for shakie. */
+    #sharkieTranslation() {
+        this.#sharkie.onMoveX = (xPos) => {
+            this.translationX = xPos;
+        }
+    }
+
     /**
      * Check, if object could move to pos.
      * @param {CollidingObject} obj - Object to check.
@@ -110,5 +138,12 @@ export class Level {
         return !this.#barries.some(barrier => obj.collidesAt(obj.hitboxAt(x, y), barrier));
     }
 
+    gameLoop = (timestamp) => {
+        const timedelta = timestamp - this.#lastTime;
+        this.#lastTime = timestamp;
+
+        this.#updateAll(timedelta);
+        this.#drawAll();
+        requestAnimationFrame(this.gameLoop);
     }
 }
