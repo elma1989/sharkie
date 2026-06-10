@@ -1,16 +1,18 @@
 import { Background } from "./abstract/background.js";
+import { Barrier } from "./abstract/barrier.js";
 import { DrawableObject } from "./abstract/drawable-object.js";
 import { GameConfig } from "./game-config.js";
-import { BottomBarrier } from "./model/bottom-barrier.js";
-import { Floor } from "./model/floor.js";
-import { Layer0 } from "./model/layer0.js";
-import { Layer1 } from "./model/layer1.js";
-import { Light } from "./model/light.js";
-import { RightBarrier } from "./model/right-barrier.js";
+import { Floor } from "./model/background/floor.js";
+import { Layer0 } from "./model/background/layer0.js";
+import { Layer1 } from "./model/background/layer1.js";
+import { Light } from "./model/background/light.js";
 import { Sharkie } from "./model/sharkie.js";
-import { TopButtomBarrier } from "./model/top-bottom-barrier.js";
-import { Water } from "./model/water.js";
+import { Water } from "./model/background/water.js";
 import { Canvas } from "./ui/canvas.js";
+import { TopBarrier } from "./model/barrier/top.js";
+import { FirstBottomBarrier } from "./model/barrier/bottom-1.js";
+import { SecondBottomBarrier } from "./model/barrier/bottom-2.js";
+import { RightBarrier } from "./model/barrier/right.js";
 
 /** Manges inner cnavas objects. */
 export class Level {
@@ -19,7 +21,8 @@ export class Level {
     #sharkie;
     #drawings = [];
     #backgrounds = [];
-    #barries = []
+    /** @type{Barrier[]} */
+    #barries = [];
 
     constructor(ctx) {
         this.#sharkie = new Sharkie();
@@ -43,8 +46,17 @@ export class Level {
         ]
     }
 
+    /**
+     * Crateds a list from all barriers.
+     * @returns {Barrier[]}
+     */
     #createBarries() {
-        return [new TopButtomBarrier(), new BottomBarrier(), new RightBarrier()]
+        return [
+            new TopBarrier(),
+            new FirstBottomBarrier(),
+            new SecondBottomBarrier(),
+            new RightBarrier()
+        ]
     }
 
     /**
