@@ -1,5 +1,6 @@
 import { Background } from "./abstract/background.js";
 import { Barrier } from "./abstract/barrier.js";
+import { CollidingObject } from "./abstract/colliding-object.js";
 import { DrawableObject } from "./abstract/drawable-object.js";
 import { GameConfig } from "./game-config.js";
 import { Floor } from "./model/background/floor.js";
@@ -8,6 +9,7 @@ import { Layer1 } from "./model/background/layer1.js";
 import { Light } from "./model/background/light.js";
 import { Sharkie } from "./model/sharkie.js";
 import { Water } from "./model/background/water.js";
+import { MovableObject } from "./abstract/moveable-object.js";
 import { Canvas } from "./ui/canvas.js";
 import { TopBarrier } from "./model/barrier/top.js";
 import { FirstBottomBarrier } from "./model/barrier/bottom-1.js";
@@ -19,16 +21,22 @@ export class Level {
     #ctx;
     /** @type{Sharkie} */
     #sharkie;
-    #drawings = [];
+    /** @type{Background[]} */
     #backgrounds = [];
     /** @type{Barrier[]} */
     #barries = [];
+    /** @type{DrawableObject[]} */
+    #drawings = [];
+    /** @type{MovalbelObject[]} */
+    #movables = [];
 
-    constructor(ctx) {
-        this.#sharkie = new Sharkie();
+    constructor(ctx, ctrl) {
+        this.#sharkie = new Sharkie(this, ctrl);
+        this.#sharkieTranslation();
         this.#backgrounds = this.#createBackgrounds();
         this.#barries = this.#createBarries();
         this.#drawings = this.#createDrawings();
+        this.#movables = this.#createMovables();
         this.#ctx = ctx;
     }
 
@@ -71,6 +79,16 @@ export class Level {
         ]
     }
 
+    /**
+     * Creates a list from all movable objects.
+     * @returns {MovableObject[]} all movable objects.
+     */
+    #createMovables() {
+        return [
+            this.#sharkie
+        ]
+    }
+
     /** Calls for all drawings the load()-method. */
     async loadDrawings() {
         await Promise.all(this.#drawings.map(drawing => drawing.load()));
@@ -81,5 +99,16 @@ export class Level {
         this.#ctx.clearRect(0, 0, GameConfig.WIDTH, GameConfig.HEIGHT);
         this.#drawings.forEach(drawing => drawing.draw(this.#ctx));
         requestAnimationFrame(() => this.drawAll());    
+    /**
+     * Check, if object could move to pos.
+     * @param {CollidingObject} obj - Object to check.
+     * @param {number} x - Next X-Pos of object.
+     * @param {number} y - Next Y-Pos of object.
+     * @returns {boolean} - True, object could move to position
+     */
+    canMoveTo(obj, x, y) {
+        return !this.#barries.some(barrier => obj.collidesAt(obj.hitboxAt(x, y), barrier));
+    }
+
     }
 }
