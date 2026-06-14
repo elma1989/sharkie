@@ -90,8 +90,11 @@ export class AnimatedObject extends MovableObject {
     }
 
 
-    /** Updates the state. */
-    updateState() {}
+    /**
+     * Update the state.
+     * @param {number} timedelta - Time to next frame.
+     */
+    updateState(timedelta) {}
 
     /**
      * Updates the animation.
