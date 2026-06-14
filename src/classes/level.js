@@ -32,6 +32,7 @@ export class Level {
     #movables = [];
     #lastTime = 0;
     #translationX = 0;
+    #frameid = null;
 
     constructor(ctx, ctrl) {
         this.#sharkie = new Sharkie(this, ctrl);
@@ -41,8 +42,11 @@ export class Level {
         this.#drawings = this.#createDrawings();
         this.#movables = this.#createMovables();
         this.#ctx = ctx;
+        this.#addFocusEvent();
+        this.#addBlurEvent();
     }
 
+    // #region Methods
     get translationX() {return this.#translationX; }
 
     set translationX(value) {
@@ -50,6 +54,7 @@ export class Level {
         this.#translationX = value;
     }
 
+    // #region Create Objects
     /**
      * Creates a list with all backgrounds.
      * @returns {Background[]} All backgrounds.
@@ -98,7 +103,9 @@ export class Level {
             this.#sharkie
         ]
     }
+    // #endregion
 
+    // #region Draw
     /** Calls for all drawings the load()-method. */
     async loadDrawings() {
         await Promise.all(this.#drawings.map(drawing => drawing.load()));
@@ -111,7 +118,9 @@ export class Level {
         this.#drawings.forEach(drawing => drawing.draw(this.#ctx));
         this.#ctx.translate(this.#translationX, 0);
     }
+    // #endregion
 
+    // #region Update
     /**
      * Executes update-method for all movable objects.
      * @param {number} timedelta - Time to next frame.
@@ -137,6 +146,7 @@ export class Level {
     canMoveTo(obj, x, y) {
         return !this.#barries.some(barrier => obj.collidesAt(obj.hitboxAt(x, y), barrier));
     }
+    // #endregion
 
     gameLoop = (timestamp) => {
         const timedelta = timestamp - this.#lastTime;
@@ -144,6 +154,24 @@ export class Level {
 
         this.#updateAll(timedelta);
         this.#drawAll();
-        requestAnimationFrame(this.gameLoop);
+        this.#frameid = requestAnimationFrame(this.gameLoop);
     }
+
+    #addFocusEvent() {
+        window.addEventListener('focus', () => {
+            if(!this.#frameid) {
+                this.#frameid = requestAnimationFrame(this.gameLoop);
+            }
+        })
+    }
+
+    #addBlurEvent() {
+        window.addEventListener('blur', () => {
+            if(this.#frameid) {
+                cancelAnimationFrame(this.#frameid);
+                this.#frameid = null;
+            }
+        })
+    }
+    // #endregion
 }
