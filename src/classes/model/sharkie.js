@@ -59,6 +59,9 @@ export class Sharkie extends AnimatedObject {
         if (this.#ctrl.ctrl.up) moveY = -1;
         if (this.#ctrl.ctrl.down) moveY = 1;
 
+        if (moveX < 0) this.mirrorHorzontally = true;
+        else if (moveX > 0) this.mirrorHorzontally = false;
+
         const length = Math.hypot(moveX, moveY);
         if (length > 0) {
             moveX /= length;
