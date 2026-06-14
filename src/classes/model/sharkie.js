@@ -1,11 +1,14 @@
 import { ImgHelper } from '../helper/img-helper.js';
-import { MovableObject } from '../abstract/moveable-object.js';
+import { AnimatedObject } from '../abstract/animatad-object.js';
+import { HEALTH_STATE } from '../types.js';
+import { SHAKIE } from '../helper/animation.js';
 
-export class Sharkie extends MovableObject {
+export class Sharkie extends AnimatedObject {
 
     /** @type{Level} */
     #level;
     #ctrl;
+    #longIdleTimer = 0;
 
     constructor(level, ctrl) {
         super(0, 0, 815, 1000, {
@@ -13,7 +16,7 @@ export class Sharkie extends MovableObject {
             right: 250,
             bottom: 300,
             left: 250
-        });
+        }, SHAKIE);
         this.#level = level;
         this.#ctrl = ctrl;
     }
@@ -37,9 +40,16 @@ export class Sharkie extends MovableObject {
 
     async load() {
         this.img = await this.loadImage(ImgHelper.url(ImgHelper.sharkie.idle[0]));
+        this.animations.idle.frames = await this.loadAnimations(ImgHelper.urls(ImgHelper.sharkie.idle));
+        this.animations.longIdle.frames = await this.loadAnimations(ImgHelper.urls(ImgHelper.sharkie.longIdle));
+        this.animations.swim.frames = await this.loadAnimations(ImgHelper.urls(ImgHelper.sharkie.swim));
+        this.animations['hurt/poison'].frames = await this.loadAnimations(ImgHelper.urls(ImgHelper.sharkie['hurt/poison']));
+        this.animations['hurt/electric'].frames = await this.loadAnimations(ImgHelper.urls(ImgHelper.sharkie['hurt/electric']));
+        this.animations['dead/poison'].frames = await this.loadAnimations(ImgHelper.urls(ImgHelper.sharkie['dead/poison']));
+        this.animations['dead/electric'].frames = await this.loadAnimations(ImgHelper.urls(ImgHelper.sharkie['dead/electric']));
     }
 
-    update(timedelta) {
+    updateMovement(timedelta) {
         const speed = 800;
         let moveX = 0;
         let moveY = 0;
@@ -53,6 +63,9 @@ export class Sharkie extends MovableObject {
         if (length > 0) {
             moveX /= length;
             moveY /= length;
+            if (this.healthState == HEALTH_STATE.idle || this.healthState == HEALTH_STATE.longIdle) this.healthState = HEALTH_STATE.swim;
+        } else if (this.healthState != HEALTH_STATE.longIdle && this.healthState != HEALTH_STATE.idle) {
+            this.healthState = HEALTH_STATE.idle;
         }
 
         const nextX = this.x + moveX * speed * timedelta / 1000;
@@ -61,5 +74,25 @@ export class Sharkie extends MovableObject {
             this.x = nextX;
             this.y = nextY;
         }
+    }
+
+    updateState(timedelta) {
+        if (this.healthState != HEALTH_STATE.idle && this.healthState != HEALTH_STATE.longIdle) this.#longIdleTimer = 0;
+        if (this.healthState == HEALTH_STATE.idle) this.#longIdleTimer += timedelta;
+        if (this.healthState == HEALTH_STATE.idle && this.#longIdleTimer >= 5000) this.healthState = HEALTH_STATE.longIdle;
+    }
+
+    updateAnimation(timedelta) {
+        this.animationTimer += timedelta;
+        const duration = this.durationFrame;
+        if (this.animationTimer >= duration) {
+            this.playAnimation(this.healthState);
+            this.animationTimer -= duration;
+        }
+    }
+
+    resetAnimation() {
+        if (this.healthState == HEALTH_STATE.longIdle && this.curImg >= 13) this.curImg = 10;
+        else super.resetAnimation();
     }
 }

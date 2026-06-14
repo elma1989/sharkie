@@ -14,4 +14,25 @@
  * @property {number} height - Height of box.
  * */
 
+/**
+ * @typedef {Object} Animation
+ * @property {HTMLImageElement[]} frames - Sprites of animation.
+ * @property {number} duration - Duration of animation in ms.
+ * @property {boolean} loop - True , if animation has loop.
+ */
+
 export {}
+
+export const HEALTH_STATE = Object.freeze({
+  idle: 'idle',
+  longIdle: 'longIdle',
+  swim: 'swim',
+  'hurt/poison': 'hurt/poison',
+  'hurt/electric': 'hurt/electric',
+  'dead/poison': 'dead/poison',
+  'dead/electric': 'dead/electric'
+})
+
+/**
+ * @typedef {typeof HEALTH_STATE[keyof typeof HEALTH_STATE]} HealthState
+ */

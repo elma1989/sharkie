@@ -117,7 +117,7 @@ export class ImgHelper {
     /**
      * Gets url from file.
      * @param {string} file - Name from ImgHeloper-Getter.
-     * @returns Complete url.
+     * @returns {string} Complete url.
      */
     static url(file) {
         const host = location.hostname;
@@ -125,5 +125,14 @@ export class ImgHelper {
         const daServer = host.endsWith('developerakademie.net');
         const prefix = local ? '/' : (daServer ? '/sharkie/' : '/static/sharkie/');
         return prefix + 'assets/img/' + file;
+    }
+
+    /**
+     * Gets urls form files.
+     * @param {string[]} files - Files for urls
+     * @returns {string[]} Array of paths.
+     */
+    static urls(files) {
+        return files.map(file => ImgHelper.url(file));
     }
 }
