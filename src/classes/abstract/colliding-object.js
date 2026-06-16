@@ -10,10 +10,6 @@ import { Barrier } from './barrier.js';
 export class CollidingObject extends DrawableObject {
     /** @type {Offset} */
     #offset;
-    #rX;
-    #rY;
-    #rWidth;
-    #rHeight;
     /**
      * Creates a colliding object.
      * @param {number} x - X-Pos of object.
@@ -25,19 +21,7 @@ export class CollidingObject extends DrawableObject {
     constructor(x, y, width, height, offset) {
         super(x, y, width, height);
         this.#offset = offset;
-        this.#rX = x + offset.left;
-        this.#rY = y + offset.top;
-        this.#rWidth = width - offset.left - offset.right;
-        this.#rHeight = height - offset.top - offset.bottom;
     }
-
-    get rX() { return this.#rX; }
-
-    get rY() { return this.#rY; }
-
-    get rWidth() { return this.#rWidth; }
-
-    get rHeight() { return this.#rHeight; }
 
     get hitbox() {
         return {
@@ -91,10 +75,10 @@ export class CollidingObject extends DrawableObject {
      * @returns {boolean} true, if object a colliding.
      */
     isColliding(other) {
-        return this.rX + this.rWidth >= other.rX
-            && this.rX <= other.rX + other.rWidth
-            && this.rY + this.rHeight >= other.rY
-            && this.rY <= other.rY + other.rHeight;
+        return this.hitbox.x + this.hitbox.width >= other.hitbox.x
+            && this.hitbox.x <= other.hitbox.x + other.hitbox.width
+            && this.hitbox.y + this.hitbox.height >= other.hitbox.y
+            && this.hitbox.y <= other.hitbox.y + other.hitbox.height;
     }
 
     /**
