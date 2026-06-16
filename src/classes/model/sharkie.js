@@ -9,6 +9,7 @@ export class Sharkie extends MovableObject {
     #level;
     #ctrl;
     #longIdleTimer = 0;
+    #poisonousJars = 0;
 
     constructor(level, ctrl) {
         super(0, 0, 815, 1000, {
@@ -21,6 +22,8 @@ export class Sharkie extends MovableObject {
         this.#ctrl = ctrl;
     }
 
+    // #region Methods
+    // #region Overridden methods
     get x() { return super.x; }
 
     set x(value) {
@@ -98,4 +101,11 @@ export class Sharkie extends MovableObject {
         if (this.healthState == HEALTH_STATE.longIdle && this.curImg >= 13) this.curImg = 10;
         else super.resetAnimation();
     }
+    // #endregion
+
+    /** Adds a poisonous jar. */
+    addPoisonousJar() {
+        this.#poisonousJars++;
+    }
+    // #endregion
 }
