@@ -1,9 +1,9 @@
 import { ImgHelper } from '../helper/img-helper.js';
-import { AnimatedObject } from '../abstract/animatad-object.js';
 import { HEALTH_STATE } from '../types.js';
 import { SHAKIE } from '../helper/animation.js';
+import { MovableObject } from '../abstract/moveable-object.js';
 
-export class Sharkie extends AnimatedObject {
+export class Sharkie extends MovableObject {
 
     /** @type{Level} */
     #level;
