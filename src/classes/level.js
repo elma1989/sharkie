@@ -9,12 +9,14 @@ import { Layer1 } from "./model/background/layer1.js";
 import { Light } from "./model/background/light.js";
 import { Sharkie } from "./model/sharkie.js";
 import { Water } from "./model/background/water.js";
-import { MovableObject } from "./abstract/moveable-object.js";
 import { Canvas } from "./ui/canvas.js";
 import { TopBarrier } from "./model/barrier/top.js";
 import { FirstBottomBarrier } from "./model/barrier/bottom-1.js";
 import { SecondBottomBarrier } from "./model/barrier/bottom-2.js";
 import { RightBarrier } from "./model/barrier/right.js";
+import { PoisonousJar } from "./model/poisonous-jar.js";
+import { AnimatedObject } from "./abstract/animatad-object.js";
+import { Collectable } from "./abstract/collectable.js";
 
 /** Manges inner cnavas objects. */
 export class Level {
@@ -26,10 +28,12 @@ export class Level {
     #backgrounds = [];
     /** @type{Barrier[]} */
     #barries = [];
+    /** @type{Collectable[]} */
+    #collectables = []
     /** @type{DrawableObject[]} */
     #drawings = [];
-    /** @type{MovalbelObject[]} */
-    #movables = [];
+    /** @type{AnimatedObject[]} */
+    #updateables = [];
     #lastTime = 0;
     #translationX = 0;
     #frameid = null;
@@ -39,8 +43,10 @@ export class Level {
         this.#sharkieTranslation();
         this.#backgrounds = this.#createBackgrounds();
         this.#barries = this.#createBarries();
+        this.#collectables = this.#createCollectables();
+        this.#addAllCollectEvents();
         this.#drawings = this.#createDrawings();
-        this.#movables = this.#createMovables();
+        this.#updateables = this.#createUpdatingObjects();
         this.#ctx = ctx;
         this.#addFocusEvent();
         this.#addBlurEvent();
@@ -83,12 +89,27 @@ export class Level {
     }
 
     /**
+     * Creates a list from all collectables.
+     * @returns {Collectable[]} All collectables.
+     */
+    #createCollectables() {
+        return [
+            new PoisonousJar(1700, 800),
+            new PoisonousJar(2500, 600),
+            new PoisonousJar(3800, 800),
+            new PoisonousJar(5300, 400),
+            new PoisonousJar(5800, 100)
+        ]
+    }
+
+    /**
      * Combines all object-lists to a huge list.
      * @returns {DrawableObject[]} All drawings.
      */
     #createDrawings() {
         return [
             ...this.#backgrounds,
+            ...this.#collectables,
             this.#sharkie,
             ...this.#barries
         ]
@@ -96,10 +117,11 @@ export class Level {
 
     /**
      * Creates a list from all movable objects.
-     * @returns {MovableObject[]} all movable objects.
+     * @returns {AnimatedObject[]} all movable objects.
      */
-    #createMovables() {
+    #createUpdatingObjects() {
         return [
+            ...this.#collectables,
             this.#sharkie
         ]
     }
@@ -126,7 +148,7 @@ export class Level {
      * @param {number} timedelta - Time to next frame.
      */
     #updateAll(timedelta) {
-        this.#movables.forEach(mov => mov.update(timedelta));
+        this.#updateables.forEach(updateObj => updateObj.update(timedelta));
     }
 
     /** Adds tranlation event for shakie. */
@@ -148,15 +170,46 @@ export class Level {
     }
     // #endregion
 
+    // #region Collision
+    #checkCollisionCollectable() {
+        this.#collectables.forEach(collectable => {
+            if (this.#sharkie.isColliding(collectable)) {
+                collectable.collect(this.#sharkie);
+            }
+        })
+    }
+
+    #checkCollision() {
+        this.#checkCollisionCollectable();
+    }
+    // #endregion
+
     gameLoop = (timestamp) => {
         const timedelta = timestamp - this.#lastTime;
         this.#lastTime = timestamp;
 
         this.#updateAll(timedelta);
+        this.#checkCollision();
         this.#drawAll();
         this.#frameid = requestAnimationFrame(this.gameLoop);
     }
 
+    /**
+     * Removes a collectable.
+     * @param {Collectable} collectable - Collectable to remove.
+     */
+    #removeCollectable(collectable) {
+        const indexCollect = this.#collectables.indexOf(collectable);
+        const indexUpdate = this.#updateables.indexOf(collectable);
+        const indexDraw = this.#drawings.indexOf(collectable);
+        if (indexCollect >= 0) {
+            this.#collectables.splice(indexCollect, 1);
+            this.#updateables.splice(indexUpdate, 1);
+            this.#drawings.splice(indexDraw, 1);
+        }
+    }
+
+    // #region Events
     #addFocusEvent() {
         window.addEventListener('focus', () => {
             if(!this.#frameid) {
@@ -173,5 +226,14 @@ export class Level {
             }
         })
     }
+
+    #addAllCollectEvents() {
+        this.#collectables.forEach(collectable => {
+            collectable.onCollect = () => {
+                this.#removeCollectable(collectable);
+            }
+        })
+    }
+    // #endregion
     // #endregion
 }
