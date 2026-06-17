@@ -1,14 +1,15 @@
 import { ImgHelper } from '../helper/img-helper.js';
-import { AnimatedObject } from '../abstract/animatad-object.js';
 import { HEALTH_STATE } from '../types.js';
 import { SHAKIE } from '../helper/animation.js';
+import { MovableObject } from '../abstract/moveable-object.js';
 
-export class Sharkie extends AnimatedObject {
+export class Sharkie extends MovableObject {
 
     /** @type{Level} */
     #level;
     #ctrl;
     #longIdleTimer = 0;
+    #poisonousJars = 0;
 
     constructor(level, ctrl) {
         super(0, 0, 815, 1000, {
@@ -21,6 +22,8 @@ export class Sharkie extends AnimatedObject {
         this.#ctrl = ctrl;
     }
 
+    // #region Methods
+    // #region Overridden methods
     get x() { return super.x; }
 
     set x(value) {
@@ -98,4 +101,11 @@ export class Sharkie extends AnimatedObject {
         if (this.healthState == HEALTH_STATE.longIdle && this.curImg >= 13) this.curImg = 10;
         else super.resetAnimation();
     }
+    // #endregion
+
+    /** Adds a poisonous jar. */
+    addPoisonousJar() {
+        this.#poisonousJars++;
+    }
+    // #endregion
 }

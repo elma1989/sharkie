@@ -110,6 +110,19 @@ export class ImgHelper {
         ]
     }
 
+    static COLLECTABLE = {
+        poison: [
+            '03_Collectable/01_poison/1.png',
+            '03_Collectable/01_poison/2.png',
+            '03_Collectable/01_poison/3.png',
+            '03_Collectable/01_poison/4.png',
+            '03_Collectable/01_poison/5.png',
+            '03_Collectable/01_poison/6.png',
+            '03_Collectable/01_poison/7.png',
+            '03_Collectable/01_poison/8.png'
+        ]
+    }
+
     static get background() { return this.#BACKGROUND; }
 
     static get sharkie() { return this.#SHARKIE; }

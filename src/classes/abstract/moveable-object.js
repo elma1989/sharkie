@@ -1,12 +1,13 @@
 import { GameConfig } from "../game-config.js";
-import { CollidingObject } from "./colliding-object.js";
+import { AnimatedObject } from "./animatad-object.js";
 
 /**
  * Respesents an object, which can move.
  * @typedef {import('../types.js').Offset} Offset
+ * @typedef {import('../types.js').Animation} Animaiton
  */
 
-export class MovableObject extends CollidingObject {
+export class MovableObject extends AnimatedObject {
     #mirorHorizontally = false;
 
     /**
@@ -16,9 +17,10 @@ export class MovableObject extends CollidingObject {
      * @param {number} width - Width of object.
      * @param {number} height - Height of object.
      * @param {Offset} offset - Offset of object.
+     * @param {Object.<string, Animaiton>} animations - Animations of object.
      */
-    constructor(x, y, width, height, offset) {
-        super(x, y, width, height, offset);
+    constructor(x, y, width, height, offset, animations) {
+        super(x, y, width, height, offset, animations);
     }
 
     get mirrorHorzontally() { return this.#mirorHorizontally; }
@@ -39,19 +41,16 @@ export class MovableObject extends CollidingObject {
         } else super.draw(ctx);
     }
 
-    /**
-     * Updates an object.
-     * @param {number} deltatime - Time to next frame in ms.
-     */
-    update(deltatime) {
-
+    update(timedelta) {
+        this.updateMovement(timedelta);
+        super.update(timedelta)
     }
 
     /**
      * Updates movment of an object.
-     * @param {number} deltatime - Time to next frame in ms.
+     * @param {number} timedelta - Time to next frame in ms.
      */
-    updateMovement(deltatime) {
+    updateMovement(timedelta) {
 
     }
 }

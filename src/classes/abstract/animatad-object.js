@@ -1,5 +1,5 @@
 import { HEALTH_STATE } from "../types.js";
-import { MovableObject } from "./moveable-object.js";
+import { CollidingObject } from "./colliding-object.js";
 
 /**
  * @typedef {import('../types.js') Offset} Offset
@@ -9,7 +9,7 @@ import { MovableObject } from "./moveable-object.js";
 
 
 /** Represents an movabele object, which has animation. */
-export class AnimatedObject extends MovableObject {
+export class AnimatedObject extends CollidingObject {
 
     /** @type {Object.<string, Animation>} */
     #animations;
@@ -32,6 +32,7 @@ export class AnimatedObject extends MovableObject {
         this.#animations = animations;
     }
 
+    // #region Methods
     get animations() {return this.#animations};
 
     get durationFrame() {
@@ -54,6 +55,7 @@ export class AnimatedObject extends MovableObject {
         if (validValues.includes(value)) this.#healthState = value;
     }
 
+    // #region Animaiton
     /**
      * Gets a list of images from urls
      * @param {string[]} urls - Urls for animation.
@@ -88,8 +90,9 @@ export class AnimatedObject extends MovableObject {
         this.#changeImage();
         this.resetAnimation();
     }
+    // #endregion
 
-
+    // #region Update
     /**
      * Update the state.
      * @param {number} timedelta - Time to next frame.
@@ -102,9 +105,14 @@ export class AnimatedObject extends MovableObject {
      */
     updateAnimation(timedelta) {}
 
+    /**
+     * Updates an object.
+     * @param {number} timedelta - Time to next frame.
+     */
     update(timedelta) {
-        this.updateMovement(timedelta);
         this.updateState(timedelta);
         this.updateAnimation(timedelta);
     }
+    // #endregion
+    // #endregion
 }
