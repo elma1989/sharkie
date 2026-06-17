@@ -10,6 +10,7 @@ export class Sharkie extends MovableObject {
     #ctrl;
     #longIdleTimer = 0;
     #poisonousJars = 0;
+    #coins = 0;
 
     constructor(level, ctrl) {
         super(0, 0, 815, 1000, {
@@ -106,6 +107,11 @@ export class Sharkie extends MovableObject {
     /** Adds a poisonous jar. */
     addPoisonousJar() {
         this.#poisonousJars++;
+    }
+
+    /** Adds a coin. */
+    addCoin() {
+        this.#coins++;
     }
     // #endregion
 }

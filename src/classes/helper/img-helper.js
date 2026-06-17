@@ -120,6 +120,12 @@ export class ImgHelper {
             '03_Collectable/01_poison/6.png',
             '03_Collectable/01_poison/7.png',
             '03_Collectable/01_poison/8.png'
+        ],
+        coin: [
+            '03_Collectable/02_coin/1.png',
+            '03_Collectable/02_coin/2.png',
+            '03_Collectable/02_coin/3.png',
+            '03_Collectable/02_coin/4.png'
         ]
     }
 

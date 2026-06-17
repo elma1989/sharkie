@@ -17,6 +17,7 @@ import { RightBarrier } from "./model/barrier/right.js";
 import { PoisonousJar } from "./model/poisonous-jar.js";
 import { AnimatedObject } from "./abstract/animatad-object.js";
 import { Collectable } from "./abstract/collectable.js";
+import { Coin } from "./model/coin.js";
 
 /** Manges inner cnavas objects. */
 export class Level {
@@ -98,7 +99,27 @@ export class Level {
             new PoisonousJar(2500, 600),
             new PoisonousJar(3800, 800),
             new PoisonousJar(5300, 400),
-            new PoisonousJar(5800, 100)
+            new PoisonousJar(5800, 100),
+            new Coin(1300, 200),
+            new Coin(1500, 200),
+            new Coin(1700, 200),
+            new Coin(2000, 400),
+            new Coin(2200, 600),
+            new Coin(2400, 400),
+            new Coin(2600, 600),
+            new Coin(3800, 200),
+            new Coin(4000, 200),
+            new Coin(4200, 200),
+            new Coin(5000, 200),
+            new Coin(5200, 200),
+            new Coin(5200, 400),
+            new Coin(5600, 200),
+            new Coin(5600, 400),
+            new Coin(5600, 600),
+            new Coin(5800, 200),
+            new Coin(5800, 400),
+            new Coin(5800, 600),
+            new Coin(5800, 800)
         ]
     }
 
