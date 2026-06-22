@@ -107,6 +107,36 @@ export class ImgHelper {
             '01_Sharkie/04_dead/electric/8.png',
             '01_Sharkie/04_dead/electric/9.png',
             '01_Sharkie/04_dead/electric/10.png'
+        ],
+        'attack/slap': [
+            '01_Sharkie/05_attack/slap/1.png',
+            '01_Sharkie/05_attack/slap/2.png',
+            '01_Sharkie/05_attack/slap/3.png',
+            '01_Sharkie/05_attack/slap/4.png',
+            '01_Sharkie/05_attack/slap/5.png',
+            '01_Sharkie/05_attack/slap/6.png',
+            '01_Sharkie/05_attack/slap/7.png',
+            '01_Sharkie/05_attack/slap/8.png'
+        ],
+        'attack/bubble/normal': [
+            '01_Sharkie/05_attack/bubble/normal/1.png',
+            '01_Sharkie/05_attack/bubble/normal/2.png',
+            '01_Sharkie/05_attack/bubble/normal/3.png',
+            '01_Sharkie/05_attack/bubble/normal/4.png',
+            '01_Sharkie/05_attack/bubble/normal/5.png',
+            '01_Sharkie/05_attack/bubble/normal/6.png',
+            '01_Sharkie/05_attack/bubble/normal/7.png',
+            '01_Sharkie/05_attack/bubble/normal/8.png'
+        ],
+        'attack/bubble/poison': [
+            '01_Sharkie/05_attack/bubble/poison/1.png',
+            '01_Sharkie/05_attack/bubble/poison/2.png',
+            '01_Sharkie/05_attack/bubble/poison/3.png',
+            '01_Sharkie/05_attack/bubble/poison/4.png',
+            '01_Sharkie/05_attack/bubble/poison/5.png',
+            '01_Sharkie/05_attack/bubble/poison/6.png',
+            '01_Sharkie/05_attack/bubble/poison/7.png',
+            '01_Sharkie/05_attack/bubble/poison/8.png'
         ]
     }
 

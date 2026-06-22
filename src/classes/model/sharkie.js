@@ -51,6 +51,9 @@ export class Sharkie extends MovableObject {
         this.animations['hurt/electric'].frames = await this.loadAnimations(ImgHelper.urls(ImgHelper.sharkie['hurt/electric']));
         this.animations['dead/poison'].frames = await this.loadAnimations(ImgHelper.urls(ImgHelper.sharkie['dead/poison']));
         this.animations['dead/electric'].frames = await this.loadAnimations(ImgHelper.urls(ImgHelper.sharkie['dead/electric']));
+        this.animations['attack/slap'].frames = await this.loadAnimations(ImgHelper.urls(ImgHelper.sharkie['attack/slap']));
+        this.animations['attack/bubble/normal'].frames = await this.loadAnimations(ImgHelper.urls(ImgHelper.sharkie['attack/bubble/normal']));
+        this.animations['attack/bubble/poison'].frames = await this.loadAnimations(ImgHelper.urls(ImgHelper.sharkie['attack/bubble/poison']));
     }
 
     updateMovement(timedelta) {
