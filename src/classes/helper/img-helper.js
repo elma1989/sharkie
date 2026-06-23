@@ -137,7 +137,8 @@ export class ImgHelper {
             '01_Sharkie/05_attack/bubble/poison/6.png',
             '01_Sharkie/05_attack/bubble/poison/7.png',
             '01_Sharkie/05_attack/bubble/poison/8.png'
-        ]
+        ],
+        'bubble/normal': '01_Sharkie/05_attack/bubble/normal/bubble.png'
     }
 
     static COLLECTABLE = {
