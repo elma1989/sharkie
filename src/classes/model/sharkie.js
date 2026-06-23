@@ -51,6 +51,9 @@ export class Sharkie extends MovableObject {
         this.animations['hurt/electric'].frames = await this.loadAnimations(ImgHelper.urls(ImgHelper.sharkie['hurt/electric']));
         this.animations['dead/poison'].frames = await this.loadAnimations(ImgHelper.urls(ImgHelper.sharkie['dead/poison']));
         this.animations['dead/electric'].frames = await this.loadAnimations(ImgHelper.urls(ImgHelper.sharkie['dead/electric']));
+        this.animations['attack/slap'].frames = await this.loadAnimations(ImgHelper.urls(ImgHelper.sharkie['attack/slap']));
+        this.animations['attack/bubble/normal'].frames = await this.loadAnimations(ImgHelper.urls(ImgHelper.sharkie['attack/bubble/normal']));
+        this.animations['attack/bubble/poison'].frames = await this.loadAnimations(ImgHelper.urls(ImgHelper.sharkie['attack/bubble/poison']));
     }
 
     updateMovement(timedelta) {
@@ -63,6 +66,9 @@ export class Sharkie extends MovableObject {
         if (this.#ctrl.ctrl.up) moveY = -1;
         if (this.#ctrl.ctrl.down) moveY = 1;
 
+        if (this.#ctrl.ctrl.attackSlap) this.#attackSlap();
+        if (this.#ctrl.ctrl.attackBubble) this.#attackBubble();
+
         if (moveX < 0) this.mirrorHorzontally = true;
         else if (moveX > 0) this.mirrorHorzontally = false;
 
@@ -71,8 +77,6 @@ export class Sharkie extends MovableObject {
             moveX /= length;
             moveY /= length;
             if (this.healthState == HEALTH_STATE.idle || this.healthState == HEALTH_STATE.longIdle) this.healthState = HEALTH_STATE.swim;
-        } else if (this.healthState != HEALTH_STATE.longIdle && this.healthState != HEALTH_STATE.idle) {
-            this.healthState = HEALTH_STATE.idle;
         }
 
         const nextX = this.x + moveX * speed * timedelta / 1000;
@@ -84,6 +88,8 @@ export class Sharkie extends MovableObject {
     }
 
     updateState(timedelta) {
+        if ((this.healthState == HEALTH_STATE['attack/slap'] || this.healthState == HEALTH_STATE['attack/bubble/normal'] || this.healthState == HEALTH_STATE['attack/bubble/poison'])
+            && this.curImg == 8) this.healthState = HEALTH_STATE.idle;
         if (this.healthState != HEALTH_STATE.idle && this.healthState != HEALTH_STATE.longIdle) this.#longIdleTimer = 0;
         if (this.healthState == HEALTH_STATE.idle) this.#longIdleTimer += timedelta;
         if (this.healthState == HEALTH_STATE.idle && this.#longIdleTimer >= 5000) this.healthState = HEALTH_STATE.longIdle;
@@ -104,6 +110,7 @@ export class Sharkie extends MovableObject {
     }
     // #endregion
 
+    // #region Collect
     /** Adds a poisonous jar. */
     addPoisonousJar() {
         this.#poisonousJars++;
@@ -112,6 +119,22 @@ export class Sharkie extends MovableObject {
     /** Adds a coin. */
     addCoin() {
         this.#coins++;
+    }
+    // #endregion
+    #attackSlap() {
+        if (this.healthState == HEALTH_STATE['dead/electric'] || this.healthState == HEALTH_STATE['dead/poison']) return;
+        if (this.healthState != HEALTH_STATE['attack/slap']) this.healthState = HEALTH_STATE['attack/slap'];
+    }
+
+    #attackBubble() {
+        if (this.healthState == HEALTH_STATE['dead/electric'] || this.healthState == HEALTH_STATE['dead/poison']
+            || this.healthState == HEALTH_STATE['attack/bubble/normal'] || this.healthState == HEALTH_STATE['attack/bubble/poiseon']
+        ) return;
+        if (this.#poisonousJars == 5) {
+            this.healthState = HEALTH_STATE['attack/bubble/poison'];
+        } else {
+            this.healthState = HEALTH_STATE['attack/bubble/normal'];
+        }
     }
     // #endregion
 }

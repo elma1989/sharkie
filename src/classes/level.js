@@ -99,7 +99,7 @@ export class Level {
             new PoisonousJar(2500, 600),
             new PoisonousJar(3800, 800),
             new PoisonousJar(5300, 400),
-            new PoisonousJar(5800, 100),
+            new PoisonousJar(6000, 100),
             new Coin(1300, 200),
             new Coin(1500, 200),
             new Coin(1700, 200),

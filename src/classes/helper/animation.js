@@ -33,5 +33,20 @@ export const SHAKIE = {
         frames: [],
         duration: 2000,
         loop: false
+    },
+    'attack/slap': {
+        frames: [],
+        duration: 1000,
+        loop: false
+    },
+    'attack/bubble/normal': {
+        frames: [],
+        duration: 1500,
+        loop: false
+    },
+    'attack/bubble/poison': {
+        frames: [],
+        duration: 1500,
+        loop: false
     }
 }

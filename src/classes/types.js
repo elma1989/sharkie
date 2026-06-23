@@ -30,7 +30,10 @@ export const HEALTH_STATE = Object.freeze({
   'hurt/poison': 'hurt/poison',
   'hurt/electric': 'hurt/electric',
   'dead/poison': 'dead/poison',
-  'dead/electric': 'dead/electric'
+  'dead/electric': 'dead/electric',
+  'attack/slap' : 'attack/slap',
+  'attack/bubble/normal': 'attack/bubble/normal',
+  'attack/bubble/poison': 'attack/bubble/poison'
 })
 
 /**
