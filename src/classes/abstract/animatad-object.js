@@ -51,8 +51,8 @@ export class AnimatedObject extends CollidingObject {
     get healthState() { return this.#healthState; }
 
     set healthState(value) {
-        const validValues = ['idle', 'longIdle', 'swim', 'hurt/poison', 'hurt/electric', 'dead/poison', 'dead/electric'];
-        if (validValues.includes(value)) this.#healthState = value;
+        const validValues = ['idle', 'longIdle', 'swim', 'hurt/poison', 'hurt/electric', 'dead/poison', 'dead/electric', 'attack/slap', 'attack/bubble/normal', 'attack/bubble/poison'];
+        if (validValues.includes(value) && this.healthState != value) this.#healthState = value;
     }
 
     // #region Animaiton

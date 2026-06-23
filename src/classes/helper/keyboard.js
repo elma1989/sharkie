@@ -33,8 +33,12 @@ export class Keyboard {
                     this.#ctrl.setCtrl('down', true);
                     break;
 
+                case 'ControlLeft':
+                    this.#ctrl.setCtrl('attackBubble', true);
+                    break;
+
                 case 'Space':
-                    this.#ctrl.setCtrl('attack', true);
+                    this.#ctrl.setCtrl('attackSlap', true);
             }
         });
     }
@@ -59,8 +63,12 @@ export class Keyboard {
                     this.#ctrl.setCtrl('down', false);
                     break;
 
+                case 'ControlLeft':
+                    this.#ctrl.setCtrl('attackBubble', false);
+                    break;
+
                 case 'Space':
-                    this.#ctrl.setCtrl('attack', false);
+                    this.#ctrl.setCtrl('attackSlap', false);
             }
         });
     }

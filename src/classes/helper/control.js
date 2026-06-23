@@ -4,7 +4,8 @@ export class Control {
         right: false,
         down: false,
         left: false,
-        attack: false,
+        attackSlap: false,
+        attackBubble: false
     }
 
     get ctrl() { return this.#controls; }
