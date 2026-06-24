@@ -1,0 +1,32 @@
+import { DIRECTION } from "../types.js";
+import { MovableObject } from "./moveable-object.js";
+
+/**
+ * @typedef {import('../types.js').Direction} Direction
+ */
+
+/** Represents a bubble. */
+export class Bubble extends MovableObject {
+    #direction;
+    /**
+     * Creates ab bubble
+     * @param {number} x - X-Pos of bubble.
+     * @param {number} y - Y-Pos of bubble.
+     * @param {Direction} direction - Direction of bubble
+     */
+    constructor(x, y, direction) {
+        super(x, y, 96, 96, {
+            top: 12,
+            right: 12,
+            bottom: 12,
+            left: 12
+        });
+        this.#direction = direction;
+    }
+
+    updateMovement(timedelta) {
+        const speed = (this.#direction == DIRECTION.EAST ? 1 : -1) * 1200;
+        this.x += speed * timedelta / 1000;
+        if (this.x < -100) this.onBurst?.()
+    }
+}

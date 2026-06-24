@@ -18,6 +18,8 @@ import { PoisonousJar } from "./model/poisonous-jar.js";
 import { AnimatedObject } from "./abstract/animatad-object.js";
 import { Collectable } from "./abstract/collectable.js";
 import { Coin } from "./model/coin.js";
+import { Bubble } from "./abstract/bubble.js";
+import { NormalBubble } from "./model/normal-bubble.js";
 
 /** Manges inner cnavas objects. */
 export class Level {
@@ -30,7 +32,9 @@ export class Level {
     /** @type{Barrier[]} */
     #barries = [];
     /** @type{Collectable[]} */
-    #collectables = []
+    #collectables = [];
+    /** @type{Bubble[]} */
+    #bubbles = [];
     /** @type{DrawableObject[]} */
     #drawings = [];
     /** @type{AnimatedObject[]} */
@@ -131,6 +135,7 @@ export class Level {
         return [
             ...this.#backgrounds,
             ...this.#collectables,
+            ...this.#bubbles,
             this.#sharkie,
             ...this.#barries
         ]
@@ -143,7 +148,8 @@ export class Level {
     #createUpdatingObjects() {
         return [
             ...this.#collectables,
-            this.#sharkie
+            this.#sharkie,
+            ...this.#bubbles
         ]
     }
     // #endregion

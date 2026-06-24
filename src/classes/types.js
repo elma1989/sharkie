@@ -39,3 +39,14 @@ export const HEALTH_STATE = Object.freeze({
 /**
  * @typedef {typeof HEALTH_STATE[keyof typeof HEALTH_STATE]} HealthState
  */
+
+export const DIRECTION = Object.freeze({
+  NORTH: 'north',
+  EAST: 'east',
+  SOUTH: 'south',
+  WEST: 'west'
+})
+
+/**
+ * @typedef {typeof DIRECTION[keyof typeof DIRECTION]} Direction
+ */
