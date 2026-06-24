@@ -49,12 +49,10 @@ export class Level {
         this.#backgrounds = this.#createBackgrounds();
         this.#barries = this.#createBarries();
         this.#collectables = this.#createCollectables();
-        this.#addAllCollectEvents();
         this.#drawings = this.#createDrawings();
         this.#updateables = this.#createUpdatingObjects();
         this.#ctx = ctx;
-        this.#addFocusEvent();
-        this.#addBlurEvent();
+        this.#addEvents();
     }
 
     // #region Methods
@@ -206,8 +204,22 @@ export class Level {
         })
     }
 
+    #checkBubbleBarrierCollision() {
+        if (this.#bubbles.length == 0) return;
+        this.#bubbles.forEach(bubble => {
+            this.#barries.forEach(barrier => {
+                if(bubble.isColliding(barrier)) this.#removeBubble(bubble);
+            });
+        });
+    }
+
+    #checkBubbleCollision() {
+        this.#checkBubbleBarrierCollision();
+    }
+
     #checkCollision() {
         this.#checkCollisionCollectable();
+        this.#checkBubbleCollision();
     }
     // #endregion
 
@@ -236,7 +248,36 @@ export class Level {
         }
     }
 
+    // #region Object Management
+    /**
+     * Adds bubble to level.
+     * @param {Bubble} bubble - Bubble to add.
+     */
+    #addBubble(bubble) {
+        bubble.onBurst = () => this.#removeBubble(bubble);
+        this.#bubbles.push(bubble);
+        this.#updateables = this.#createUpdatingObjects();
+        this.#drawings = this.#createDrawings();
+    }
+
+    /**
+     * Removes a bubble.
+     * @param {Bubble} bubble - Bubble to remove.
+     */
+    #removeBubble(bubble) {
+        const iBubble = this.#bubbles.indexOf(bubble);
+        const iUpdate = this.#updateables.indexOf(bubble);
+        const iDraw = this.#drawings.indexOf(bubble);
+        if (iBubble >= 0) {
+            this.#bubbles.splice(iBubble, 1);
+            this.#updateables.splice(iUpdate, 1);
+            this.#drawings.splice(iDraw, 1);
+        }
+    }
+    // #endregion
+
     // #region Events
+    /** Add event for focus on the game. */
     #addFocusEvent() {
         window.addEventListener('focus', () => {
             if(!this.#frameid) {
@@ -245,6 +286,7 @@ export class Level {
         })
     }
 
+    /** Adds an event for leave game-tab. */
     #addBlurEvent() {
         window.addEventListener('blur', () => {
             if(this.#frameid) {
@@ -254,12 +296,26 @@ export class Level {
         })
     }
 
+    /** Adds events for all collectables. */
     #addAllCollectEvents() {
         this.#collectables.forEach(collectable => {
             collectable.onCollect = () => {
                 this.#removeCollectable(collectable);
             }
         })
+    }
+
+    /** Adds event for emit of bubble. */
+    #addBubbleEvent() {
+        this.#sharkie.onBubbleAttack = (bubble => this.#addBubble(bubble))
+    }
+
+    /** Adds all events. */
+    #addEvents() {
+        this.#addFocusEvent();
+        this.#addBlurEvent();
+        this.#addAllCollectEvents();
+        this.#addBubbleEvent();
     }
     // #endregion
     // #endregion

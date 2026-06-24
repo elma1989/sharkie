@@ -138,11 +138,13 @@ export class Sharkie extends MovableObject {
         }
     }
 
+    /** Executes an attack for slap. */
     #attackSlap() {
         if (this.healthState == HEALTH_STATE['dead/electric'] || this.healthState == HEALTH_STATE['dead/poison']) return;
         if (this.healthState != HEALTH_STATE['attack/slap']) this.healthState = HEALTH_STATE['attack/slap'];
     }
 
+    /** Executes an attack for bubble-shot. */
     #attackBubble() {
         if (this.healthState == HEALTH_STATE['dead/electric'] || this.healthState == HEALTH_STATE['dead/poison']
             || this.healthState == HEALTH_STATE['attack/bubble/normal'] || this.healthState == HEALTH_STATE['attack/bubble/poiseon']
@@ -156,7 +158,6 @@ export class Sharkie extends MovableObject {
             this.healthState = HEALTH_STATE['attack/bubble/normal'];
             this.#bubble = new NormalBubble(pos.x, pos.y, direction);
         }
-
     }
     // #endregion
 }
