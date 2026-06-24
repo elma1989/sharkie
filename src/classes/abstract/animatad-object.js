@@ -27,7 +27,7 @@ export class AnimatedObject extends CollidingObject {
      * @param {Offset} offset - Offset of object.
      * @param {Ojbect.<string, Animation>} animations - Animations of object.
      */
-    constructor(x, y, width, height, offset, animations) {
+    constructor(x, y, width, height, offset, animations = {}) {
         super(x, y, width, height, offset);
         this.#animations = animations;
     }
