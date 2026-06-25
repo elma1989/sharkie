@@ -3,6 +3,7 @@ import { DIRECTION, HEALTH_STATE } from '../types.js';
 import { SHAKIE } from '../helper/animation.js';
 import { MovableObject } from '../abstract/moveable-object.js';
 import { NormalBubble } from './normal-bubble.js';
+import { PoisonousBubble } from './poison-bubble.js';
 
 /**
  * @typedef {import('../types.js').Direction} Direction
@@ -17,6 +18,7 @@ export class Sharkie extends MovableObject {
     #poisonousJars = 0;
     #coins = 0;
     #bubble = null;
+    #canThrowBubble = true;
 
     constructor(level, ctrl) {
         super(0, 0, 815, 1000, {
@@ -60,6 +62,16 @@ export class Sharkie extends MovableObject {
         this.animations['attack/slap'].frames = await this.loadAnimations(ImgHelper.urls(ImgHelper.sharkie['attack/slap']));
         this.animations['attack/bubble/normal'].frames = await this.loadAnimations(ImgHelper.urls(ImgHelper.sharkie['attack/bubble/normal']));
         this.animations['attack/bubble/poison'].frames = await this.loadAnimations(ImgHelper.urls(ImgHelper.sharkie['attack/bubble/poison']));
+    }
+
+    /**
+     * Load a bubble
+     * @param {Bubble} bubble - Bubble to looad
+     */
+    async #loadBubble(bubble) {
+        await bubble.load();
+        this.#bubble = bubble;
+        this.#canThrowBubble = true;
     }
 
     updateMovement(timedelta) {
@@ -149,15 +161,19 @@ export class Sharkie extends MovableObject {
         if (this.healthState == HEALTH_STATE['dead/electric'] || this.healthState == HEALTH_STATE['dead/poison']
             || this.healthState == HEALTH_STATE['attack/bubble/normal'] || this.healthState == HEALTH_STATE['attack/bubble/poiseon']
         ) return;
+        if (!this.#canThrowBubble) return;
+        this.#canThrowBubble = false;
         const direction = this.mirrorHorzontally ? DIRECTION.WEST : DIRECTION.EAST;
         const pos = this.#calcBubblePos(direction);
         let bubble;
         if (this.#poisonousJars == 5) {
             this.healthState = HEALTH_STATE['attack/bubble/poison'];
+            bubble = new PoisonousBubble(pos.x, pos.y, direction);
         } else {
             this.healthState = HEALTH_STATE['attack/bubble/normal'];
-            this.#bubble = new NormalBubble(pos.x, pos.y, direction);
+            bubble = new NormalBubble(pos.x, pos.y, direction);
         }
+        this.#loadBubble(bubble);
     }
     // #endregion
 }
