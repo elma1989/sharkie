@@ -15,7 +15,6 @@ export class NormalBubble extends Bubble {
      */
     constructor(x, y, direction) {
         super(x, y, direction);
-        this.load();
     }
 
     async load() {
