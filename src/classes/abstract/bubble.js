@@ -1,3 +1,4 @@
+import { GameConfig } from "../game-config.js";
 import { DIRECTION } from "../types.js";
 import { MovableObject } from "./moveable-object.js";
 
@@ -7,7 +8,9 @@ import { MovableObject } from "./moveable-object.js";
 
 /** Represents a bubble. */
 export class Bubble extends MovableObject {
+    #startX;
     #direction;
+    #bubbleDistanceReached = false;
     /**
      * Creates ab bubble
      * @param {number} x - X-Pos of bubble.
@@ -21,12 +24,17 @@ export class Bubble extends MovableObject {
             bottom: 12,
             left: 12
         });
+        this.#startX = x;
         this.#direction = direction;
     }
 
     updateMovement(timedelta) {
         const speed = (this.#direction == DIRECTION.EAST ? 1 : -1) * 1200;
         this.x += speed * timedelta / 1000;
-        if (this.x < -100) this.onBurst?.()
+        if (this.x < -100) this.onBurst?.();
+        if (this.x > this.#startX + 200 && !this.#bubbleDistanceReached) {
+            this.#bubbleDistanceReached = true;
+            this.onDistanceSharkie?.();
+        }
     }
 }
