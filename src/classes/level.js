@@ -254,7 +254,6 @@ export class Level {
      * @param {Bubble} bubble - Bubble to add.
      */
     #addBubble(bubble) {
-        bubble.onBurst = () => this.#removeBubble(bubble);
         this.#bubbles.push(bubble);
         this.#updateables = this.#createUpdatingObjects();
         this.#drawings = this.#createDrawings();
@@ -273,6 +272,7 @@ export class Level {
             this.#updateables.splice(iUpdate, 1);
             this.#drawings.splice(iDraw, 1);
         }
+        if (this.#bubbles.length == 0) this.#sharkie.enableBubbleShot();
     }
     // #endregion
 
@@ -307,7 +307,10 @@ export class Level {
 
     /** Adds event for emit of bubble. */
     #addBubbleEvent() {
-        this.#sharkie.onBubbleAttack = (bubble => this.#addBubble(bubble))
+        this.#sharkie.onBubbleAttack = (bubble => {
+            bubble.onBurst = () => this.#removeBubble(bubble);
+            this.#addBubble(bubble);
+        });
     }
 
     /** Adds all events. */
