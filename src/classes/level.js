@@ -224,7 +224,7 @@ export class Level {
     // #endregion
 
     gameLoop = (timestamp) => {
-        const timedelta = timestamp - this.#lastTime;
+        const timedelta = Math.min(timestamp - this.#lastTime, 100);
         this.#lastTime = timestamp;
 
         this.#updateAll(timedelta);
