@@ -19,6 +19,7 @@ export class Sharkie extends MovableObject {
     #coins = 0;
     #bubble = null;
     #canThrowBubble = true;
+    #isBubbleThrown = false;
 
     constructor(level, ctrl) {
         super(0, 0, 815, 1000, {
@@ -64,16 +65,6 @@ export class Sharkie extends MovableObject {
         this.animations['attack/bubble/poison'].frames = await this.loadAnimations(ImgHelper.urls(ImgHelper.sharkie['attack/bubble/poison']));
     }
 
-    /**
-     * Load a bubble
-     * @param {Bubble} bubble - Bubble to looad
-     */
-    async #loadBubble(bubble) {
-        await bubble.load();
-        this.#bubble = bubble;
-        this.#canThrowBubble = true;
-    }
-
     updateMovement(timedelta) {
         const speed = 800;
         let moveX = 0;
@@ -109,8 +100,8 @@ export class Sharkie extends MovableObject {
         if ((this.healthState == HEALTH_STATE['attack/slap'] || this.healthState == HEALTH_STATE['attack/bubble/normal'] || this.healthState == HEALTH_STATE['attack/bubble/poison'])
             && this.curImg == 8) {
             this.healthState = HEALTH_STATE.idle;
-            this.onBubbleAttack?.(this.#bubble);
-            this.bubble = null;
+            if (this.#bubble) this.onBubbleAttack?.(this.#bubble);
+            this.#bubble = null;
         }
         if (this.healthState != HEALTH_STATE.idle && this.healthState != HEALTH_STATE.longIdle) this.#longIdleTimer = 0;
         if (this.healthState == HEALTH_STATE.idle) this.#longIdleTimer += timedelta;
@@ -143,12 +134,43 @@ export class Sharkie extends MovableObject {
         this.#coins++;
     }
     // #endregion
+
+    // #region Bubble-Mangement
     #calcBubblePos(direction) {
         return {
             x: direction == DIRECTION.EAST ? this.hitbox.x + this.hitbox.width + 50 : this.hitbox.x - 150,
             y: this.hitbox.y + this.hitbox.height - 100
         }
     }
+
+    /**
+     * Loads a bubble
+     * @param {Bubble} bubble - Bubble to load.
+     */
+    async #loadBubble(bubble) {
+        await bubble.load();
+        this.#bubble = bubble;
+        this.#canThrowBubble = true;
+    }
+
+    /**
+     * Adds events for a bubbe
+     * @param {Bubble} bubble - Bubble for add events
+     */
+    #addBubbleEvents(bubble) {
+        bubble.onBurst = () => {
+            this.#isBubbleThrown = false;
+        }
+        bubble.onDistanceSharkie = () => {
+            this.#isBubbleThrown = false;
+        }
+    }
+
+    /** Enables bubblesshot again. */
+    enableBubbleShot() {
+        this.#isBubbleThrown = false;
+    }
+    // #endregion
 
     /** Executes an attack for slap. */
     #attackSlap() {
@@ -161,8 +183,9 @@ export class Sharkie extends MovableObject {
         if (this.healthState == HEALTH_STATE['dead/electric'] || this.healthState == HEALTH_STATE['dead/poison']
             || this.healthState == HEALTH_STATE['attack/bubble/normal'] || this.healthState == HEALTH_STATE['attack/bubble/poiseon']
         ) return;
-        if (!this.#canThrowBubble) return;
+        if (!this.#canThrowBubble || this.#isBubbleThrown) return;
         this.#canThrowBubble = false;
+        this.#isBubbleThrown = true;
         const direction = this.mirrorHorzontally ? DIRECTION.WEST : DIRECTION.EAST;
         const pos = this.#calcBubblePos(direction);
         let bubble;
@@ -173,6 +196,7 @@ export class Sharkie extends MovableObject {
             this.healthState = HEALTH_STATE['attack/bubble/normal'];
             bubble = new NormalBubble(pos.x, pos.y, direction);
         }
+        this.#addBubbleEvents(bubble);
         this.#loadBubble(bubble);
     }
     // #endregion
