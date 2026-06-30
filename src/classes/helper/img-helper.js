@@ -142,6 +142,33 @@ export class ImgHelper {
         'bubble/poison': '01_Sharkie/05_attack/bubble/poison/bubble.png'
     }
 
+    static ENEMY = {
+        'pufferfish/green/swim/empty': [
+            '02_Enemy/01_puffer_fish/green/swim/empty/1.png',
+            '02_Enemy/01_puffer_fish/green/swim/empty/2.png',
+            '02_Enemy/01_puffer_fish/green/swim/empty/3.png',
+            '02_Enemy/01_puffer_fish/green/swim/empty/4.png',
+            '02_Enemy/01_puffer_fish/green/swim/empty/5.png'
+        ],
+        'pufferfish/green/swim/transition': [
+            '02_Enemy/01_puffer_fish/green/swim/transition/1.png',
+            '02_Enemy/01_puffer_fish/green/swim/transition/2.png',
+            '02_Enemy/01_puffer_fish/green/swim/transition/3.png',
+            '02_Enemy/01_puffer_fish/green/swim/transition/4.png',
+            '02_Enemy/01_puffer_fish/green/swim/transition/5.png'
+        ],
+        'pufferfish/green/swim/full': [
+            '02_Enemy/01_puffer_fish/green/swim/full/1.png',
+            '02_Enemy/01_puffer_fish/green/swim/full/2.png',
+            '02_Enemy/01_puffer_fish/green/swim/full/3.png',
+            '02_Enemy/01_puffer_fish/green/swim/full/4.png',
+            '02_Enemy/01_puffer_fish/green/swim/full/5.png'
+        ],
+        'pufferfish/green/dead/empty': '02_Enemy/01_puffer_fish/green/dead/empty.png',
+        'pufferfish/green/dead/transition': '02_Enemy/01_puffer_fish/green/dead/transition.png',
+        'pufferfish/green/dead/full': '02_Enemy/01_puffer_fish/green/dead/full.png'
+    }
+
     static COLLECTABLE = {
         poison: [
             '03_Collectable/01_poison/1.png',
