@@ -10,9 +10,8 @@ import { Enemy } from "./enemy.js";
  */
 
 export class PufferFish extends Enemy {
-    #prevPufferState = null;
-    #curPufferState = PUFFER_STATE.EMPTY;
-    #pufferTimer = null;
+    #pufferState = PUFFER_STATE.EMPTY;
+    #pufferTimer = 0;
     #deathImg = {
         empty: null,
         transition: null,
@@ -59,8 +58,10 @@ export class PufferFish extends Enemy {
         });
     }
 
+    // #region Methods
     get deathImg() { return this.#deathImg; }
 
+    // #region Movment
     changeDirection() {
         this.direction = this.direction == DIRECTION.WEST ? DIRECTION.EAST : DIRECTION.WEST;
         this.mirrorHorzontally = this.direction == DIRECTION.EAST;
@@ -78,4 +79,44 @@ export class PufferFish extends Enemy {
             this.y -= movement;
         }
     }
+    // #endregion
+
+    // #region Animation
+    /** Changes to the next puffer state. */
+    #nextPufferState() {
+        if (this.#pufferState == PUFFER_STATE.EMPTY) this.#pufferState = PUFFER_STATE.TRANSFORM;
+        else if (this.#pufferState == PUFFER_STATE.TRANSFORM) this.#pufferState = PUFFER_STATE.FULL;
+        else this.#pufferState = PUFFER_STATE.EMPTY;
+    }
+
+    /** Plays animation for current puffer state. */
+    #checkPufferState() {
+        if (this.animationTimer >= this.durationFrame) {
+            switch (this.#pufferState) {
+                case PUFFER_STATE.EMPTY:
+                    this.playAnimation('swim/empty');
+                    break;
+                case PUFFER_STATE.TRANSFORM:
+                    this.playAnimation('swim/transition');
+                    break;
+                case PUFFER_STATE.FULL:
+                    this.playAnimation('swim/full');
+            }
+            this.animationTimer -= this.durationFrame;
+        }
+    }
+
+    updateAnimation(timedelta) {
+        if (this.healthState == HEALTH_STATE.swim) {
+            this.animationTimer += timedelta;
+            this.#pufferTimer += timedelta;
+            this.#checkPufferState();
+            if (this.#pufferState == PUFFER_STATE.TRANSFORM && this.curImg == 5 || this.#pufferTimer >= 10000) {
+                this.#nextPufferState();
+                this.#pufferTimer = 0;
+            }
+        }
+    }
+    // #endregion
+    // #endregion
 }
