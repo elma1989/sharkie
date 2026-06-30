@@ -1,4 +1,4 @@
-import { DIRECTION, PUFFER_STATE } from "../types.js";
+import { DIRECTION, HEALTH_STATE, PUFFER_STATE } from "../types.js";
 import { Enemy } from "./enemy.js";
 
 /**
@@ -54,11 +54,28 @@ export class PufferFish extends Enemy {
         }, DIRECTION.WEST, {
             minX: minX,
             maxX: maxX,
-            minY: y,
-            maxY: y
+            minY: y - 10,
+            maxY: y + 10
         });
     }
 
     get deathImg() { return this.#deathImg; }
 
+    changeDirection() {
+        this.direction = this.direction == DIRECTION.WEST ? DIRECTION.EAST : DIRECTION.WEST;
+        this.mirrorHorzontally = this.direction == DIRECTION.EAST;
+    }
+
+    updateMovement(timedelta) {
+        let movement;
+        if(this.healthState == HEALTH_STATE.swim) {
+            movement = this.movement(400, timedelta);
+            this.x += this.direction == DIRECTION.WEST ? -movement : movement;
+            super.updateMovement();
+        } else if (this.healthState == HEALTH_STATE.dead) {
+            movement = this.movement(1500, timedelta);
+            this.x -= movement;
+            this.y -= movement;
+        }
+    }
 }

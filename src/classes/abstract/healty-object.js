@@ -1,4 +1,4 @@
-import { AnimatedObject } from "./animatad-object.js";
+import { MovableObject } from "./moveable-object.js";
 
 /**
  * @typedef {import('../types.js').Offset} Offset
@@ -6,7 +6,7 @@ import { AnimatedObject } from "./animatad-object.js";
  */
 
 /** An animattaed object alive. */
-export class HealthyObject extends AnimatedObject {
+export class HealthyObject extends MovableObject {
     #health = 100;
 
     /**

@@ -53,4 +53,14 @@ export class MovableObject extends AnimatedObject {
     updateMovement(timedelta) {
 
     }
+
+    /**
+     * Calulates movement for an obuject.
+     * @param {number} speed - Speed in pixel per second.
+     * @param {number} timedelta - Time to next frame.
+     * @returns {number} - Movement of object.
+     */
+    movement(speed, timedelta) {
+        return speed * timedelta / 1000;
+    }
 }

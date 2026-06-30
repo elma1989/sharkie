@@ -1,3 +1,4 @@
+import { DIRECTION, HEALTH_STATE } from "../types.js";
 import { HealthyObject } from "./healty-object.js";
 
 /**
@@ -27,5 +28,25 @@ export class Enemy extends HealthyObject {
         super(x, y, width, height, offset, animations);
         this.#direction = direction;
         this.#limits = limits;
+    }
+
+    get direction() { return this.#direction; }
+
+    set direction(direction) {
+        const validValues = Object.values(DIRECTION);
+        if (validValues.includes(direction)) this.#direction = direction;
+    }
+
+    bringToLife() {
+        this.healthState = HEALTH_STATE.swim;
+    }
+
+    changeDirection() {}
+
+    updateMovement() {
+        if (this.x <= this.#limits.minX
+            || this.x >= this.#limits.maxX
+            || this.y <= this.#limits.minY
+            || this.y >= this.#limits.maxY) this.changeDirection();
     }
 }

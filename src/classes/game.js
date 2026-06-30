@@ -19,6 +19,7 @@ export class Game {
     /** Will be executed after create of game. */
     async init() {
         await this.#level.loadDrawings();
+        this.#level.bringEnemiesToLife();
         this.#level.gameLoop(0);
     }
     //#endregion

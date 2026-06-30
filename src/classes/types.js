@@ -37,6 +37,7 @@ export const HEALTH_STATE = Object.freeze({
   swim: 'swim',
   'hurt/poison': 'hurt/poison',
   'hurt/electric': 'hurt/electric',
+  'dead': 'dead',
   'dead/poison': 'dead/poison',
   'dead/electric': 'dead/electric',
   'attack/slap' : 'attack/slap',
