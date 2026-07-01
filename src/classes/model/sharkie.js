@@ -1,15 +1,15 @@
 import { ImgHelper } from '../helper/img-helper.js';
 import { DIRECTION, HEALTH_STATE } from '../types.js';
 import { SHAKIE } from '../helper/animation.js';
-import { MovableObject } from '../abstract/moveable-object.js';
 import { NormalBubble } from './normal-bubble.js';
 import { PoisonousBubble } from './poison-bubble.js';
+import { HealthyObject } from '../abstract/healty-object.js';
 
 /**
  * @typedef {import('../types.js').Direction} Direction
  */
 
-export class Sharkie extends MovableObject {
+export class Sharkie extends HealthyObject {
 
     /** @type{Level} */
     #level;
@@ -20,6 +20,8 @@ export class Sharkie extends MovableObject {
     #bubble = null;
     #canThrowBubble = true;
     #isBubbleThrown = false;
+    #invulnerable = false;
+    #invulnerableTimer = 0;
 
     constructor(level, ctrl) {
         super(0, 0, 815, 1000, {
@@ -51,6 +53,8 @@ export class Sharkie extends MovableObject {
         super.y = value;
     }
 
+    get invulnerable() { return this.#invulnerable; }
+
     async load() {
         this.img = await this.loadImage(ImgHelper.url(ImgHelper.sharkie.idle[0]));
         this.animations.idle.frames = await this.loadAnimations(ImgHelper.urls(ImgHelper.sharkie.idle));
@@ -65,8 +69,35 @@ export class Sharkie extends MovableObject {
         this.animations['attack/bubble/poison'].frames = await this.loadAnimations(ImgHelper.urls(ImgHelper.sharkie['attack/bubble/poison']));
     }
 
-    updateMovement(timedelta) {
-        const speed = 800;
+    /**
+     * Checks, if sharkie is dead
+     * @returns {boolean} True, if it is dead.
+     */
+    #isDead() { return this.healthState == HEALTH_STATE['dead/poison'] || this.healthState == HEALTH_STATE['dead/electric']; }
+
+    /**
+     * Checks if it is idle.
+     * @returns {boolean} True if it is idle.
+     */
+    #isIdle() { return this.healthState == HEALTH_STATE.idle || this.healthState == HEALTH_STATE.longIdle; }
+
+    /**
+     * Checkes if it is injured.
+     * @returns {boolean} True if it is injured.
+     */
+    #isInjured() {return this.healthState == HEALTH_STATE['hurt/poison'] || this.healthState == HEALTH_STATE['hurt/electric']; }
+
+    /**
+     * Checks if it is attack.
+     * @returns {boolean} True if it is attack.
+     */
+    #isAttack() { return this.healthState == HEALTH_STATE['attack/slap'] || this.healthState == HEALTH_STATE['attack/bubble/normal'] || this.healthState == HEALTH_STATE['attack/bubble/poison']}
+
+    /**
+     * Gets control-data.
+     * @returns {{moveX:number,moveY:number, moving:boolean}} Data from control.
+     */
+    #controlImput() {
         let moveX = 0;
         let moveY = 0;
 
@@ -75,21 +106,34 @@ export class Sharkie extends MovableObject {
         if (this.#ctrl.ctrl.up) moveY = -1;
         if (this.#ctrl.ctrl.down) moveY = 1;
 
-        if (this.#ctrl.ctrl.attackSlap) this.#attackSlap();
-        if (this.#ctrl.ctrl.attackBubble) this.#attackBubble();
-
-        if (moveX < 0) this.mirrorHorzontally = true;
-        else if (moveX > 0) this.mirrorHorzontally = false;
-
         const length = Math.hypot(moveX, moveY);
         if (length > 0) {
             moveX /= length;
             moveY /= length;
-            if (this.healthState == HEALTH_STATE.idle || this.healthState == HEALTH_STATE.longIdle) this.healthState = HEALTH_STATE.swim;
+        }
+
+        return {moveX, moveY, moving: length > 0}
+    }
+
+    /** Checks Attack-Controls */
+    #checkAttack() {
+        if (this.#ctrl.ctrl.attackSlap) this.#attackSlap();
+        if (this.#ctrl.ctrl.attackBubble) this.#attackBubble();
+    }
+
+    updateMovement(timedelta) {
+        const speed = 800;
+        if (this.#isDead()) return;
+        const inputs = this.#controlImput();
+        this.#checkAttack();
+        if (inputs.moving) {
+            this.mirrorHorzontally = inputs.moveX < 0;
+            if (this.#isIdle()) this.healthState = HEALTH_STATE.swim;
         } else if (this.healthState == HEALTH_STATE.swim) this.healthState = HEALTH_STATE.idle;
 
-        const nextX = this.x + moveX * speed * timedelta / 1000;
-        const nextY = this.y + moveY * speed * timedelta / 1000;
+        const nextX = this.x + inputs.moveX * speed * timedelta / 1000;
+        const nextY = this.y + inputs.moveY * speed * timedelta / 1000;
+
         if (this.#level.canMoveTo(this, nextX, nextY)) {
             this.x = nextX;
             this.y = nextY;
@@ -97,11 +141,15 @@ export class Sharkie extends MovableObject {
     }
 
     updateState(timedelta) {
-        if ((this.healthState == HEALTH_STATE['attack/slap'] || this.healthState == HEALTH_STATE['attack/bubble/normal'] || this.healthState == HEALTH_STATE['attack/bubble/poison'])
-            && this.curImg == 8) {
+        this.#invulnerableTimer += timedelta;
+        if (this.#isAttack() && this.curImg == 8) {
             this.healthState = HEALTH_STATE.idle;
             if (this.#bubble) this.onBubbleAttack?.(this.#bubble);
             this.#bubble = null;
+        }
+        if (this.#isInjured() && this.#invulnerableTimer >= 700) {
+            this.healthState = HEALTH_STATE.idle;
+            this.#invulnerable = false;
         }
         if (this.healthState != HEALTH_STATE.idle && this.healthState != HEALTH_STATE.longIdle) this.#longIdleTimer = 0;
         if (this.healthState == HEALTH_STATE.idle) this.#longIdleTimer += timedelta;
@@ -172,6 +220,7 @@ export class Sharkie extends MovableObject {
     }
     // #endregion
 
+    // #region Attack
     /** Executes an attack for slap. */
     #attackSlap() {
         if (this.healthState == HEALTH_STATE['dead/electric'] || this.healthState == HEALTH_STATE['dead/poison']) return;
@@ -198,6 +247,23 @@ export class Sharkie extends MovableObject {
         }
         this.#addBubbleEvents(bubble);
         this.#loadBubble(bubble);
+    }
+    // #endregion
+    prepareDeath(attackType) {
+        this.healthState = `dead/${attackType}`;
+    }
+
+    /**
+     * Injures sharkie.
+     * @param {number} damage - Damage from collision
+     * @param {string} attackType - Attacktype poison or electric
+     */
+    injure(damage, attackType) {
+        this.#invulnerable = true;
+        this.#invulnerableTimer = 0;
+        this.health -= damage;
+        if (this.health <= 0) this.prepareDeath(attackType);
+        else this.healthState = `hurt/${attackType}`;
     }
     // #endregion
 }

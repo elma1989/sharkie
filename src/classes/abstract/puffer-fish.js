@@ -77,6 +77,7 @@ export class PufferFish extends Enemy {
             movement = this.movement(1500, timedelta);
             this.x -= movement;
             this.y -= movement;
+            if (this.y <= 0) this.onDead?.();
         }
     }
     // #endregion
@@ -118,5 +119,20 @@ export class PufferFish extends Enemy {
         }
     }
     // #endregion
+
+    prepareDeath() {
+        this.healthState = HEALTH_STATE.dead;
+        this.img = this.#pufferState == PUFFER_STATE.EMPTY ? this.deathImg.empty : (this.#pufferState == PUFFER_STATE.FULL ? this.deathImg.full : this.deathImg.transition);
+    }
+
+    hit(sharkie) {
+        if (this.healthState != HEALTH_STATE.dead ) {
+            if(sharkie.healthState == HEALTH_STATE["attack/slap"]) this.injure(100);
+            else if (!sharkie.invulnerable
+                && sharkie.healthState != HEALTH_STATE["dead/poison"]
+                && sharkie.healthState != HEALTH_STATE["dead/electric"]
+            ) sharkie.injure(10, 'poison');
+        }
+    }
     // #endregion
 }

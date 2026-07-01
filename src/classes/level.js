@@ -98,6 +98,7 @@ export class Level {
 
     #createEnemies() {
         return [
+            
         ]
     }
 
@@ -225,12 +226,20 @@ export class Level {
         });
     }
 
+    #checkEnemyCollision() {
+        if (this.#enemies.length == 0) return;
+        this.#enemies.forEach(enemy => {
+            if (this.#sharkie.isColliding(enemy)) enemy.hit(this.#sharkie);
+        })
+    }
+
     #checkBubbleCollision() {
         this.#checkBubbleBarrierCollision();
     }
 
     #checkCollision() {
         this.#checkCollisionCollectable();
+        this.#checkEnemyCollision();
         this.#checkBubbleCollision();
     }
     // #endregion
@@ -287,8 +296,24 @@ export class Level {
         if (this.#bubbles.length == 0) this.#sharkie.enableBubbleShot();
     }
 
+    /** Brings all enemies to life. */
     bringEnemiesToLife() {
         this.#enemies.forEach(enemy => enemy.bringToLife());
+    }
+
+    /**
+     * Removes an enemy.
+     * @param {Enemy} remEnemy - Enemy to remove.
+     */
+    #removeEnemy(remEnemy) {
+        const iEnemy = this.#enemies.indexOf(remEnemy);
+        const iUpdate = this.#updateables.indexOf(remEnemy);
+        const iDraw = this.#drawings.indexOf(remEnemy);
+        if (iEnemy >= 0) {
+            this.#enemies.splice(iEnemy, 1);
+            this.#updateables.splice(iUpdate, 1);
+            this.#drawings.splice(iDraw, 1);
+        }
     }
     // #endregion
 
@@ -329,12 +354,19 @@ export class Level {
         });
     }
 
+    #addEnemyDeadEvent() {
+        this.#enemies.forEach(enemy => {
+            enemy.onDead = () => this.#removeEnemy(enemy);
+        })
+    }
+
     /** Adds all events. */
     #addEvents() {
         this.#addFocusEvent();
         this.#addBlurEvent();
         this.#addAllCollectEvents();
         this.#addBubbleEvent();
+        this.#addEnemyDeadEvent();
     }
     // #endregion
     // #endregion
