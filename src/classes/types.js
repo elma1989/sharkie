@@ -21,6 +21,14 @@
  * @property {boolean} loop - True , if animation has loop.
  */
 
+/**
+ * @typedef {Object} Limits
+ * @property {number} minX - Smallesst x-Pos.
+ * @property {number} maxX - Biggest x-Pos.
+ * @property {number} minY - Smallest y-Pos.
+ * @property {number} maxY - Bigges y-Pos.
+ */
+
 export {}
 
 export const HEALTH_STATE = Object.freeze({
@@ -29,6 +37,7 @@ export const HEALTH_STATE = Object.freeze({
   swim: 'swim',
   'hurt/poison': 'hurt/poison',
   'hurt/electric': 'hurt/electric',
+  'dead': 'dead',
   'dead/poison': 'dead/poison',
   'dead/electric': 'dead/electric',
   'attack/slap' : 'attack/slap',
@@ -49,4 +58,14 @@ export const DIRECTION = Object.freeze({
 
 /**
  * @typedef {typeof DIRECTION[keyof typeof DIRECTION]} Direction
+ */
+
+export const PUFFER_STATE = Object.freeze({
+  EMPTY: 'empty',
+  TRANSFORM: 'transform',
+  FULL: 'full'
+})
+
+/**
+ * @typedef {typeof PUFFER_STATE[keyof typeof PUFFER_STATE]} PufferState
  */
