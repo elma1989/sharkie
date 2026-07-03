@@ -190,7 +190,31 @@ export class ImgHelper {
         ],
         'pufferfish/orange/dead/empty': '02_Enemy/01_puffer_fish/orange/dead/empty.png',
         'pufferfish/orange/dead/transition': '02_Enemy/01_puffer_fish/orange/dead/transition.png',
-        'pufferfish/orange/dead/full': '02_Enemy/01_puffer_fish/orange/dead/full.png'
+        'pufferfish/orange/dead/full': '02_Enemy/01_puffer_fish/orange/dead/full.png',
+        'pufferfish/pink/swim/empty': [
+            '02_Enemy/01_puffer_fish/pink/swim/empty/1.png',
+            '02_Enemy/01_puffer_fish/pink/swim/empty/2.png',
+            '02_Enemy/01_puffer_fish/pink/swim/empty/3.png',
+            '02_Enemy/01_puffer_fish/pink/swim/empty/4.png',
+            '02_Enemy/01_puffer_fish/pink/swim/empty/5.png'
+        ],
+        'pufferfish/pink/swim/transition': [
+            '02_Enemy/01_puffer_fish/pink/swim/transition/1.png',
+            '02_Enemy/01_puffer_fish/pink/swim/transition/2.png',
+            '02_Enemy/01_puffer_fish/pink/swim/transition/3.png',
+            '02_Enemy/01_puffer_fish/pink/swim/transition/4.png',
+            '02_Enemy/01_puffer_fish/pink/swim/transition/5.png'
+        ],
+        'pufferfish/pink/swim/full': [
+            '02_Enemy/01_puffer_fish/pink/swim/full/1.png',
+            '02_Enemy/01_puffer_fish/pink/swim/full/2.png',
+            '02_Enemy/01_puffer_fish/pink/swim/full/3.png',
+            '02_Enemy/01_puffer_fish/pink/swim/full/4.png',
+            '02_Enemy/01_puffer_fish/pink/swim/full/5.png'
+        ],
+        'pufferfish/pink/dead/empty': '02_Enemy/01_puffer_fish/pink/dead/empty.png',
+        'pufferfish/pink/dead/transition': '02_Enemy/01_puffer_fish/pink/dead/transition.png',
+        'pufferfish/pink/dead/full': '02_Enemy/01_puffer_fish/pink/dead/full.png'
     }
 
     static COLLECTABLE = {
