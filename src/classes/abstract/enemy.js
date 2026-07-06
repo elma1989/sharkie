@@ -38,17 +38,31 @@ export class Enemy extends HealthyObject {
         if (validValues.includes(direction)) this.#direction = direction;
     }
 
+    get limits() { return this.#limits; }
+
+    /**
+     * Draws a rectangle around the limits.
+     * @param {CanvasRenderingContext2D} ctx - Context to draw.
+     */
+    drawLimits(ctx) {
+        ctx.stroke.width = 3;
+        ctx.strokeStyle = 'green';
+        ctx.strokeRect(this.limits.minX, this.limits.minY, this.limits.maxX - this.limits.minX, this.limits.maxY - this.limits.minY);
+    }
+
     bringToLife() {
         this.healthState = HEALTH_STATE.swim;
     }
 
     changeDirection() {}
 
-    updateMovement() {
-        if (this.x <= this.#limits.minX
-            || this.x >= this.#limits.maxX
-            || this.y <= this.#limits.minY
-            || this.y >= this.#limits.maxY) this.changeDirection();
+    /** Checks conditions to change direction. */
+    checkDirection() {
+        if (this.healthState == HEALTH_STATE.swim
+            && this.hitbox.x <= this.#limits.minX
+            || this.hitbox.x + this.hitbox.width >= this.#limits.maxX
+            || this.hitbox.y <= this.#limits.minY
+            || this.hitbox.y + this.hitbox.height >= this.#limits.maxY) this.changeDirection();
     }
 
     /**
