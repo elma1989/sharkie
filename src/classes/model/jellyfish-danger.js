@@ -98,4 +98,11 @@ export class DangerousJellyFish extends JellyFish {
         this.checkDirection();
     }
 
+    hit(sharkie) {
+        sharkie.injure(20, 'electric');
+    }
+
+    blubb(bubble) {
+        this.injure(50);
+    }
 }

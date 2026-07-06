@@ -1,4 +1,5 @@
 import { DIRECTION, HEALTH_STATE } from "../types.js";
+import { Bubble } from "./bubble.js";
 import { HealthyObject } from "./healty-object.js";
 
 /**
@@ -49,4 +50,10 @@ export class Enemy extends HealthyObject {
             || this.y <= this.#limits.minY
             || this.y >= this.#limits.maxY) this.changeDirection();
     }
+
+    /**
+     * Will be executed on collision width bubble and enemy.
+     * @param {Bubble} bubble - Bubble from collision.
+     */
+    blubb(bubble) {}
 }

@@ -43,4 +43,12 @@ export class JellyFish extends Enemy {
             this.animationTimer -= this.durationFrame;
         }
     }
+
+    hit(sharkie) {
+        sharkie.injure(10, 'electric');
+    }
+
+    blubb(bubble) {
+        this.injure(100);
+    }
 }
