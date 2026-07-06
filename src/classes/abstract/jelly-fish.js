@@ -1,4 +1,4 @@
-import { DIRECTION } from "../types.js";
+import { DIRECTION, HEALTH_STATE } from "../types.js";
 import { Enemy } from "./enemy.js";
 
 /**
@@ -22,6 +22,25 @@ export class JellyFish extends Enemy {
             bottom: 30,
             left: 50
         }, {
+            swim: {
+                frames: [],
+                duration: 1500,
+                loop: true
+            },
+            dead: {
+                frames: [],
+                duration: 1000,
+                loop: true
+            }
         }, direction, limits)
+    }
+
+    updateAnimation(timedelta) {
+        this.animationTimer += timedelta;
+        if (this.animationTimer >= this.durationFrame) {
+            if (this.healthState == HEALTH_STATE.swim) this.playAnimation('swim');
+            else if (this.healthState == HEALTH_STATE.dead) this.playAnimation('dead');
+            this.animationTimer -= this.durationFrame;
+        }
     }
 }
