@@ -19,9 +19,7 @@ import { AnimatedObject } from "./abstract/animatad-object.js";
 import { Collectable } from "./abstract/collectable.js";
 import { Coin } from "./model/coin.js";
 import { Bubble } from "./abstract/bubble.js";
-import { NormalBubble } from "./model/normal-bubble.js";
 import { Enemy } from "./abstract/enemy.js";
-import { GreenPufferFish } from "./model/pufferfish-green.js";
 
 /** Manges inner cnavas objects. */
 export class Level {
@@ -226,6 +224,15 @@ export class Level {
         });
     }
 
+    #checkBubbleEnemyCollision() {
+        if (this.#bubbles.length == 0) return;
+        this.#bubbles.forEach(bubble => {
+            this.#enemies.forEach(enemy => {
+                if(bubble.isColliding(enemy)) enemy.blubb(bubble);
+            });
+        });
+    }
+
     #checkEnemyCollision() {
         if (this.#enemies.length == 0) return;
         this.#enemies.forEach(enemy => {
@@ -235,6 +242,7 @@ export class Level {
 
     #checkBubbleCollision() {
         this.#checkBubbleBarrierCollision();
+        this.#checkBubbleEnemyCollision();
     }
 
     #checkCollision() {

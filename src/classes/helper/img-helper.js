@@ -214,7 +214,19 @@ export class ImgHelper {
         ],
         'pufferfish/pink/dead/empty': '02_Enemy/01_puffer_fish/pink/dead/empty.png',
         'pufferfish/pink/dead/transition': '02_Enemy/01_puffer_fish/pink/dead/transition.png',
-        'pufferfish/pink/dead/full': '02_Enemy/01_puffer_fish/pink/dead/full.png'
+        'pufferfish/pink/dead/full': '02_Enemy/01_puffer_fish/pink/dead/full.png',
+        'jellyfish/green/swim': [
+            '02_Enemy/02_jelly_fish/green/swim/1.png',
+            '02_Enemy/02_jelly_fish/green/swim/2.png',
+            '02_Enemy/02_jelly_fish/green/swim/3.png',
+            '02_Enemy/02_jelly_fish/green/swim/4.png'
+        ],
+        'jellyfish/green/dead': [
+            '02_Enemy/02_jelly_fish/green/dead/1.png',
+            '02_Enemy/02_jelly_fish/green/dead/2.png',
+            '02_Enemy/02_jelly_fish/green/dead/3.png',
+            '02_Enemy/02_jelly_fish/green/dead/4.png'
+        ]
     }
 
     static COLLECTABLE = {

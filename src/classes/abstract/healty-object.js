@@ -1,3 +1,4 @@
+import { Sharkie } from "../model/sharkie.js";
 import { HEALTH_STATE } from "../types.js";
 import { MovableObject } from "./moveable-object.js";
 
@@ -9,6 +10,8 @@ import { MovableObject } from "./moveable-object.js";
 /** An animattaed object alive. */
 export class HealthyObject extends MovableObject {
     #health = 100;
+    #invulnerable = false;
+    #invulnerableTimer = 0;
 
     /**
      * Creats a healthy object.
@@ -27,6 +30,8 @@ export class HealthyObject extends MovableObject {
 
     set health(value) { if (value >= 0 && value <= 100) this.#health = value; }
 
+    get invulnerable() { return this.#invulnerable; }
+
     // #region Methods
     /** Preperes the process of dead. */
     prepareDeath() {
@@ -38,8 +43,11 @@ export class HealthyObject extends MovableObject {
      * @param {number} damage - Damage of hurt
      */
     injure(damage) {
+        if (this.#invulnerable) return;
+        this.#invulnerable = true;
+        this.#invulnerableTimer = 0;
         this.#health -= damage;
-        if (this.health <= 0) this.prepareDeath();
+        if (!this instanceof Sharkie && this.health <= 0) this.prepareDeath();
     }
 
     /**
@@ -48,6 +56,11 @@ export class HealthyObject extends MovableObject {
      */
     hit(opponent) {
         opponent.injure(10);
+    }
+
+    updateState(timedelta) {
+        this.#invulnerableTimer += timedelta;
+        if (this.#invulnerableTimer >= 700) this.#invulnerable = false;
     }
     // #endregion
 }

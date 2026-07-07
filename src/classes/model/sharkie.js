@@ -20,8 +20,6 @@ export class Sharkie extends HealthyObject {
     #bubble = null;
     #canThrowBubble = true;
     #isBubbleThrown = false;
-    #invulnerable = false;
-    #invulnerableTimer = 0;
 
     constructor(level, ctrl) {
         super(0, 0, 815, 1000, {
@@ -52,8 +50,6 @@ export class Sharkie extends HealthyObject {
         if (newY < -920 || newY > 655) return;
         super.y = value;
     }
-
-    get invulnerable() { return this.#invulnerable; }
 
     async load() {
         this.img = await this.loadImage(ImgHelper.url(ImgHelper.sharkie.idle[0]));
@@ -141,16 +137,13 @@ export class Sharkie extends HealthyObject {
     }
 
     updateState(timedelta) {
-        this.#invulnerableTimer += timedelta;
+        super.updateState(timedelta);
         if (this.#isAttack() && this.curImg == 8) {
             this.healthState = HEALTH_STATE.idle;
             if (this.#bubble) this.onBubbleAttack?.(this.#bubble);
             this.#bubble = null;
         }
-        if (this.#isInjured() && this.#invulnerableTimer >= 700) {
-            this.healthState = HEALTH_STATE.idle;
-            this.#invulnerable = false;
-        }
+        if (this.#isInjured() && !this.invulnerable) this.healthState = HEALTH_STATE.idle;
         if (this.healthState != HEALTH_STATE.idle && this.healthState != HEALTH_STATE.longIdle) this.#longIdleTimer = 0;
         if (this.healthState == HEALTH_STATE.idle) this.#longIdleTimer += timedelta;
         if (this.healthState == HEALTH_STATE.idle && this.#longIdleTimer >= 5000) this.healthState = HEALTH_STATE.longIdle;
@@ -259,11 +252,10 @@ export class Sharkie extends HealthyObject {
      * @param {string} attackType - Attacktype poison or electric
      */
     injure(damage, attackType) {
-        this.#invulnerable = true;
-        this.#invulnerableTimer = 0;
-        this.health -= damage;
+        const health = this.health;
+        super.injure(damage);
         if (this.health <= 0) this.prepareDeath(attackType);
-        else this.healthState = `hurt/${attackType}`;
+        else if (this.health < health) this.healthState = `hurt/${attackType}`;
     }
     // #endregion
 }
