@@ -226,6 +226,18 @@ export class ImgHelper {
             '02_Enemy/02_jelly_fish/green/dead/2.png',
             '02_Enemy/02_jelly_fish/green/dead/3.png',
             '02_Enemy/02_jelly_fish/green/dead/4.png'
+        ],
+        'jellyfish/purple/swim': [
+            '02_Enemy/02_jelly_fish/purple/swim/1.png',
+            '02_Enemy/02_jelly_fish/purple/swim/2.png',
+            '02_Enemy/02_jelly_fish/purple/swim/3.png',
+            '02_Enemy/02_jelly_fish/purple/swim/4.png'
+        ],
+        'jellyfish/purple/dead': [
+            '02_Enemy/02_jelly_fish/purple/dead/1.png',
+            '02_Enemy/02_jelly_fish/purple/dead/2.png',
+            '02_Enemy/02_jelly_fish/purple/dead/3.png',
+            '02_Enemy/02_jelly_fish/purple/dead/4.png'
         ]
     }
 
