@@ -25,6 +25,12 @@ export class Bubble extends MovableObject {
         this.#direction = direction;
     }
 
+    get direction() { return this.#direction; }
+
+    get startX() {return this.#startX; }
+
+    set startX(value) { this.#startX = value; }
+
     updateMovement(timedelta) {
         const speed = (this.#direction == DIRECTION.EAST ? 1 : -1) * 1200;
         this.x += speed * timedelta / 1000;

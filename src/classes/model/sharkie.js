@@ -140,7 +140,10 @@ export class Sharkie extends HealthyObject {
         super.updateState(timedelta);
         if (this.#isAttack() && this.curImg == 8) {
             this.healthState = HEALTH_STATE.idle;
-            if (this.#bubble) this.onBubbleAttack?.(this.#bubble);
+            if (this.#bubble) {
+                this.#setBubblePos();
+                this.onBubbleAttack?.(this.#bubble);
+            }
             this.#bubble = null;
         }
         if (this.#isInjured() && !this.invulnerable) this.healthState = HEALTH_STATE.idle;
@@ -177,11 +180,12 @@ export class Sharkie extends HealthyObject {
     // #endregion
 
     // #region Bubble-Mangement
-    #calcBubblePos(direction) {
-        return {
-            x: direction == DIRECTION.EAST ? this.hitbox.x + this.hitbox.width + 50 : this.hitbox.x - 150,
-            y: this.hitbox.y + this.hitbox.height - 100
-        }
+    /** Sets position of bubble. */
+    #setBubblePos() {
+        const x = this.#bubble.direction == DIRECTION.EAST ? this.hitbox.x + this.hitbox.width + 50 : this.hitbox.x - 150;
+        this.#bubble.x = x;
+        this.#bubble.startX = x;
+        this.#bubble.y = this.hitbox.y + this.hitbox.height - 100;
     }
 
     /**
@@ -227,7 +231,6 @@ export class Sharkie extends HealthyObject {
         this.#canThrowBubble = false;
         this.#isBubbleThrown = true;
         const direction = this.mirrorHorzontally ? DIRECTION.WEST : DIRECTION.EAST;
-        const pos = this.#calcBubblePos(direction);
         let bubble;
         if (this.#poisonousJars == 5) {
             this.healthState = HEALTH_STATE['attack/bubble/poison'];
