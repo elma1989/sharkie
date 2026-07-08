@@ -1,4 +1,6 @@
+import { Sharkie } from "../model/sharkie.js";
 import { DIRECTION, HEALTH_STATE } from "../types.js";
+import { Bubble } from "./bubble.js";
 import { Enemy } from "./enemy.js";
 
 /**
@@ -35,6 +37,33 @@ export class JellyFish extends Enemy {
         }, direction, limits)
     }
 
+    /**
+     * @override
+     * @inheritdoc
+     * @param {number} movement
+     */
+    moveDead(movement) {
+        this.y -= movement;
+        if (this.y + this.height < 0) this.onDead?.();
+    }
+
+    /**
+     * @override
+     * @inheritdoc
+     * @param {number} timedelta
+     */
+    updateMovement(timedelta) {
+        if (this.healthState == HEALTH_STATE.swim) {
+            this.moveSwim(this.movement(300, timedelta));
+            this.checkDirection();
+        } else if(this.healthState == HEALTH_STATE.dead) this.moveDead(this.movement(800, timedelta));
+    }
+
+    /**
+     * @override
+     * @inheritdoc
+     * @param {number} timedelta
+     */
     updateAnimation(timedelta) {
         this.animationTimer += timedelta;
         if (this.animationTimer >= this.durationFrame) {
@@ -44,10 +73,20 @@ export class JellyFish extends Enemy {
         }
     }
 
+    /**
+     * @override
+     * @inheritdoc
+     * @param {Sharkie} sharkie
+     */
     hit(sharkie) {
         sharkie.injure(10, 'electric');
     }
 
+    /**
+     * @override
+     * @inheritdoc
+     * @param {Bubble} bubble
+     */
     blubb(bubble) {
         this.injure(100);
     }

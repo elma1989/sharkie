@@ -54,6 +54,7 @@ export class Enemy extends HealthyObject {
         this.healthState = HEALTH_STATE.swim;
     }
 
+    // #region Movemnt
     changeDirection() {}
 
     /** Checks conditions to change direction. */
@@ -64,6 +65,19 @@ export class Enemy extends HealthyObject {
             || this.hitbox.y <= this.#limits.minY
             || this.hitbox.y + this.hitbox.height >= this.#limits.maxY) this.changeDirection();
     }
+
+    /**
+     * Movement on swim.
+     * @param {number} movement - Distance in pixel after movement.
+     */
+    moveSwim(movement) {}
+
+    /**
+     * Movement on dead.
+     * @param {number} movement - Distance in pixel on dead.
+     */
+    moveDead(movement) {}
+    // #endregion
 
     /**
      * Will be executed on collision width bubble and enemy.

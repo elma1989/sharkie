@@ -10,8 +10,8 @@ import { DIRECTION, HEALTH_STATE } from "../types.js";
 export class DangerousJellyFish extends JellyFish {
     constructor() {
         const limits = {
-            minX: 200,
-            maxX: 900,
+            minX: 3700,
+            maxX: 4400,
             minY: 200,
             maxY: 1000
         }
@@ -39,12 +39,10 @@ export class DangerousJellyFish extends JellyFish {
 
     /**
      * Gets movement data.
-     * @param {number} timedelta - Time to next frame.
+     * @param {number} movement - Time to next frame.
      * @returns {{moveX: number, moveY: number}} Data of movement.
      */
-    #movedata(timedelta) {
-        const speed = 300;
-        const movement = speed * timedelta / 1000;
+    #movedata(movement) {
         let moveX = 0;
         let moveY = 0;
         if (this.healthState == HEALTH_STATE.swim) {
@@ -91,11 +89,10 @@ export class DangerousJellyFish extends JellyFish {
         }
     }
 
-    updateMovement(timedelta) {
-        const movement = this.#movedata(timedelta);
-        this.x += movement.moveX;
-        this.y += movement.moveY;
-        this.checkDirection();
+    moveSwim(movement) {
+        const moveData = this.#movedata(movement);
+        this.x += moveData.moveX;
+        this.y += moveData.moveY;
     }
 
     hit(sharkie) {

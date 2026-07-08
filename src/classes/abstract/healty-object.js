@@ -47,7 +47,7 @@ export class HealthyObject extends MovableObject {
         this.#invulnerable = true;
         this.#invulnerableTimer = 0;
         this.#health -= damage;
-        if (!this instanceof Sharkie && this.health <= 0) this.prepareDeath();
+        if (!(this instanceof Sharkie) && this.health <= 0) this.prepareDeath();
     }
 
     /**
