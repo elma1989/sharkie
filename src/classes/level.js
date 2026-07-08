@@ -228,7 +228,10 @@ export class Level {
         if (this.#bubbles.length == 0) return;
         this.#bubbles.forEach(bubble => {
             this.#enemies.forEach(enemy => {
-                if(bubble.isColliding(enemy)) enemy.blubb(bubble);
+                if(bubble.isColliding(enemy)) {
+                    enemy.blubb(bubble);
+                    this.#removeBubble(bubble);
+                }
             });
         });
     }
