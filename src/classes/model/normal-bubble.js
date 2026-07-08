@@ -9,12 +9,10 @@ import { ImgHelper } from "../helper/img-helper.js";
 export class NormalBubble extends Bubble {
     /**
      * Creates a normal bubble.
-     * @param {number} x - X-Pos of bubble.
-     * @param {number} y - Y-Pos of bubble.
      * @param {Direction} direction - Direction of bubble;
      */
-    constructor(x, y, direction) {
-        super(x, y, direction);
+    constructor(direction) {
+        super(direction);
     }
 
     async load() {
