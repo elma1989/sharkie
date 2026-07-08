@@ -222,9 +222,7 @@ export class Sharkie extends HealthyObject {
 
     /** Executes an attack for bubble-shot. */
     #attackBubble() {
-        if (this.healthState == HEALTH_STATE['dead/electric'] || this.healthState == HEALTH_STATE['dead/poison']
-            || this.healthState == HEALTH_STATE['attack/bubble/normal'] || this.healthState == HEALTH_STATE['attack/bubble/poiseon']
-        ) return;
+        if (this.#isDead() || this.#isAttack()) return
         if (!this.#canThrowBubble || this.#isBubbleThrown) return;
         this.#canThrowBubble = false;
         this.#isBubbleThrown = true;
@@ -233,10 +231,10 @@ export class Sharkie extends HealthyObject {
         let bubble;
         if (this.#poisonousJars == 5) {
             this.healthState = HEALTH_STATE['attack/bubble/poison'];
-            bubble = new PoisonousBubble(pos.x, pos.y, direction);
+            bubble = new PoisonousBubble(direction);
         } else {
             this.healthState = HEALTH_STATE['attack/bubble/normal'];
-            bubble = new NormalBubble(pos.x, pos.y, direction);
+            bubble = new NormalBubble(direction);
         }
         this.#addBubbleEvents(bubble);
         this.#loadBubble(bubble);

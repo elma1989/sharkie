@@ -8,23 +8,20 @@ import { MovableObject } from "./moveable-object.js";
 
 /** Represents a bubble. */
 export class Bubble extends MovableObject {
-    #startX;
+    #startX = 0;
     #direction;
     #bubbleDistanceReached = false;
     /**
      * Creates ab bubble
-     * @param {number} x - X-Pos of bubble.
-     * @param {number} y - Y-Pos of bubble.
      * @param {Direction} direction - Direction of bubble
      */
-    constructor(x, y, direction) {
-        super(x, y, 96, 96, {
+    constructor(direction) {
+        super(0, 0, 96, 96, {
             top: 12,
             right: 12,
             bottom: 12,
             left: 12
         });
-        this.#startX = x;
         this.#direction = direction;
     }
 
