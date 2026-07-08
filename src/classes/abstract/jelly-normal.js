@@ -24,15 +24,7 @@ export class NormalJellyFish extends JellyFish {
         this.direction = this.direction == DIRECTION.SOUTH ? DIRECTION.NORTH : DIRECTION.SOUTH;
     }
 
-    updateMovement(timedelta) {
-        const speed = 300;
-        const movement = speed * timedelta / 1000;
-        if (this.healthState == HEALTH_STATE.swim) {
-            this.y += this.direction == DIRECTION.SOUTH ? movement : -movement;
-            this.checkDirection();
-        } else if (this.healthState == HEALTH_STATE.dead) {
-            this.y -= 500 * timedelta / 1000;
-            if (this.y <= -this.height) this.onDead?.();
-        }
+    moveSwim(movement) {
+        this.y += this.direction == DIRECTION.SOUTH ? movement : -movement;
     }
 }

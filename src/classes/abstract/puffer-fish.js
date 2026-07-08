@@ -54,7 +54,7 @@ export class PufferFish extends Enemy {
             minX: minX,
             maxX: maxX,
             minY: y - 10,
-            maxY: y + 10
+            maxY: y + 200
         });
     }
 
@@ -67,17 +67,37 @@ export class PufferFish extends Enemy {
         this.mirrorHorzontally = this.direction == DIRECTION.EAST;
     }
 
+    /**
+     * @override
+     * @inheritdoc
+     * @param {number} movement
+     */
+    moveSwim(movement) {
+        this.x += this.direction == DIRECTION.WEST ? -movement : movement;
+    }
+
+    /**
+     * @override
+     * @inheritdoc
+     * @param {number} movement
+     */
+    moveDead(movement) {
+        this.x -= movement;
+        this.y -= movement;
+        if (this.y + this.height <= 0) this.onDead?.();
+    }
+
+    /**
+     * @override
+     * @inheritdoc
+     * @param {number} timedelta
+     */
     updateMovement(timedelta) {
-        let movement;
         if(this.healthState == HEALTH_STATE.swim) {
-            movement = this.movement(400, timedelta);
-            this.x += this.direction == DIRECTION.WEST ? -movement : movement;
-            super.updateMovement();
+            this.moveSwim(this.movement(400, timedelta));
+            this.checkDirection()
         } else if (this.healthState == HEALTH_STATE.dead) {
-            movement = this.movement(1500, timedelta);
-            this.x -= movement;
-            this.y -= movement;
-            if (this.y <= 0) this.onDead?.();
+            this.moveDead(this.movement(1500, timedelta));
         }
     }
     // #endregion
