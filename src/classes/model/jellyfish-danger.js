@@ -10,8 +10,8 @@ import { DIRECTION, HEALTH_STATE } from "../types.js";
 export class DangerousJellyFish extends JellyFish {
     constructor() {
         const limits = {
-            minX: 200,
-            maxX: 900,
+            minX: 3700,
+            maxX: 4400,
             minY: 200,
             maxY: 1000
         }
