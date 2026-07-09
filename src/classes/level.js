@@ -20,6 +20,7 @@ import { Collectable } from "./abstract/collectable.js";
 import { Coin } from "./model/coin.js";
 import { Bubble } from "./abstract/bubble.js";
 import { Enemy } from "./abstract/enemy.js";
+import { Orca } from "./model/orca.js";
 
 /** Manges inner cnavas objects. */
 export class Level {
@@ -32,7 +33,9 @@ export class Level {
     /** @type{Barrier[]} */
     #barries = [];
     /** @type{Enemy[]} */
-    #enemies = []
+    #enemies = [];
+    /** @type{Orca} */
+    #orca;
     /** @type{Collectable[]} */
     #collectables = [];
     /** @type{Bubble[]} */
@@ -52,6 +55,7 @@ export class Level {
         this.#barries = this.#createBarries();
         this.#collectables = this.#createCollectables();
         this.#enemies = this.#createEnemies();
+        this.#orca = new Orca();
         this.#drawings = this.#createDrawings();
         this.#updateables = this.#createUpdatingObjects();
         this.#ctx = ctx;
@@ -142,6 +146,7 @@ export class Level {
         return [
             ...this.#backgrounds,
             ...this.#enemies,
+            this.#orca,
             ...this.#collectables,
             ...this.#bubbles,
             this.#sharkie,
@@ -157,6 +162,7 @@ export class Level {
         return [
             ...this.#collectables,
             ...this.#enemies,
+            this.#orca,
             this.#sharkie,
             ...this.#bubbles
         ]
