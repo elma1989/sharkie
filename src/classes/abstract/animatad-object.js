@@ -51,7 +51,12 @@ export class AnimatedObject extends CollidingObject {
     get healthState() { return this.#healthState; }
 
     set healthState(value) {
+        if (this.deathState()) return;
         if (Object.values(HEALTH_STATE).includes(value) && this.healthState != value) this.#healthState = value;
+    }
+
+    deathState() {
+        return this.healthState == HEALTH_STATE.dead || this.healthState == HEALTH_STATE["dead/poison"] || this.healthState == HEALTH_STATE["dead/electric"]
     }
 
     // #region Animaiton
