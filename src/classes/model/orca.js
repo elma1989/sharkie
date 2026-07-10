@@ -22,6 +22,7 @@ export class Orca extends Enemy {
     }
 
     async load() {
+        this.img = await this.loadImage(ImgHelper.url(ImgHelper.ENEMY["orca/spawn"][0]));
         this.animations.spawn.frames = await this.loadAnimations(ImgHelper.urls(ImgHelper.ENEMY["orca/spawn"]));
         this.animations.swim.frames = await this.loadAnimations(ImgHelper.urls(ImgHelper.ENEMY["orca/swim"]));
         this.animations.attack.frames = await this.loadAnimations(ImgHelper.urls(ImgHelper.ENEMY["orca/attack"]));
@@ -30,6 +31,7 @@ export class Orca extends Enemy {
     }
 
     bringToLife() {
+        this.animationTimer = 0;
         this.healthState = HEALTH_STATE.spawn;
     }
 
@@ -37,6 +39,20 @@ export class Orca extends Enemy {
         super.updateState(timedelta);
         this.#attackTimer += timedelta;
         if (this.#attackTimer >= 5000 && this.healthState == HEALTH_STATE.swim) this.healthState = HEALTH_STATE.attack;
+    }
+
+    updateMovement(timedelta) {
+        let movement = this.movement(400, timedelta);
+        if (this.healthState == HEALTH_STATE.attack) {
+            this.x -= 2 * movement;
+            this.y -= movement;
+        } else {
+            movement /= 4;
+            if (this.x + 2 * movement <= GameConfig.WIDTH * 3 + 450) {
+                this.x += 2 * movement;
+                this.y += movement;
+            }
+        }
     }
 
     // #region Animation
@@ -85,4 +101,8 @@ export class Orca extends Enemy {
     }
     // #endregion
 
+    injure(damage) {
+        super.injure(damage);
+        this.healthState = HEALTH_STATE.hurt;
+    }
 }

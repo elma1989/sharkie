@@ -4,6 +4,7 @@ import { SHAKIE } from '../helper/animation.js';
 import { NormalBubble } from './normal-bubble.js';
 import { PoisonousBubble } from './poison-bubble.js';
 import { HealthyObject } from '../abstract/healty-object.js';
+import { GameConfig } from '../game-config.js';
 
 /**
  * @typedef {import('../types.js').Direction} Direction
@@ -20,6 +21,7 @@ export class Sharkie extends HealthyObject {
     #bubble = null;
     #canThrowBubble = true;
     #isBubbleThrown = false;
+    #calledOrca = false;
 
     constructor(level, ctrl) {
         super(0, 0, 815, 1000, {
@@ -117,8 +119,31 @@ export class Sharkie extends HealthyObject {
         if (this.#ctrl.ctrl.attackBubble) this.#attackBubble();
     }
 
-    updateMovement(timedelta) {
+    /**
+     * Moves to next positon.
+     * @param {number} inputX - Horizintally input.
+     * @param {number} inputY - Vertically input.
+     * @param {number} timedelta - Time to next frame.
+     */
+    #moveToNewPositon(inputX, inputY, timedelta) {
         const speed = 800;
+        const nextX = this.x + inputX * speed * timedelta / 1000;
+        const nextY = this.y + inputY * speed * timedelta / 1000;
+        if (this.#level.canMoveTo(this, nextX, nextY)) {
+            this.x = nextX;
+            this.y = nextY;
+        }
+    }
+
+    /** Checks conditons for call orca. */
+    #checkCallOrca() {
+        if (!this.#calledOrca && this.hitbox.x + this.hitbox.width >= 3 * GameConfig.WIDTH) {
+            this.#calledOrca = true;
+            this.onCallOrca?.();
+        }
+    }
+
+    updateMovement(timedelta) {
         if (this.#isDead()) return;
         const inputs = this.#controlImput();
         this.#checkAttack();
@@ -126,14 +151,8 @@ export class Sharkie extends HealthyObject {
             this.mirrorHorzontally = inputs.moveX < 0;
             if (this.#isIdle()) this.healthState = HEALTH_STATE.swim;
         } else if (this.healthState == HEALTH_STATE.swim) this.healthState = HEALTH_STATE.idle;
-
-        const nextX = this.x + inputs.moveX * speed * timedelta / 1000;
-        const nextY = this.y + inputs.moveY * speed * timedelta / 1000;
-
-        if (this.#level.canMoveTo(this, nextX, nextY)) {
-            this.x = nextX;
-            this.y = nextY;
-        }
+        this.#moveToNewPositon(inputs.moveX, inputs.moveY, timedelta);
+        this.#checkCallOrca();
     }
 
     updateState(timedelta) {
