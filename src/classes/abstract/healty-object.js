@@ -43,7 +43,7 @@ export class HealthyObject extends MovableObject {
      * @param {number} damage - Damage of hurt
      */
     injure(damage) {
-        if (this.#invulnerable) return;
+        if (this.deathState() || this.#invulnerable) return;
         this.#invulnerable = true;
         this.#invulnerableTimer = 0;
         this.#health -= damage;

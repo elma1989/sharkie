@@ -250,6 +250,55 @@ export class ImgHelper {
             '02_Enemy/02_jelly_fish/yellow/dead/2.png',
             '02_Enemy/02_jelly_fish/yellow/dead/3.png',
             '02_Enemy/02_jelly_fish/yellow/dead/4.png'
+        ],
+        'orca/swim': [
+            '02_Enemy/03_orca/swim/1.png',
+            '02_Enemy/03_orca/swim/2.png',
+            '02_Enemy/03_orca/swim/3.png',
+            '02_Enemy/03_orca/swim/4.png',
+            '02_Enemy/03_orca/swim/5.png',
+            '02_Enemy/03_orca/swim/6.png',
+            '02_Enemy/03_orca/swim/7.png',
+            '02_Enemy/03_orca/swim/8.png',
+            '02_Enemy/03_orca/swim/9.png',
+            '02_Enemy/03_orca/swim/10.png',
+            '02_Enemy/03_orca/swim/11.png',
+            '02_Enemy/03_orca/swim/12.png',
+            '02_Enemy/03_orca/swim/13.png'
+        ],
+        'orca/spawn': [
+            '02_Enemy/03_orca/spawn/1.png',
+            '02_Enemy/03_orca/spawn/2.png',
+            '02_Enemy/03_orca/spawn/3.png',
+            '02_Enemy/03_orca/spawn/4.png',
+            '02_Enemy/03_orca/spawn/5.png',
+            '02_Enemy/03_orca/spawn/6.png',
+            '02_Enemy/03_orca/spawn/7.png',
+            '02_Enemy/03_orca/spawn/8.png',
+            '02_Enemy/03_orca/spawn/9.png',
+            '02_Enemy/03_orca/spawn/10.png'
+        ],
+        'orca/attack': [
+            '02_Enemy/03_orca/attack/1.png',
+            '02_Enemy/03_orca/attack/2.png',
+            '02_Enemy/03_orca/attack/3.png',
+            '02_Enemy/03_orca/attack/4.png',
+            '02_Enemy/03_orca/attack/5.png',
+            '02_Enemy/03_orca/attack/6.png'
+        ],
+        'orca/hurt': [
+            '02_Enemy/03_orca/hurt/1.png',
+            '02_Enemy/03_orca/hurt/2.png',
+            '02_Enemy/03_orca/hurt/3.png',
+            '02_Enemy/03_orca/hurt/4.png'
+        ],
+        'orca/dead': [
+            '02_Enemy/03_orca/dead/1.png',
+            '02_Enemy/03_orca/dead/2.png',
+            '02_Enemy/03_orca/dead/3.png',
+            '02_Enemy/03_orca/dead/4.png',
+            '02_Enemy/03_orca/dead/5.png',
+            '02_Enemy/03_orca/dead/6.png'
         ]
     }
 

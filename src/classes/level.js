@@ -20,6 +20,12 @@ import { Collectable } from "./abstract/collectable.js";
 import { Coin } from "./model/coin.js";
 import { Bubble } from "./abstract/bubble.js";
 import { Enemy } from "./abstract/enemy.js";
+import { Orca } from "./model/orca.js";
+import { GreenPufferFish } from "./model/pufferfish-green.js";
+import { OrangePufferFish } from "./model/pufferfish-orange.js";
+import { PinkPufferFish } from "./model/pufferfish-pink.js";
+import { PurpleJellyFish } from "./model/jellyfish-purple.js";
+import { YellowJellyFish } from "./model/jellyfish-yellow.js";
 
 /** Manges inner cnavas objects. */
 export class Level {
@@ -32,7 +38,9 @@ export class Level {
     /** @type{Barrier[]} */
     #barries = [];
     /** @type{Enemy[]} */
-    #enemies = []
+    #enemies = [];
+    /** @type{Orca} */
+    #orca;
     /** @type{Collectable[]} */
     #collectables = [];
     /** @type{Bubble[]} */
@@ -52,6 +60,7 @@ export class Level {
         this.#barries = this.#createBarries();
         this.#collectables = this.#createCollectables();
         this.#enemies = this.#createEnemies();
+        this.#orca = new Orca();
         this.#drawings = this.#createDrawings();
         this.#updateables = this.#createUpdatingObjects();
         this.#ctx = ctx;
@@ -96,7 +105,11 @@ export class Level {
 
     #createEnemies() {
         return [
-            
+            new GreenPufferFish(300, 100, 100, 1600),
+            new OrangePufferFish(600, 300, 100, 1600),
+            new PinkPufferFish(GameConfig.WIDTH + 300, 300, GameConfig.WIDTH + 100, 2 * GameConfig.WIDTH - 100),
+            new PurpleJellyFish(2 * GameConfig.WIDTH, 200, 100, GameConfig.HEIGHT - 100),
+            new YellowJellyFish(3 * GameConfig.WIDTH - 500, 100, 100, 700)
         ]
     }
 
@@ -142,6 +155,7 @@ export class Level {
         return [
             ...this.#backgrounds,
             ...this.#enemies,
+            this.#orca,
             ...this.#collectables,
             ...this.#bubbles,
             this.#sharkie,
@@ -157,6 +171,7 @@ export class Level {
         return [
             ...this.#collectables,
             ...this.#enemies,
+            this.#orca,
             this.#sharkie,
             ...this.#bubbles
         ]
@@ -233,14 +248,18 @@ export class Level {
                     this.#removeBubble(bubble);
                 }
             });
+            if(bubble.isColliding(this.#orca)) {
+                this.#orca.blubb(bubble);
+                this.#removeBubble(bubble);
+            }
         });
     }
 
     #checkEnemyCollision() {
-        if (this.#enemies.length == 0) return;
         this.#enemies.forEach(enemy => {
             if (this.#sharkie.isColliding(enemy)) enemy.hit(this.#sharkie);
         })
+        if (this.#sharkie.isColliding(this.#orca)) this.#sharkie.injure(20, 'poison');
     }
 
     #checkBubbleCollision() {
@@ -371,6 +390,10 @@ export class Level {
         })
     }
 
+    #addCallOrcaEvent() {
+        this.#sharkie.onCallOrca = () => this.#orca.bringToLife();
+    }
+
     /** Adds all events. */
     #addEvents() {
         this.#addFocusEvent();
@@ -378,6 +401,7 @@ export class Level {
         this.#addAllCollectEvents();
         this.#addBubbleEvent();
         this.#addEnemyDeadEvent();
+        this.#addCallOrcaEvent();
     }
     // #endregion
     // #endregion

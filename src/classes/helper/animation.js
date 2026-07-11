@@ -50,3 +50,31 @@ export const SHAKIE = {
         loop: false
     }
 }
+
+export const ORCA = {
+    spawn: {
+        frames: [],
+        duration: 2000,
+        loop: false
+    },
+    swim: {
+        frames: [],
+        duration: 3000,
+        loop: true
+    },
+    attack: {
+        frames: [],
+        duration: 1000,
+        loop: false
+    },
+    hurt: {
+        frames: [],
+        duration: 700,
+        loop: false
+    },
+    dead: {
+        frames: [],
+        duration: 1500,
+        loop: false
+    }
+}
