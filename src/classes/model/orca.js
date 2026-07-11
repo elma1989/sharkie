@@ -3,6 +3,7 @@ import { GameConfig } from "../game-config.js";
 import { ORCA } from "../helper/animation.js";
 import { ImgHelper } from "../helper/img-helper.js";
 import { DIRECTION, HEALTH_STATE } from "../types.js";
+import { PoisonousBubble } from "./poison-bubble.js";
 
 export class Orca extends Enemy {
     #attackTimer = 0;
@@ -104,5 +105,9 @@ export class Orca extends Enemy {
     injure(damage) {
         super.injure(damage);
         this.healthState = HEALTH_STATE.hurt;
+    }
+
+    blubb(bubble) {
+        if (bubble instanceof PoisonousBubble) this.injure(20);
     }
 }

@@ -239,14 +239,18 @@ export class Level {
                     this.#removeBubble(bubble);
                 }
             });
+            if(bubble.isColliding(this.#orca)) {
+                this.#orca.blubb(bubble);
+                this.#removeBubble(bubble);
+            }
         });
     }
 
     #checkEnemyCollision() {
-        if (this.#enemies.length == 0) return;
         this.#enemies.forEach(enemy => {
             if (this.#sharkie.isColliding(enemy)) enemy.hit(this.#sharkie);
         })
+        if (this.#sharkie.isColliding(this.#orca)) this.#sharkie.injure(20, 'poison');
     }
 
     #checkBubbleCollision() {
