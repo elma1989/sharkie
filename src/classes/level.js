@@ -21,6 +21,11 @@ import { Coin } from "./model/coin.js";
 import { Bubble } from "./abstract/bubble.js";
 import { Enemy } from "./abstract/enemy.js";
 import { Orca } from "./model/orca.js";
+import { GreenPufferFish } from "./model/pufferfish-green.js";
+import { OrangePufferFish } from "./model/pufferfish-orange.js";
+import { PinkPufferFish } from "./model/pufferfish-pink.js";
+import { PurpleJellyFish } from "./model/jellyfish-purple.js";
+import { YellowJellyFish } from "./model/jellyfish-yellow.js";
 
 /** Manges inner cnavas objects. */
 export class Level {
@@ -100,7 +105,11 @@ export class Level {
 
     #createEnemies() {
         return [
-            
+            new GreenPufferFish(300, 100, 100, 1600),
+            new OrangePufferFish(600, 300, 100, 1600),
+            new PinkPufferFish(GameConfig.WIDTH + 300, 300, GameConfig.WIDTH + 100, 2 * GameConfig.WIDTH - 100),
+            new PurpleJellyFish(2 * GameConfig.WIDTH, 200, 100, GameConfig.HEIGHT - 100),
+            new YellowJellyFish(3 * GameConfig.WIDTH - 500, 100, 100, 700)
         ]
     }
 
