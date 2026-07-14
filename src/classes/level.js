@@ -26,6 +26,8 @@ import { OrangePufferFish } from "./model/pufferfish-orange.js";
 import { PinkPufferFish } from "./model/pufferfish-pink.js";
 import { PurpleJellyFish } from "./model/jellyfish-purple.js";
 import { YellowJellyFish } from "./model/jellyfish-yellow.js";
+import { Screen } from "./abstract/screen.js";
+import { WinScreen } from "./model/screen-win.js";
 
 /** Manges inner cnavas objects. */
 export class Level {
@@ -45,6 +47,10 @@ export class Level {
     #collectables = [];
     /** @type{Bubble[]} */
     #bubbles = [];
+    /** @type{Screen[]} */
+    #screens = [];
+    /** @type{DrawableObject[]} */
+    #loadings = []
     /** @type{DrawableObject[]} */
     #drawings = [];
     /** @type{AnimatedObject[]} */
@@ -52,6 +58,7 @@ export class Level {
     #lastTime = 0;
     #translationX = 0;
     #frameid = null;
+    #gameEnd = false;
 
     constructor(ctx, ctrl) {
         this.#sharkie = new Sharkie(this, ctrl);
@@ -60,9 +67,11 @@ export class Level {
         this.#barries = this.#createBarries();
         this.#collectables = this.#createCollectables();
         this.#enemies = this.#createEnemies();
+        this.#screens = this.#createScreens();
         this.#orca = new Orca();
         this.#drawings = this.#createDrawings();
         this.#updateables = this.#createUpdatingObjects();
+        this.#loadings = this.#createLoadings();
         this.#ctx = ctx;
         this.#addEvents();
     }
@@ -176,12 +185,34 @@ export class Level {
             ...this.#bubbles
         ]
     }
+
+    /**
+     * Creates a list from all screens.
+     * @returns {Screen[]} All screens.
+     */
+    #createScreens() {
+        return [
+            new WinScreen()
+        ]
+    }
+
+    /**
+     * Creates a list with all things to load.
+     * @returns {DrawableObject[]} All things to load.
+     */
+    #createLoadings() {
+        return [
+            ...this.#drawings,
+            ...this.#screens
+        ]
+    }
+
     // #endregion
 
     // #region Draw
     /** Calls for all drawings the load()-method. */
     async loadDrawings() {
-        await Promise.all(this.#drawings.map(drawing => drawing.load()));
+        await Promise.all(this.#loadings.map(loading => loading.load()));
     }
 
     /** Draws all drawings. */
@@ -199,7 +230,7 @@ export class Level {
      * @param {number} timedelta - Time to next frame.
      */
     #updateAll(timedelta) {
-        this.#updateables.forEach(updateObj => updateObj.update(timedelta));
+        if (!this.#gameEnd) this.#updateables.forEach(updateObj => updateObj.update(timedelta));
     }
 
     /** Adds tranlation event for shakie. */
@@ -387,7 +418,8 @@ export class Level {
     #addEnemyDeadEvent() {
         this.#enemies.forEach(enemy => {
             enemy.onDead = () => this.#removeEnemy(enemy);
-        })
+        });
+        this.#orca.onDead = () => this.#win();
     }
 
     #addCallOrcaEvent() {
@@ -402,6 +434,20 @@ export class Level {
         this.#addBubbleEvent();
         this.#addEnemyDeadEvent();
         this.#addCallOrcaEvent();
+    }
+    // #endregion
+
+    // #region Endgame
+    /** Will be executed on finish of game. */
+    #finish() {
+        this.#gameEnd = true;
+    }
+
+    /** Will be executed, if sharkie wins. */
+    #win() {
+        this.#screens[0].setMiddle(this.translationX);
+        this.#drawings.push(this.#screens[0]);
+        this.#finish();
     }
     // #endregion
     // #endregion
