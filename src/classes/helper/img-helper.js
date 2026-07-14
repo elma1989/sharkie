@@ -321,6 +321,10 @@ export class ImgHelper {
         ]
     }
 
+    static SCREEN = {
+        win: '04_Screen/win.png'
+    }
+
     static get background() { return this.#BACKGROUND; }
 
     static get sharkie() { return this.#SHARKIE; }

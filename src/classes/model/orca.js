@@ -104,7 +104,13 @@ export class Orca extends Enemy {
 
     injure(damage) {
         super.injure(damage);
-        this.healthState = HEALTH_STATE.hurt;
+        if (this.health >= 0) this.healthState = HEALTH_STATE.hurt;
+        else this.prepareDeath();
+    }
+
+    prepareDeath() {
+        this.healthState = HEALTH_STATE.dead;
+        this.onDead?.();
     }
 
     blubb(bubble) {
