@@ -264,6 +264,7 @@ export class Sharkie extends HealthyObject {
     // #endregion
     prepareDeath(attackType) {
         this.healthState = `dead/${attackType}`;
+        this.onDead?.();
     }
 
     /**
