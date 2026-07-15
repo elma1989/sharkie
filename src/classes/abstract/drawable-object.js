@@ -70,6 +70,15 @@ export class DrawableObject {
         if (!resp.ok) throw new Error(`HTTP-Error: ${resp.status}, url: ${url}`);
         return this.#getImage(url);
     }
+
+    /**
+     * Gets a list of images from urls
+     * @param {string[]} urls - Urls for animation.
+     * @returns {Promise<HTMLImageElement[]>}
+     */
+    async loadImages(urls) {
+        return await Promise.all(urls.map(url => this.loadImage(url)));
+    }
     // #endregion
 
     /** Draws an object. */

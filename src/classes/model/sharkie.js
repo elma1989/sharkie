@@ -55,16 +55,16 @@ export class Sharkie extends HealthyObject {
 
     async load() {
         this.img = await this.loadImage(ImgHelper.url(ImgHelper.sharkie.idle[0]));
-        this.animations.idle.frames = await this.loadAnimations(ImgHelper.urls(ImgHelper.sharkie.idle));
-        this.animations.longIdle.frames = await this.loadAnimations(ImgHelper.urls(ImgHelper.sharkie.longIdle));
-        this.animations.swim.frames = await this.loadAnimations(ImgHelper.urls(ImgHelper.sharkie.swim));
-        this.animations['hurt/poison'].frames = await this.loadAnimations(ImgHelper.urls(ImgHelper.sharkie['hurt/poison']));
-        this.animations['hurt/electric'].frames = await this.loadAnimations(ImgHelper.urls(ImgHelper.sharkie['hurt/electric']));
-        this.animations['dead/poison'].frames = await this.loadAnimations(ImgHelper.urls(ImgHelper.sharkie['dead/poison']));
-        this.animations['dead/electric'].frames = await this.loadAnimations(ImgHelper.urls(ImgHelper.sharkie['dead/electric']));
-        this.animations['attack/slap'].frames = await this.loadAnimations(ImgHelper.urls(ImgHelper.sharkie['attack/slap']));
-        this.animations['attack/bubble/normal'].frames = await this.loadAnimations(ImgHelper.urls(ImgHelper.sharkie['attack/bubble/normal']));
-        this.animations['attack/bubble/poison'].frames = await this.loadAnimations(ImgHelper.urls(ImgHelper.sharkie['attack/bubble/poison']));
+        this.animations.idle.frames = await this.loadImages(ImgHelper.urls(ImgHelper.sharkie.idle));
+        this.animations.longIdle.frames = await this.loadImages(ImgHelper.urls(ImgHelper.sharkie.longIdle));
+        this.animations.swim.frames = await this.loadImages(ImgHelper.urls(ImgHelper.sharkie.swim));
+        this.animations['hurt/poison'].frames = await this.loadImages(ImgHelper.urls(ImgHelper.sharkie['hurt/poison']));
+        this.animations['hurt/electric'].frames = await this.loadImages(ImgHelper.urls(ImgHelper.sharkie['hurt/electric']));
+        this.animations['dead/poison'].frames = await this.loadImages(ImgHelper.urls(ImgHelper.sharkie['dead/poison']));
+        this.animations['dead/electric'].frames = await this.loadImages(ImgHelper.urls(ImgHelper.sharkie['dead/electric']));
+        this.animations['attack/slap'].frames = await this.loadImages(ImgHelper.urls(ImgHelper.sharkie['attack/slap']));
+        this.animations['attack/bubble/normal'].frames = await this.loadImages(ImgHelper.urls(ImgHelper.sharkie['attack/bubble/normal']));
+        this.animations['attack/bubble/poison'].frames = await this.loadImages(ImgHelper.urls(ImgHelper.sharkie['attack/bubble/poison']));
     }
 
     /**
@@ -275,6 +275,7 @@ export class Sharkie extends HealthyObject {
     injure(damage, attackType) {
         const health = this.health;
         super.injure(damage);
+        this.onInjure?.(this.health);
         if (this.health <= 0) this.prepareDeath(attackType);
         else if (this.health < health) this.healthState = `hurt/${attackType}`;
     }

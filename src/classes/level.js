@@ -29,6 +29,8 @@ import { YellowJellyFish } from "./model/jellyfish-yellow.js";
 import { Screen } from "./abstract/screen.js";
 import { WinScreen } from "./model/screen-win.js";
 import { LoseScreen } from "./model/screen-lose.js";
+import { Statusbar } from "./abstract/statusbar.js";
+import { SharkieHealthBar } from "./model/status/health-sharkie.js";
 
 /** Manges inner cnavas objects. */
 export class Level {
@@ -50,6 +52,8 @@ export class Level {
     #bubbles = [];
     /** @type{Screen[]} */
     #screens = [];
+    /** @type{Statusbar[]} */
+    #bars = []
     /** @type{DrawableObject[]} */
     #loadings = []
     /** @type{DrawableObject[]} */
@@ -63,12 +67,12 @@ export class Level {
 
     constructor(ctx, ctrl) {
         this.#sharkie = new Sharkie(this, ctrl);
-        this.#sharkieTranslation();
         this.#backgrounds = this.#createBackgrounds();
         this.#barries = this.#createBarries();
         this.#collectables = this.#createCollectables();
         this.#enemies = this.#createEnemies();
         this.#screens = this.#createScreens();
+        this.#bars = this.#createBars();
         this.#orca = new Orca();
         this.#drawings = this.#createDrawings();
         this.#updateables = this.#createUpdatingObjects();
@@ -81,7 +85,7 @@ export class Level {
     get translationX() {return this.#translationX; }
 
     set translationX(value) {
-        if (value < 0 || value > 5730) return;
+        if (value < 0 || value > 3 * GameConfig.WIDTH) return;
         this.#translationX = value;
     }
 
@@ -157,6 +161,12 @@ export class Level {
         ]
     }
 
+    #createBars() {
+        return [
+            new SharkieHealthBar()
+        ]
+    }
+
     /**
      * Combines all object-lists to a huge list.
      * @returns {DrawableObject[]} All drawings.
@@ -205,6 +215,7 @@ export class Level {
     #createLoadings() {
         return [
             ...this.#drawings,
+            ...this.#bars,
             ...this.#screens
         ]
     }
@@ -222,6 +233,9 @@ export class Level {
         this.#ctx.clearRect(0, 0, GameConfig.WIDTH, GameConfig.HEIGHT);
         this.#ctx.translate(-this.#translationX, 0);
         this.#drawings.forEach(drawing => drawing.draw(this.#ctx));
+        this.#bars.forEach(bar => {
+            if (bar.active) bar.draw(this.#ctx);
+        });
         this.#ctx.translate(this.#translationX, 0);
     }
     // #endregion
@@ -233,13 +247,6 @@ export class Level {
      */
     #updateAll(timedelta) {
         if (!this.#gameEnd) this.#updateables.forEach(updateObj => updateObj.update(timedelta));
-    }
-
-    /** Adds tranlation event for shakie. */
-    #sharkieTranslation() {
-        this.#sharkie.onMoveX = (xPos) => {
-            this.translationX = xPos;
-        }
     }
 
     /**
@@ -400,6 +407,16 @@ export class Level {
         })
     }
 
+    /** Adds events for shakie. */
+    #addSharkieEvents() {
+        this.#sharkie.onMoveX = (xPos) => {
+            this.translationX = xPos;
+            this.#bars.forEach(bar => bar.x = xPos);
+        }
+
+        this.#sharkie.onInjure = (helth) => this.#bars[0].value = helth;
+    }
+
     /** Adds events for all collectables. */
     #addAllCollectEvents() {
         this.#collectables.forEach(collectable => {
@@ -433,6 +450,7 @@ export class Level {
     #addEvents() {
         this.#addFocusEvent();
         this.#addBlurEvent();
+        this.#addSharkieEvents();
         this.#addAllCollectEvents();
         this.#addBubbleEvent();
         this.#addDeadEvents();

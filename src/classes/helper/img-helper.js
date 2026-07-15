@@ -326,6 +326,17 @@ export class ImgHelper {
         lose: '04_Screen/lose.png'
     }
 
+    static STATUS = {
+        'health/sharkie': [
+            '05_Status/01_health_sharkie/00.png',
+            '05_Status/01_health_sharkie/20.png',
+            '05_Status/01_health_sharkie/40.png',
+            '05_Status/01_health_sharkie/60.png',
+            '05_Status/01_health_sharkie/80.png',
+            '05_Status/01_health_sharkie/100.png'
+        ]
+    }
+
     static get background() { return this.#BACKGROUND; }
 
     static get sharkie() { return this.#SHARKIE; }

@@ -19,8 +19,8 @@ export class PinkPufferFish extends PufferFish {
         this.deathImg.empty = await this.loadImage(ImgHelper.url(ImgHelper.ENEMY["pufferfish/pink/dead/empty"]));
         this.deathImg.transition = await this.loadImage(ImgHelper.url(ImgHelper.ENEMY["pufferfish/pink/dead/transition"]));
         this.deathImg.full = await this.loadImage(ImgHelper.url(ImgHelper.ENEMY["pufferfish/pink/dead/full"]));
-        this.animations['swim/empty'].frames = await this.loadAnimations(ImgHelper.urls(ImgHelper.ENEMY["pufferfish/pink/swim/empty"]));
-        this.animations['swim/transition'].frames = await this.loadAnimations(ImgHelper.urls(ImgHelper.ENEMY["pufferfish/pink/swim/transition"]));
-        this.animations['swim/full'].frames = await this.loadAnimations(ImgHelper.urls(ImgHelper.ENEMY["pufferfish/pink/swim/full"]));
+        this.animations['swim/empty'].frames = await this.loadImages(ImgHelper.urls(ImgHelper.ENEMY["pufferfish/pink/swim/empty"]));
+        this.animations['swim/transition'].frames = await this.loadImages(ImgHelper.urls(ImgHelper.ENEMY["pufferfish/pink/swim/transition"]));
+        this.animations['swim/full'].frames = await this.loadImages(ImgHelper.urls(ImgHelper.ENEMY["pufferfish/pink/swim/full"]));
     }
 }
