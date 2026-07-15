@@ -322,7 +322,8 @@ export class ImgHelper {
     }
 
     static SCREEN = {
-        win: '04_Screen/win.png'
+        win: '04_Screen/win.png',
+        lose: '04_Screen/lose.png'
     }
 
     static get background() { return this.#BACKGROUND; }
