@@ -28,6 +28,7 @@ import { PurpleJellyFish } from "./model/jellyfish-purple.js";
 import { YellowJellyFish } from "./model/jellyfish-yellow.js";
 import { Screen } from "./abstract/screen.js";
 import { WinScreen } from "./model/screen-win.js";
+import { LoseScreen } from "./model/screen-lose.js";
 
 /** Manges inner cnavas objects. */
 export class Level {
@@ -192,7 +193,8 @@ export class Level {
      */
     #createScreens() {
         return [
-            new WinScreen()
+            new WinScreen(),
+            new LoseScreen()
         ]
     }
 
@@ -415,7 +417,8 @@ export class Level {
         });
     }
 
-    #addEnemyDeadEvent() {
+    #addDeadEvents() {
+        this.#sharkie.onDead = () => this.#lose();
         this.#enemies.forEach(enemy => {
             enemy.onDead = () => this.#removeEnemy(enemy);
         });
@@ -432,7 +435,7 @@ export class Level {
         this.#addBlurEvent();
         this.#addAllCollectEvents();
         this.#addBubbleEvent();
-        this.#addEnemyDeadEvent();
+        this.#addDeadEvents();
         this.#addCallOrcaEvent();
     }
     // #endregion
@@ -443,10 +446,25 @@ export class Level {
         this.#gameEnd = true;
     }
 
+    /**
+     * Activates a screen from index.
+     * @param {number} index - Index of screen.
+     */
+    #activateScreen(index) {
+        if (index < 0 || index >= this.#screens.length) return;
+        this.#screens[index].setMiddle(this.translationX);
+        this.#drawings.push(this.#screens[index]);
+    }
+
     /** Will be executed, if sharkie wins. */
     #win() {
-        this.#screens[0].setMiddle(this.translationX);
-        this.#drawings.push(this.#screens[0]);
+        this.#activateScreen(0);
+        this.#finish();
+    }
+
+    /** Will be executed, if sharkie loses. */
+    #lose() {
+        this.#activateScreen(1)
         this.#finish();
     }
     // #endregion
