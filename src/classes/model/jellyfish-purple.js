@@ -16,7 +16,7 @@ export class PurpleJellyFish extends NormalJellyFish {
 
     async load() {
         this.img = await this.loadImage(ImgHelper.url(ImgHelper.ENEMY["jellyfish/purple/swim"][0]));
-        this.animations.swim.frames = await this.loadAnimations(ImgHelper.urls(ImgHelper.ENEMY["jellyfish/purple/swim"]));
-        this.animations.dead.frames = await this.loadAnimations(ImgHelper.urls(ImgHelper.ENEMY["jellyfish/purple/dead"]));
+        this.animations.swim.frames = await this.loadImages(ImgHelper.urls(ImgHelper.ENEMY["jellyfish/purple/swim"]));
+        this.animations.dead.frames = await this.loadImages(ImgHelper.urls(ImgHelper.ENEMY["jellyfish/purple/dead"]));
     }
 }

@@ -60,15 +60,6 @@ export class AnimatedObject extends CollidingObject {
     }
 
     // #region Animaiton
-    /**
-     * Gets a list of images from urls
-     * @param {string[]} urls - Urls for animation.
-     * @returns {Promise<HTMLImageElement[]>}
-     */
-    async loadAnimations(urls) {
-        return await Promise.all(urls.map(url => this.loadImage(url)));
-    }
-
     /** Changes to next image. */
     #changeImage() {
         if (!this.#currentAnimation) return;

@@ -24,11 +24,11 @@ export class Orca extends Enemy {
 
     async load() {
         this.img = await this.loadImage(ImgHelper.url(ImgHelper.ENEMY["orca/spawn"][0]));
-        this.animations.spawn.frames = await this.loadAnimations(ImgHelper.urls(ImgHelper.ENEMY["orca/spawn"]));
-        this.animations.swim.frames = await this.loadAnimations(ImgHelper.urls(ImgHelper.ENEMY["orca/swim"]));
-        this.animations.attack.frames = await this.loadAnimations(ImgHelper.urls(ImgHelper.ENEMY["orca/attack"]));
-        this.animations.hurt.frames = await this.loadAnimations(ImgHelper.urls(ImgHelper.ENEMY["orca/hurt"]));
-        this.animations.dead.frames = await this.loadAnimations(ImgHelper.urls(ImgHelper.ENEMY["orca/dead"]));
+        this.animations.spawn.frames = await this.loadImages(ImgHelper.urls(ImgHelper.ENEMY["orca/spawn"]));
+        this.animations.swim.frames = await this.loadImages(ImgHelper.urls(ImgHelper.ENEMY["orca/swim"]));
+        this.animations.attack.frames = await this.loadImages(ImgHelper.urls(ImgHelper.ENEMY["orca/attack"]));
+        this.animations.hurt.frames = await this.loadImages(ImgHelper.urls(ImgHelper.ENEMY["orca/hurt"]));
+        this.animations.dead.frames = await this.loadImages(ImgHelper.urls(ImgHelper.ENEMY["orca/dead"]));
     }
 
     bringToLife() {
