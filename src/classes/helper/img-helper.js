@@ -342,6 +342,14 @@ export class ImgHelper {
             '05_Status/02_health_orca/60.png',
             '05_Status/02_health_orca/80.png',
             '05_Status/02_health_orca/100.png'
+        ],
+        coin: [
+            '05_Status/03_coin/00.png',
+            '05_Status/03_coin/20.png',
+            '05_Status/03_coin/40.png',
+            '05_Status/03_coin/60.png',
+            '05_Status/03_coin/80.png',
+            '05_Status/03_coin/100.png'
         ]
     }
 
