@@ -334,6 +334,14 @@ export class ImgHelper {
             '05_Status/01_health_sharkie/60.png',
             '05_Status/01_health_sharkie/80.png',
             '05_Status/01_health_sharkie/100.png'
+        ],
+        'health/orca': [
+            '05_Status/02_health_orca/00.png',
+            '05_Status/02_health_orca/20.png',
+            '05_Status/02_health_orca/40.png',
+            '05_Status/02_health_orca/60.png',
+            '05_Status/02_health_orca/80.png',
+            '05_Status/02_health_orca/100.png'
         ]
     }
 
