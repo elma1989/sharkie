@@ -445,7 +445,14 @@ export class Level {
     }
 
     #addCallOrcaEvent() {
-        this.#sharkie.onCallOrca = () => this.#orca.bringToLife();
+        this.#sharkie.onCallOrca = () => {
+            this.#orca.bringToLife();
+            this.#bars[1].enable();
+        }
+    }
+
+    #addOrcaInjureEvent() {
+        this.#orca.onInjure = (health) => this.#bars[1].value = health;
     }
 
     /** Adds all events. */
@@ -457,6 +464,7 @@ export class Level {
         this.#addBubbleEvent();
         this.#addDeadEvents();
         this.#addCallOrcaEvent();
+        this.#addOrcaInjureEvent();
     }
     // #endregion
 
