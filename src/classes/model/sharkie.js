@@ -40,9 +40,10 @@ export class Sharkie extends HealthyObject {
 
     set x(value) {
         const newX = this.x + value;
-        if (newX < -280 || newX > 13300) return;
+        const oldX = this.x;
+        if (newX < -280) return;
         super.x = value;
-        this.onMoveX?.(this.x);
+        if (oldX != value) this.onMoveX?.(this.x);
     }
 
     get y() { return super.y; }
@@ -150,8 +151,8 @@ export class Sharkie extends HealthyObject {
         if (inputs.moving) {
             this.mirrorHorzontally = inputs.moveX < 0;
             if (this.#isIdle()) this.healthState = HEALTH_STATE.swim;
+            this.#moveToNewPositon(inputs.moveX, inputs.moveY, timedelta);
         } else if (this.healthState == HEALTH_STATE.swim) this.healthState = HEALTH_STATE.idle;
-        this.#moveToNewPositon(inputs.moveX, inputs.moveY, timedelta);
         this.#checkCallOrca();
     }
 
@@ -176,6 +177,7 @@ export class Sharkie extends HealthyObject {
         const duration = this.durationFrame;
         if (this.animationTimer >= duration) {
             this.playAnimation(this.healthState);
+            if (this.#isDead() && this.curImg == this.lengthAnimation) this.onDead?.();
             this.animationTimer -= duration;
         }
     }
@@ -264,7 +266,6 @@ export class Sharkie extends HealthyObject {
     // #endregion
     prepareDeath(attackType) {
         this.healthState = `dead/${attackType}`;
-        this.onDead?.();
     }
 
     /**
