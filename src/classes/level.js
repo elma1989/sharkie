@@ -31,6 +31,7 @@ import { WinScreen } from "./model/screen-win.js";
 import { LoseScreen } from "./model/screen-lose.js";
 import { Statusbar } from "./abstract/statusbar.js";
 import { SharkieHealthBar } from "./model/status/health-sharkie.js";
+import { OrcaHealthBar } from "./model/status/health-orca.js";
 
 /** Manges inner cnavas objects. */
 export class Level {
@@ -163,7 +164,8 @@ export class Level {
 
     #createBars() {
         return [
-            new SharkieHealthBar()
+            new SharkieHealthBar(),
+            new OrcaHealthBar()
         ]
     }
 

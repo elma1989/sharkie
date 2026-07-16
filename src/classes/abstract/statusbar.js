@@ -47,4 +47,9 @@ export class Statusbar extends DrawableObject {
         if (value >= 100) return 5;
         return Math.floor(value / 20);
     }
+
+    /** Enables status bar. */
+    enable() {
+        this.#active = true;
+    }
 }
