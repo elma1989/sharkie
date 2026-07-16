@@ -19,10 +19,6 @@ export class Statusbar extends DrawableObject {
         this.#active = active;
     }
 
-    get x() { return super.x; }
-
-    set x(value) { super.x = value < 0 ? 0 : (value > 3 * GameConfig.WIDTH ? 3 * GameConfig.WIDTH : value) }
-
     get active() { return this.#active; }
 
     get stats() { return this.#stats; }
@@ -50,5 +46,10 @@ export class Statusbar extends DrawableObject {
         if (value <= 20) return 1;
         if (value >= 100) return 5;
         return Math.floor(value / 20);
+    }
+
+    /** Enables status bar. */
+    enable() {
+        this.#active = true;
     }
 }

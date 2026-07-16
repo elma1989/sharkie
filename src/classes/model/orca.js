@@ -97,6 +97,7 @@ export class Orca extends Enemy {
         const duration = this.durationFrame;
         if (this.animationTimer >= duration) {
             this.#chooseAnimation();
+            if (this.deathState() && this.curImg == this.lengthAnimation) this.onDead?.();
             this.animationTimer -= duration;
         }
     }
@@ -104,13 +105,13 @@ export class Orca extends Enemy {
 
     injure(damage) {
         super.injure(damage);
+        this.onInjure?.(this.health);
         if (this.health >= 0) this.healthState = HEALTH_STATE.hurt;
         else this.prepareDeath();
     }
 
     prepareDeath() {
         this.healthState = HEALTH_STATE.dead;
-        this.onDead?.();
     }
 
     blubb(bubble) {

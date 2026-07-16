@@ -48,6 +48,11 @@ export class AnimatedObject extends CollidingObject {
         this.#currentImg = value;
     }
 
+    get lengthAnimation() {
+        if (!this.#currentAnimation) return 0;
+        return this.animations[this.#currentAnimation].frames.length;
+    }
+
     get healthState() { return this.#healthState; }
 
     set healthState(value) {

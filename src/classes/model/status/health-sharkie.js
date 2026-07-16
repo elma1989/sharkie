@@ -1,8 +1,8 @@
-import { Statusbar } from "../../abstract/statusbar.js";
+import { LeftStatusbar } from "../../abstract/statusbar-left.js";
 import { ImgHelper } from "../../helper/img-helper.js";
 
 /** A statusbar for Sharkie's health. */
-export class SharkieHealthBar extends Statusbar {
+export class SharkieHealthBar extends LeftStatusbar {
     constructor() {
         super(0, 0, 100);
     }
