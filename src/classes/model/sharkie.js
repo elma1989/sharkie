@@ -197,6 +197,7 @@ export class Sharkie extends HealthyObject {
     /** Adds a coin. */
     addCoin() {
         this.#coins++;
+        this.onCollectCoin?.(this.#coins / 20 * 100);
     }
     // #endregion
 

@@ -3,6 +3,11 @@ import { Statusbar } from "./statusbar.js";
 
 /** A statusbar on the left of canvas */
 export class LeftStatusbar extends Statusbar {
+    /**
+     * Creates a left status bar.
+     * @param {number} y Y-Pos of bar.
+     * @param {number} value - Value of bar.
+     */
     constructor(y, value) {
         super(0, y, value);
     }
