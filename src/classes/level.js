@@ -32,6 +32,7 @@ import { LoseScreen } from "./model/screen-lose.js";
 import { Statusbar } from "./abstract/statusbar.js";
 import { SharkieHealthBar } from "./model/status/health-sharkie.js";
 import { OrcaHealthBar } from "./model/status/health-orca.js";
+import { CoinBar } from "./model/status/coin.js";
 
 /** Manges inner cnavas objects. */
 export class Level {
@@ -165,7 +166,8 @@ export class Level {
     #createBars() {
         return [
             new SharkieHealthBar(),
-            new OrcaHealthBar()
+            new OrcaHealthBar(),
+            new CoinBar()
         ]
     }
 
@@ -416,7 +418,8 @@ export class Level {
             this.#bars.forEach(bar => bar.x = xPos);
         }
 
-        this.#sharkie.onInjure = (helth) => this.#bars[0].value = helth;
+        this.#sharkie.onInjure = (health) => this.#bars[0].value = health;
+        this.#sharkie.onCollectCoin = (percentage) => this.#bars[2].value = percentage;
     }
 
     /** Adds events for all collectables. */
