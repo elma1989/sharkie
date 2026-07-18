@@ -323,7 +323,8 @@ export class ImgHelper {
 
     static SCREEN = {
         win: '04_Screen/win.png',
-        lose: '04_Screen/lose.png'
+        lose: '04_Screen/lose.png',
+        title: '04_Screen/title.png'
     }
 
     static STATUS = {
