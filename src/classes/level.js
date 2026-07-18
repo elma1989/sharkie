@@ -34,6 +34,7 @@ import { SharkieHealthBar } from "./model/status/health-sharkie.js";
 import { OrcaHealthBar } from "./model/status/health-orca.js";
 import { CoinBar } from "./model/status/coin.js";
 import { PoisonBar } from "./model/status/poison.js";
+import { TitleScreen } from "./model/screen-title.js";
 
 /** Manges inner cnavas objects. */
 export class Level {
@@ -210,7 +211,8 @@ export class Level {
     #createScreens() {
         return [
             new WinScreen(),
-            new LoseScreen()
+            new LoseScreen(),
+            new TitleScreen()
         ]
     }
 
@@ -241,12 +243,17 @@ export class Level {
         });
     }
 
+    #drawTitleScreen() {
+        if (this.#screens.length > 2) this.#screens[2].draw(this.#ctx);
+    }
+
     /** Draws all drawings. */
     #drawAll() {
         this.#ctx.clearRect(0, 0, GameConfig.WIDTH, GameConfig.HEIGHT);
         this.#ctx.translate(-this.#translationX, 0);
         this.#drawings.forEach(drawing => drawing.draw(this.#ctx));
         this.#drawBars();
+        this.#drawTitleScreen();
         this.#ctx.translate(this.#translationX, 0);
     }
     // #endregion
