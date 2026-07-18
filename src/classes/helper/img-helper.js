@@ -350,6 +350,14 @@ export class ImgHelper {
             '05_Status/03_coin/60.png',
             '05_Status/03_coin/80.png',
             '05_Status/03_coin/100.png'
+        ],
+        posion: [
+            '05_Status/04_poison/00.png',
+            '05_Status/04_poison/20.png',
+            '05_Status/04_poison/40.png',
+            '05_Status/04_poison/60.png',
+            '05_Status/04_poison/80.png',
+            '05_Status/04_poison/100.png'
         ]
     }
 
