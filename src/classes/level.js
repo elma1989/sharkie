@@ -33,6 +33,7 @@ import { Statusbar } from "./abstract/statusbar.js";
 import { SharkieHealthBar } from "./model/status/health-sharkie.js";
 import { OrcaHealthBar } from "./model/status/health-orca.js";
 import { CoinBar } from "./model/status/coin.js";
+import { PoisonBar } from "./model/status/poison.js";
 
 /** Manges inner cnavas objects. */
 export class Level {
@@ -167,7 +168,8 @@ export class Level {
         return [
             new SharkieHealthBar(),
             new OrcaHealthBar(),
-            new CoinBar()
+            new CoinBar(),
+            new PoisonBar()
         ]
     }
 
@@ -232,14 +234,19 @@ export class Level {
         await Promise.all(this.#loadings.map(loading => loading.load()));
     }
 
+    /** Draws the bars. */
+    #drawBars() {
+        this.#bars.forEach(bar => {
+            if (bar.active) bar.draw(this.#ctx);
+        });
+    }
+
     /** Draws all drawings. */
     #drawAll() {
         this.#ctx.clearRect(0, 0, GameConfig.WIDTH, GameConfig.HEIGHT);
         this.#ctx.translate(-this.#translationX, 0);
         this.#drawings.forEach(drawing => drawing.draw(this.#ctx));
-        this.#bars.forEach(bar => {
-            if (bar.active) bar.draw(this.#ctx);
-        });
+        this.#drawBars();
         this.#ctx.translate(this.#translationX, 0);
     }
     // #endregion
@@ -420,6 +427,7 @@ export class Level {
 
         this.#sharkie.onInjure = (health) => this.#bars[0].value = health;
         this.#sharkie.onCollectCoin = (percentage) => this.#bars[2].value = percentage;
+        this.#sharkie.onCollectJar = (relJars) => this.#bars[3].value = relJars;
     }
 
     /** Adds events for all collectables. */

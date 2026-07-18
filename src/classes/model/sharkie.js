@@ -192,6 +192,7 @@ export class Sharkie extends HealthyObject {
     /** Adds a poisonous jar. */
     addPoisonousJar() {
         this.#poisonousJars++;
+        this.onCollectJar?.(this.#poisonousJars / 5 * 100);
     }
 
     /** Adds a coin. */
