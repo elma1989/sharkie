@@ -277,6 +277,10 @@ export class Sharkie extends HealthyObject {
      */
     injure(damage, attackType) {
         const health = this.health;
+        if (this.#isAttack()) {
+            this.#bubble = null;
+            this.#isBubbleThrown = false;
+        }
         super.injure(damage);
         this.onInjure?.(this.health);
         if (this.health <= 0) this.prepareDeath(attackType);
