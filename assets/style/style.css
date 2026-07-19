@@ -1,5 +1,7 @@
 @import url(./general.css);
 @import url(./fonts.css);
+@import url(./canvas.css);
+@import url(./button.css);
 
 * {
     margin: 0;
@@ -36,12 +38,4 @@ h1 {
     display: flex;
     justify-content: center;
     align-items: center;
-}
-
-.canvas-container {
-    width: 960px;
-    height: 540px;
-    display: grid;
-    grid-template-columns: 1fr;
-    grid-template-rows: 1fr;
 }
