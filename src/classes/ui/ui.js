@@ -1,3 +1,4 @@
+import { MenuButton } from "./btn-menu.js";
 import { RunButton } from "./btn-run.js";
 import { Canvas } from "./canvas.js";
 
@@ -16,7 +17,8 @@ export class UI {
 
     #createControlButtons() {
         return {
-            run: new RunButton()
+            run: new RunButton(),
+            menu: new MenuButton()
         }
     }
 
