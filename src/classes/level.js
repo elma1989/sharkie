@@ -211,8 +211,7 @@ export class Level {
     #createScreens() {
         return [
             new WinScreen(),
-            new LoseScreen(),
-            new TitleScreen()
+            new LoseScreen()
         ]
     }
 
@@ -224,13 +223,22 @@ export class Level {
         return [
             ...this.#drawings,
             ...this.#bars,
-            ...this.#screens
+            ...this.#screens.slice(0,2)
         ]
     }
 
     // #endregion
 
     // #region Draw
+    /** Draws title screen at first. */
+    async showTitle() {
+        if (this.#screens.length < 3) {
+            this.#screens.push(new TitleScreen())
+            await this.#screens[2].load();
+            this.#screens[2].draw(this.#ctx);
+        }
+    }
+
     /** Calls for all drawings the load()-method. */
     async loadDrawings() {
         await Promise.all(this.#loadings.map(loading => loading.load()));
@@ -358,6 +366,10 @@ export class Level {
     }
 
     // #region Object Management
+    removeTitleScreen() {
+        this.#screens.splice(2, 1);
+    }
+
     /**
      * Adds bubble to level.
      * @param {Bubble} bubble - Bubble to add.
@@ -490,6 +502,7 @@ export class Level {
     /** Will be executed on finish of game. */
     #finish() {
         this.#gameEnd = true;
+        this.onEndGame?.();
     }
 
     /**
