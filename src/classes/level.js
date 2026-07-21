@@ -54,6 +54,7 @@ export class Level {
     #collectables = [];
     /** @type{Bubble[]} */
     #bubbles = [];
+    #titleScreen = null;
     /** @type{Screen[]} */
     #screens = [];
     /** @type{Statusbar[]} */
@@ -231,12 +232,10 @@ export class Level {
 
     // #region Draw
     /** Draws title screen at first. */
-    async showTitle() {
-        if (this.#screens.length < 3) {
-            this.#screens.push(new TitleScreen())
-            await this.#screens[2].load();
-            this.#screens[2].draw(this.#ctx);
-        }
+    async loadTitle() {
+        const title = new TitleScreen();
+        await title.load();
+        this.#titleScreen = title;
     }
 
     /** Calls for all drawings the load()-method. */
@@ -251,17 +250,18 @@ export class Level {
         });
     }
 
-    #drawTitleScreen() {
-        if (this.#screens.length > 2) this.#screens[2].draw(this.#ctx);
+    drawTitleScreen() {
+        this.#titleScreen?.draw(this.#ctx);
     }
 
     /** Draws all drawings. */
     #drawAll() {
+        if (this.#gameEnd) return;
         this.#ctx.clearRect(0, 0, GameConfig.WIDTH, GameConfig.HEIGHT);
         this.#ctx.translate(-this.#translationX, 0);
         this.#drawings.forEach(drawing => drawing.draw(this.#ctx));
         this.#drawBars();
-        this.#drawTitleScreen();
+        this.drawTitleScreen();
         this.#ctx.translate(this.#translationX, 0);
     }
     // #endregion
@@ -367,7 +367,7 @@ export class Level {
 
     // #region Object Management
     removeTitleScreen() {
-        this.#screens.splice(2, 1);
+        this.#titleScreen = null;
     }
 
     /**
@@ -501,6 +501,7 @@ export class Level {
     // #region Endgame
     /** Will be executed on finish of game. */
     #finish() {
+        this.#drawAll();
         this.#gameEnd = true;
         this.onEndGame?.();
     }

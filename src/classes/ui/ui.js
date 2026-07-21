@@ -38,12 +38,19 @@ export class UI {
         this.ctrlBtns.run.description = 'LOADING';
     }
 
-    /**
-     * Shows and hides all control buttons.
-     * @param {boolean} view true = show buttons, false = Hide buttons.
-     */
-    switchControlButtons(view) {
-        Object.keys(this.ctrlBtns).map(btn => this.ctrlBtns[btn]).forEach(btn => btn.visible = view);
+    /** Shows all control buttons exclude menu-button. */
+    showControlButtons() {
+        Object.values(this.ctrlBtns).forEach(btn => btn.visible = btn instanceof MenuButton ? false : true);
+    }
+
+    /** Hides all control butttons. */
+    hideControlButtons() {
+        Object.values(this.ctrlBtns).forEach(btn => btn.visible = false);
+    }
+
+    /** Shows Try again and Menu - Button */
+    showAfterGameButtons() {
+        Object.values(this.ctrlBtns).slice(0,2).forEach(btn => btn.visible = true);
     }
     // #endregion
 }
