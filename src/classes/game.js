@@ -18,26 +18,34 @@ export class Game {
     // #region Methods
     /** Will be executed after create of game. */
     async init() {
-        await this.#level.showTitle();
+        await this.#level.loadTitle();
+        this.#level.drawTitleScreen()
         await this.#level.loadDrawings();
         this.#addEvents();
         this.#ui.enambleRunButton('Start');
     }
 
+    async #secondPrepare() {
+        this.#ui.disableRunButton();
+        this.#ui.showAfterGameButtons();
+        this.#level = new Level(this.#ui.canvas.ctx, this.#ctrl);
+        await this.#level.loadTitle();
+        this.#addEndGameEvent();
+        await this.#level.loadDrawings();
+        this.#ui.enambleRunButton('Try again');
+    }
+
     #startGame() {
         this.#level.removeTitleScreen();
-        this.#ui.switchControlButtons(false);
+        this.#ui.hideControlButtons();
         this.#level.bringEnemiesToLife();
         this.#level.gameLoop(0);
     }
 
-    async #secondPrepare() {
-        this.#ui.disableRunButton();
-        this.#ui.switchControlButtons(true);
-        this.#level = new Level(this.#ui.canvas.ctx, this.#ctrl);
-        this.#addEndGameEvent();
-        await this.#level.loadDrawings();
-        this.#ui.enambleRunButton('Try again');
+    #showMain() {
+        this.#level.drawTitleScreen();
+        this.#ui.ctrlBtns.run.description = 'Start';
+        this.#ui.showControlButtons()
     }
 
     #addEvents() {
@@ -47,6 +55,7 @@ export class Game {
 
     #addButtonRunEvent() {
         this.#ui.ctrlBtns.run.onPointerDown = () => this.#startGame();
+        this.#ui.ctrlBtns.menu.onPointerDown = () => this.#showMain();
     }
 
     #addEndGameEvent() {
