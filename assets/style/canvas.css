@@ -10,4 +10,5 @@
 
 .cvs-full {
     grid-area: 1 / 1 / span 3 / span 3;
+    border-radius: 1rem;
 }
