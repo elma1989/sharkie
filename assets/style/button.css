@@ -4,6 +4,7 @@ button {
 
 .btn-control {
     width: 80%;
+    z-index: 1;
     font-size: 2rem;
     background: #8f067f;
     color: white;
@@ -23,6 +24,19 @@ button {
     border-color: #0080ff;
 }
 
+.btn-close {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 2rem;
+    height: 2rem;
+    background: #c00000;
+    color: white;
+    padding: 0.25rem;
+    border: 1pt solid white;
+    border-radius: 50%;
+}
+
 .waiting {
     cursor: wait;
 }
@@ -31,6 +45,6 @@ button {
     grid-area: run;
 }
 
-#btn-menu {
+#btn-menu, #btn-controls {
     grid-area: second;
 }
