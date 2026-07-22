@@ -83,4 +83,26 @@ export class UI {
         Object.values(this.ctrlBtns).slice(0,2).forEach(btn => btn.visible = true);
     }
     // #endregion
+
+    // #region Overlay-Control
+    /**
+     * Opens an overlay.
+     * @param {string} name - Name of overlay
+     */
+    openOverlay(name) {
+        if (!Object.keys(this.overlays).includes(name)) return;
+        this.hideControlButtons();
+        this.overlays[name].show();
+    }
+
+    /**
+     * Closes an overlay.
+     * @param {string} name - Name of overlay.
+     */
+    closeOverlay(name) {
+        if (!Object.keys(this.overlays).includes(name)) return;
+        this.overlays[name].hide();
+        this.showControlButtons();
+    }
+    // #endregion
 }

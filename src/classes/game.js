@@ -18,10 +18,10 @@ export class Game {
     // #region Methods
     /** Will be executed after create of game. */
     async init() {
+        this.#addEvents();
         await this.#level.loadTitle();
         this.#level.drawTitleScreen()
         await this.#level.loadDrawings();
-        this.#addEvents();
         this.#ui.enambleRunButton('Start');
     }
 
@@ -49,13 +49,15 @@ export class Game {
     }
 
     #addEvents() {
-        this.#addButtonRunEvent();
+        this.#addButtonEvents();
         this.#addEndGameEvent();
     }
 
-    #addButtonRunEvent() {
+    #addButtonEvents() {
         this.#ui.ctrlBtns.run.onPointerDown = () => this.#startGame();
         this.#ui.ctrlBtns.menu.onPointerDown = () => this.#showMain();
+        this.#ui.ctrlBtns.controls.onPointerDown = () => this.#ui.openOverlay('ctrl');
+        this.#ui.closeBtns.ctrl.onPointerDown = () => this.#ui.closeOverlay('ctrl');
     }
 
     #addEndGameEvent() {
