@@ -7,13 +7,12 @@ export class TextButton extends Button {
     /**
      * Creates a text button.
      * @param {strring} id - ID of button.
-     * @param {string} description - Description of button
      * @param {boolean} disabled - True for disabled button (Default: false)
      * @param {visible} visible - True if it should be visible (Default: true)
      */
-    constructor(id, description, disabled = false, visible = true) {
+    constructor(id, disabled = false, visible = true) {
         super(id, disabled, visible);
-        this.description = description;
+        this.#description = this.element.innerText;
     }
 
     get description() { return this.#description; }
