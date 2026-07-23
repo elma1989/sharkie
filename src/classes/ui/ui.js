@@ -1,8 +1,10 @@
 import { TextButton } from "../abstract/button-text.js";
 import { Overlay } from "../abstract/overlay.js";
 import { ControlsCloseButton } from "./btn-close-ctrl.js";
+import { RulesCloseButton } from "./btn-close-rules.js";
 import { ControlsButton } from "./btn-controls.js";
 import { MenuButton } from "./btn-menu.js";
+import { RulesButton } from "./btn-rules.js";
 import { RunButton } from "./btn-run.js";
 import { Canvas } from "./canvas.js";
 import { ControlsOverlay } from "./overlay-controls.js";
@@ -36,19 +38,22 @@ export class UI {
         return {
             run: new RunButton(),
             menu: new MenuButton(),
-            controls: new ControlsButton()
+            controls: new ControlsButton(),
+            rules: new RulesButton()
         }
     }
 
     #createOverlays() {
         return {
-            ctrl: document.querySelector('overlay-controls')
+            ctrl: document.querySelector('overlay-controls'),
+            rules: document.querySelector('overlay-rules')
         }
     }
 
     #createCloseButtons() {
         return {
-            ctrl: new ControlsCloseButton()
+            ctrl: new ControlsCloseButton(),
+            rules: new RulesCloseButton()
         }
     }
 
