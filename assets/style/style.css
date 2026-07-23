@@ -47,6 +47,15 @@ h3 {
     letter-spacing: 0.5rem;
 }
 
+a:link, a:visited {
+    color: #8f067f;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
 .content {
     height: 90dvh;
     display: flex;

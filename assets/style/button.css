@@ -52,3 +52,7 @@ button {
 #btn-rules {
     grid-area: rules;
 }
+
+#btn-inprint {
+    grid-area: inprint;
+}
