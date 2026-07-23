@@ -1,3 +1,5 @@
+import { Template } from "../helper/template.js";
+
 /** A Element lays over the main content. */
 export class Overlay extends HTMLElement {
     #name
@@ -24,6 +26,7 @@ export class Overlay extends HTMLElement {
     set visible(state) {
         if ( typeof state != 'boolean') return;
         this.classList.toggle('transparent', !state);
+        this.classList.toggle('z-1', state);
         this.#visible = state;
     }
 
@@ -37,7 +40,13 @@ export class Overlay extends HTMLElement {
         this.visible = false;
     }
 
+    render() {
+        const children = this.innerHTML;
+        this.innerHTML = Template.overlay(this.name, this.title, children);
+    }
+
     connectedCallback() {
         this.hide();
+        this.render();
     }
 }
