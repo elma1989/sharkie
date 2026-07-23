@@ -5,16 +5,31 @@
     width: 100%;
     height: 100%;
     padding: 2rem;
+    transition: opacity 300ms linear;
 }
 
 .overlay header {
     height: auto;
 }
 
+.transparent {
+    opacity: 0;
+}
+
+.z-1 {
+    z-index: 1;
+}
+
 .overlay-content {
     flex: 1;
     display: flex;
     justify-content: center;
+    align-items: center;
+}
+
+.overlay-content p{
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
 }
 
 .control-container {

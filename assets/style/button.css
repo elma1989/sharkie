@@ -48,3 +48,7 @@ button {
 #btn-menu, #btn-controls {
     grid-area: second;
 }
+
+#btn-rules {
+    grid-area: rules;
+}
