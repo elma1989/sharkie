@@ -2,18 +2,10 @@
     display: none;
 }
 
-.transparent {
-    opacity: 0;
-}
-
 .w-full {
     width: 100%;
 }
 
 .h-full {
     height: 100%;
-}
-
-.full-canvas {
-    grid-area: 1 / 1 / 2 / 2;
 }
