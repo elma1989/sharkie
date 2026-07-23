@@ -16,7 +16,7 @@
             <div class="canvas-container">
                 <canvas id="canvas"
                 class="w-full h-full cvs-full"></canvas>
-                <overlay-controls class="overlay cvs-full">
+                <overlay-controls class="overlay cvs-full transparent">
                     <div class="control-container">
                         <div class="control-group">
                             <div class="control-keys">
@@ -39,13 +39,23 @@
                             <div class="control-keys">
                                 <div class="key wide-key">SPACE</div>
                             </div>
-                            <h3 class="font-lucky">Slap Pufferfhish</h3>
+                            <h3 class="font-lucky">Slap Pufferfish</h3>
                         </div>
                     </div>
                 </overlay-controls>
+                <overlay-rules class="overlay cvs-full transparent">
+                    <div class="rules-container">
+                        <p>Skarkie can be injured by all fishes and the orca at the end of game.</p>
+                        <p>There are puffer fishes, which can be killed by slap of Sharkie.</p>
+                        <p>There are jelly fishes, which can be killed by bubble shot.</p>
+                        <p>The orca at the end of game can only can be injured by poisonous bubble.</p>
+                        <p>If Sharkie collected 5 bottles of poison, <br/>it will get the skill to throw poisonous bubbles.</p>
+                    </div>
+                </overlay-rules>
                 <button id="btn-run" class="btn-control font-lucky"></button>
                 <button id="btn-menu" class="btn-control font-lucky"></button>
                 <button id="btn-controls" class="btn-control font-lucky"></button>
+                <button id="btn-rules" class="btn-control font-lucky"></button>
             </div>
         </div>
     </main>
