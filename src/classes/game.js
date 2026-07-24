@@ -58,9 +58,11 @@ export class Game {
         this.#ui.ctrlBtns.menu.onPointerDown = () => this.#showMain();
         this.#ui.ctrlBtns.controls.onPointerDown = () => this.#ui.openOverlay('ctrl');
         this.#ui.ctrlBtns.rules.onPointerDown = () => this.#ui.openOverlay('rules');
+        this.#ui.ctrlBtns.inprint.onPointerDown = () => this.#ui.openOverlay('inprint')
 
         this.#ui.closeBtns.ctrl.onPointerDown = () => this.#ui.closeOverlay('ctrl');
         this.#ui.closeBtns.rules.onPointerDown = () => this.#ui.closeOverlay('rules');
+        this.#ui.closeBtns.inprint.onPointerDown = () => this.#ui.closeOverlay('inprint');
     }
 
     #addEndGameEvent() {

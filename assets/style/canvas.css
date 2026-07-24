@@ -4,7 +4,7 @@
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     grid-template-rows: auto 6rem 6rem 2rem;
-    grid-template-areas: '. . .' '. rules .' 'run second .' '. . .';
+    grid-template-areas: '. . .' '. rules .' 'run second inprint' '. . .';
     place-items: center;
 }
 
