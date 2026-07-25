@@ -35,6 +35,7 @@ import { OrcaHealthBar } from "./model/status/health-orca.js";
 import { CoinBar } from "./model/status/coin.js";
 import { PoisonBar } from "./model/status/poison.js";
 import { TitleScreen } from "./model/screen-title.js";
+import { DangerousJellyFish } from "./model/jellyfish-danger.js";
 
 /** Manges inner cnavas objects. */
 export class Level {
@@ -128,7 +129,8 @@ export class Level {
             new OrangePufferFish(600, 300, 100, 1600),
             new PinkPufferFish(GameConfig.WIDTH + 300, 300, GameConfig.WIDTH + 100, 2 * GameConfig.WIDTH - 100),
             new PurpleJellyFish(2 * GameConfig.WIDTH, 200, 100, GameConfig.HEIGHT - 100),
-            new YellowJellyFish(3 * GameConfig.WIDTH - 500, 100, 100, 700)
+            new YellowJellyFish(3 * GameConfig.WIDTH - 500, 100, 100, 700),
+            new DangerousJellyFish()
         ]
     }
 
