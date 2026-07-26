@@ -533,12 +533,14 @@ export class Level {
     /** Will be executed, if sharkie wins. */
     #win() {
         this.#activateScreen(0);
+        this.#sndMgr.play('win');
         this.#finish();
     }
 
     /** Will be executed, if sharkie loses. */
     #lose() {
         this.#activateScreen(1)
+        this.#sndMgr.play('lose');
         this.#finish();
     }
     // #endregion

@@ -26,6 +26,7 @@ export class Game {
         await this.#level.loadTitle();
         this.#level.drawTitleScreen()
         await this.#level.loadDrawings();
+        await this.#sndMgr.preloadAllSounds();
         this.#ui.enambleRunButton('Start');
     }
 
@@ -39,10 +40,12 @@ export class Game {
         this.#ui.enambleRunButton('Try again');
     }
 
-    #startGame() {
+    async #startGame() {
         this.#level.removeTitleScreen();
         this.#ui.hideControlButtons();
         this.#level.bringEnemiesToLife();
+        await this.#sndMgr.enable();
+        this.#music = this.#sndMgr.play('music');
         this.#level.gameLoop(0);
     }
 
@@ -70,7 +73,11 @@ export class Game {
     }
 
     #addEndGameEvent() {
-        this.#level.onEndGame = () => this.#secondPrepare();
+        this.#level.onEndGame = () => {
+            this.#music.stop();
+            this.#music = null;
+            this.#secondPrepare();
+        }
     }
     //#endregion
 }
