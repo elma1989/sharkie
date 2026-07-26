@@ -103,9 +103,14 @@ export class Orca extends Enemy {
     }
     // #endregion
 
-    injure(damage) {
-        super.injure(damage);
+    playInjureSound(sndMgr) {
+        sndMgr.play('hurt/orca');
+    }
+
+    injure(damage, sndMgr) {
+        super.injure(damage, sndMgr);
         this.onInjure?.(this.health);
+        this.#attackTimer = 0;
         if (this.health >= 0) this.healthState = HEALTH_STATE.hurt;
         else this.prepareDeath();
     }
@@ -114,7 +119,7 @@ export class Orca extends Enemy {
         this.healthState = HEALTH_STATE.dead;
     }
 
-    blubb(bubble) {
-        if (bubble instanceof PoisonousBubble) this.injure(20);
+    blubb(bubble, sndMgr) {
+        if (bubble instanceof PoisonousBubble) this.injure(20, sndMgr);
     }
 }

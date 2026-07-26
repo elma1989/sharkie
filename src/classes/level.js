@@ -36,6 +36,7 @@ import { CoinBar } from "./model/status/coin.js";
 import { PoisonBar } from "./model/status/poison.js";
 import { TitleScreen } from "./model/screen-title.js";
 import { DangerousJellyFish } from "./model/jellyfish-danger.js";
+import { Control } from "./helper/control.js";
 import { SoundManager } from "./helper/snd-mgr.js";
 
 /** Manges inner cnavas objects. */
@@ -326,7 +327,7 @@ export class Level {
                 }
             });
             if(bubble.isColliding(this.#orca)) {
-                this.#orca.blubb(bubble);
+                this.#orca.blubb(bubble, this.#sndMgr);
                 this.#removeBubble(bubble);
             }
         });
@@ -488,12 +489,14 @@ export class Level {
     #addCallOrcaEvent() {
         this.#sharkie.onCallOrca = () => {
             this.#orca.bringToLife();
+            this.#sndMgr.play('approach');
             this.#bars[1].enable();
         }
     }
 
-    #addOrcaInjureEvent() {
+    #addOrcaEvents() {
         this.#orca.onInjure = (health) => this.#bars[1].value = health;
+        this.#orca.onAttack = () => this.#sndMgr.play('attack/orca');
     }
 
     /** Adds all events. */
@@ -505,7 +508,7 @@ export class Level {
         this.#addBubbleEvent();
         this.#addDeadEvents();
         this.#addCallOrcaEvent();
-        this.#addOrcaInjureEvent();
+        this.#addOrcaEvents();
     }
     // #endregion
 

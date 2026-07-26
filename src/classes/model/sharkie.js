@@ -88,11 +88,13 @@ export class Sharkie extends HealthyObject {
      */
     #isInjured() {return this.healthState == HEALTH_STATE['hurt/poison'] || this.healthState == HEALTH_STATE['hurt/electric']; }
 
+    #isAttackBubble() {return this.healthState == HEALTH_STATE['attack/bubble/normal'] || this.healthState == HEALTH_STATE['attack/bubble/poison']}
+
     /**
      * Checks if it is attack.
      * @returns {boolean} True if it is attack.
      */
-    #isAttack() { return this.healthState == HEALTH_STATE['attack/slap'] || this.healthState == HEALTH_STATE['attack/bubble/normal'] || this.healthState == HEALTH_STATE['attack/bubble/poison']}
+    #isAttack() { return this.healthState == HEALTH_STATE['attack/slap'] || this.#isAttackBubble()};
 
     /**
      * Gets control-data.
@@ -180,6 +182,7 @@ export class Sharkie extends HealthyObject {
         if (this.animationTimer >= duration) {
             this.playAnimation(this.healthState);
             if (this.#isDead() && this.curImg == this.lengthAnimation) this.onDead?.();
+            else if (this.#isAttackBubble() && this.curImg == 8) this.#sndMgr.play('attack/bubble');
             this.animationTimer -= duration;
         }
     }
@@ -193,8 +196,8 @@ export class Sharkie extends HealthyObject {
     // #region Collect
     /** Adds a poisonous jar. */
     addPoisonousJar() {
-        this.#poisonousJars++;
-        this.onCollectJar?.(this.#poisonousJars / 5 * 100);
+        this.onCollectJar?.(++this.#poisonousJars / 5 * 100);
+        if (this.#poisonousJars == 5) this.#sndMgr.play('skill');
     }
 
     /** Adds a coin. */
@@ -284,6 +287,7 @@ export class Sharkie extends HealthyObject {
             this.#isBubbleThrown = false;
         }
         super.injure(damage);
+        if (health != this.health) this.#sndMgr.play(`hurt/${attackType}`);
         this.onInjure?.(this.health);
         if (this.health <= 0) this.prepareDeath(attackType);
         else if (this.health < health) this.healthState = `hurt/${attackType}`;
