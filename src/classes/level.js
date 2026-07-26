@@ -302,7 +302,7 @@ export class Level {
     #checkCollisionCollectable() {
         this.#collectables.forEach(collectable => {
             if (this.#sharkie.isColliding(collectable)) {
-                collectable.collect(this.#sharkie);
+                collectable.collect(this.#sharkie, this.#sndMgr);
             }
         })
     }
