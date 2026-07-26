@@ -23,6 +23,7 @@ export class Sharkie extends HealthyObject {
     #canThrowBubble = true;
     #isBubbleThrown = false;
     #calledOrca = false;
+    #gameStarted = false;
 
     constructor(level, ctrl, sndMgr) {
         super(0, 0, 815, 1000, {
@@ -148,8 +149,10 @@ export class Sharkie extends HealthyObject {
         }
     }
 
+    activate() { this.#gameStarted = true; }
+
     updateMovement(timedelta) {
-        if (this.#isDead()) return;
+        if (!this.#gameStarted || this.#isDead()) return;
         const inputs = this.#controlImput();
         this.#checkAttack();
         if (inputs.moving) {
@@ -161,6 +164,7 @@ export class Sharkie extends HealthyObject {
     }
 
     updateState(timedelta) {
+        if (!this.#gameStarted) return;
         super.updateState(timedelta);
         if (this.#isAttack() && this.curImg == 8) {
             this.healthState = HEALTH_STATE.idle;
@@ -177,6 +181,7 @@ export class Sharkie extends HealthyObject {
     }
 
     updateAnimation(timedelta) {
+        if (!this.#gameStarted) return;
         this.animationTimer += timedelta;
         const duration = this.durationFrame;
         if (this.animationTimer >= duration) {

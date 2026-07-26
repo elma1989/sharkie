@@ -352,6 +352,10 @@ export class Level {
     }
     // #endregion
 
+    activateSharkie() {
+        this.#sharkie.activate();
+    }
+
     gameLoop = (timestamp) => {
         const timedelta = Math.min(timestamp - this.#lastTime, 100);
         this.#lastTime = timestamp;

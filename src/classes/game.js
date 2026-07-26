@@ -46,6 +46,7 @@ export class Game {
         this.#level.bringEnemiesToLife();
         await this.#sndMgr.enable();
         this.#music = this.#sndMgr.play('music');
+        this.#level.activateSharkie();
         this.#level.gameLoop(0);
     }
 
