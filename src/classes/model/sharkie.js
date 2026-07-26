@@ -15,6 +15,7 @@ export class Sharkie extends HealthyObject {
     /** @type{Level} */
     #level;
     #ctrl;
+    #sndMgr;
     #longIdleTimer = 0;
     #poisonousJars = 0;
     #coins = 0;
@@ -22,8 +23,9 @@ export class Sharkie extends HealthyObject {
     #canThrowBubble = true;
     #isBubbleThrown = false;
     #calledOrca = false;
+    #gameStarted = false;
 
-    constructor(level, ctrl) {
+    constructor(level, ctrl, sndMgr) {
         super(0, 0, 815, 1000, {
             top: 600,
             right: 250,
@@ -32,6 +34,7 @@ export class Sharkie extends HealthyObject {
         }, SHAKIE);
         this.#level = level;
         this.#ctrl = ctrl;
+        this.#sndMgr = sndMgr;
     }
 
     // #region Methods
@@ -86,11 +89,13 @@ export class Sharkie extends HealthyObject {
      */
     #isInjured() {return this.healthState == HEALTH_STATE['hurt/poison'] || this.healthState == HEALTH_STATE['hurt/electric']; }
 
+    #isAttackBubble() {return this.healthState == HEALTH_STATE['attack/bubble/normal'] || this.healthState == HEALTH_STATE['attack/bubble/poison']}
+
     /**
      * Checks if it is attack.
      * @returns {boolean} True if it is attack.
      */
-    #isAttack() { return this.healthState == HEALTH_STATE['attack/slap'] || this.healthState == HEALTH_STATE['attack/bubble/normal'] || this.healthState == HEALTH_STATE['attack/bubble/poison']}
+    #isAttack() { return this.healthState == HEALTH_STATE['attack/slap'] || this.#isAttackBubble()};
 
     /**
      * Gets control-data.
@@ -144,8 +149,10 @@ export class Sharkie extends HealthyObject {
         }
     }
 
+    activate() { this.#gameStarted = true; }
+
     updateMovement(timedelta) {
-        if (this.#isDead()) return;
+        if (!this.#gameStarted || this.#isDead()) return;
         const inputs = this.#controlImput();
         this.#checkAttack();
         if (inputs.moving) {
@@ -157,6 +164,7 @@ export class Sharkie extends HealthyObject {
     }
 
     updateState(timedelta) {
+        if (!this.#gameStarted) return;
         super.updateState(timedelta);
         if (this.#isAttack() && this.curImg == 8) {
             this.healthState = HEALTH_STATE.idle;
@@ -173,11 +181,13 @@ export class Sharkie extends HealthyObject {
     }
 
     updateAnimation(timedelta) {
+        if (!this.#gameStarted) return;
         this.animationTimer += timedelta;
         const duration = this.durationFrame;
         if (this.animationTimer >= duration) {
             this.playAnimation(this.healthState);
             if (this.#isDead() && this.curImg == this.lengthAnimation) this.onDead?.();
+            else if (this.#isAttackBubble() && this.curImg == 8) this.#sndMgr.play('attack/bubble');
             this.animationTimer -= duration;
         }
     }
@@ -191,8 +201,8 @@ export class Sharkie extends HealthyObject {
     // #region Collect
     /** Adds a poisonous jar. */
     addPoisonousJar() {
-        this.#poisonousJars++;
-        this.onCollectJar?.(this.#poisonousJars / 5 * 100);
+        this.onCollectJar?.(++this.#poisonousJars / 5 * 100);
+        if (this.#poisonousJars == 5) this.#sndMgr.play('skill');
     }
 
     /** Adds a coin. */
@@ -282,6 +292,7 @@ export class Sharkie extends HealthyObject {
             this.#isBubbleThrown = false;
         }
         super.injure(damage);
+        if (health != this.health) this.#sndMgr.play(`hurt/${attackType}`);
         this.onInjure?.(this.health);
         if (this.health <= 0) this.prepareDeath(attackType);
         else if (this.health < health) this.healthState = `hurt/${attackType}`;

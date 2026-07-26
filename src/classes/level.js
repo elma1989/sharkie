@@ -35,11 +35,15 @@ import { OrcaHealthBar } from "./model/status/health-orca.js";
 import { CoinBar } from "./model/status/coin.js";
 import { PoisonBar } from "./model/status/poison.js";
 import { TitleScreen } from "./model/screen-title.js";
+import { DangerousJellyFish } from "./model/jellyfish-danger.js";
+import { Control } from "./helper/control.js";
+import { SoundManager } from "./helper/snd-mgr.js";
 
 /** Manges inner cnavas objects. */
 export class Level {
     /** @type{CanvasRenderingContext2D} */
     #ctx;
+    #sndMgr;
     /** @type{Sharkie} */
     #sharkie;
     /** @type{Background[]} */
@@ -70,8 +74,16 @@ export class Level {
     #frameid = null;
     #gameEnd = false;
 
-    constructor(ctx, ctrl) {
-        this.#sharkie = new Sharkie(this, ctrl);
+    /**
+     * Creates the Level.
+     * @param {CanvasRenderingContext2D} ctx - Context of canvas.
+     * @param {Control} ctrl - User controls.
+     * @param {SoundManager} sndMgr - Instance of SoundManager.
+     */
+    constructor(ctx, ctrl, sndMgr) {
+        this.#ctx = ctx;
+        this.#sndMgr = sndMgr;
+        this.#sharkie = new Sharkie(this, ctrl, this.#sndMgr);
         this.#backgrounds = this.#createBackgrounds();
         this.#barries = this.#createBarries();
         this.#collectables = this.#createCollectables();
@@ -82,7 +94,6 @@ export class Level {
         this.#drawings = this.#createDrawings();
         this.#updateables = this.#createUpdatingObjects();
         this.#loadings = this.#createLoadings();
-        this.#ctx = ctx;
         this.#addEvents();
     }
 
@@ -128,7 +139,8 @@ export class Level {
             new OrangePufferFish(600, 300, 100, 1600),
             new PinkPufferFish(GameConfig.WIDTH + 300, 300, GameConfig.WIDTH + 100, 2 * GameConfig.WIDTH - 100),
             new PurpleJellyFish(2 * GameConfig.WIDTH, 200, 100, GameConfig.HEIGHT - 100),
-            new YellowJellyFish(3 * GameConfig.WIDTH - 500, 100, 100, 700)
+            new YellowJellyFish(3 * GameConfig.WIDTH - 500, 100, 100, 700),
+            new DangerousJellyFish()
         ]
     }
 
@@ -291,7 +303,7 @@ export class Level {
     #checkCollisionCollectable() {
         this.#collectables.forEach(collectable => {
             if (this.#sharkie.isColliding(collectable)) {
-                collectable.collect(this.#sharkie);
+                collectable.collect(this.#sharkie, this.#sndMgr);
             }
         })
     }
@@ -310,12 +322,12 @@ export class Level {
         this.#bubbles.forEach(bubble => {
             this.#enemies.forEach(enemy => {
                 if(bubble.isColliding(enemy)) {
-                    enemy.blubb(bubble);
+                    enemy.blubb(bubble, this.#sndMgr);
                     this.#removeBubble(bubble);
                 }
             });
             if(bubble.isColliding(this.#orca)) {
-                this.#orca.blubb(bubble);
+                this.#orca.blubb(bubble, this.#sndMgr);
                 this.#removeBubble(bubble);
             }
         });
@@ -323,7 +335,7 @@ export class Level {
 
     #checkEnemyCollision() {
         this.#enemies.forEach(enemy => {
-            if (this.#sharkie.isColliding(enemy)) enemy.hit(this.#sharkie);
+            if (this.#sharkie.isColliding(enemy)) enemy.hit(this.#sharkie, this.#sndMgr);
         })
         if (this.#sharkie.isColliding(this.#orca)) this.#sharkie.injure(20, 'poison');
     }
@@ -339,6 +351,10 @@ export class Level {
         this.#checkBubbleCollision();
     }
     // #endregion
+
+    activateSharkie() {
+        this.#sharkie.activate();
+    }
 
     gameLoop = (timestamp) => {
         const timedelta = Math.min(timestamp - this.#lastTime, 100);
@@ -477,12 +493,14 @@ export class Level {
     #addCallOrcaEvent() {
         this.#sharkie.onCallOrca = () => {
             this.#orca.bringToLife();
+            this.#sndMgr.play('approach');
             this.#bars[1].enable();
         }
     }
 
-    #addOrcaInjureEvent() {
+    #addOrcaEvents() {
         this.#orca.onInjure = (health) => this.#bars[1].value = health;
+        this.#orca.onAttack = () => this.#sndMgr.play('attack/orca');
     }
 
     /** Adds all events. */
@@ -494,7 +512,7 @@ export class Level {
         this.#addBubbleEvent();
         this.#addDeadEvents();
         this.#addCallOrcaEvent();
-        this.#addOrcaInjureEvent();
+        this.#addOrcaEvents();
     }
     // #endregion
 
@@ -519,12 +537,14 @@ export class Level {
     /** Will be executed, if sharkie wins. */
     #win() {
         this.#activateScreen(0);
+        this.#sndMgr.play('win');
         this.#finish();
     }
 
     /** Will be executed, if sharkie loses. */
     #lose() {
         this.#activateScreen(1)
+        this.#sndMgr.play('lose');
         this.#finish();
     }
     // #endregion

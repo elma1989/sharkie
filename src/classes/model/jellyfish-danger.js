@@ -33,8 +33,8 @@ export class DangerousJellyFish extends JellyFish {
 
     async load() {
         this.img = await this.loadImage(ImgHelper.url(ImgHelper.ENEMY["jellyfish/green/swim"][0]));
-        this.animations.swim.frames = await this.loadAnimations(ImgHelper.urls(ImgHelper.ENEMY["jellyfish/green/swim"]));
-        this.animations.dead.frames = await this.loadAnimations(ImgHelper.urls(ImgHelper.ENEMY["jellyfish/green/dead"]));
+        this.animations.swim.frames = await this.loadImages(ImgHelper.urls(ImgHelper.ENEMY["jellyfish/green/swim"]));
+        this.animations.dead.frames = await this.loadImages(ImgHelper.urls(ImgHelper.ENEMY["jellyfish/green/dead"]));
     }
 
     /**
@@ -99,7 +99,7 @@ export class DangerousJellyFish extends JellyFish {
         sharkie.injure(20, 'electric');
     }
 
-    blubb(bubble) {
-        this.injure(50);
+    blubb(bubble, sndMgr) {
+        this.injure(50, sndMgr);
     }
 }

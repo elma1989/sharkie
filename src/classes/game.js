@@ -1,5 +1,6 @@
 import { Control } from "./helper/control.js";
 import { Keyboard } from "./helper/keyboard.js";
+import { SoundManager } from "./helper/snd-mgr.js";
 import { Level } from "./level.js";
 import { UI } from "./ui/ui.js";
 
@@ -8,12 +9,15 @@ export class Game {
     #ui;
     #ctrl;
     #level;
+    #sndMgr;
+    #music;
 
     constructor() {
         this.#ui = new UI();
         this.#ctrl = new Control();
         new Keyboard(this.#ctrl);
-        this.#level = new Level(this.#ui.canvas.ctx, this.#ctrl);
+        this.#sndMgr = new SoundManager();
+        this.#level = new Level(this.#ui.canvas.ctx, this.#ctrl, this.#sndMgr);
     }
     // #region Methods
     /** Will be executed after create of game. */
@@ -22,23 +26,27 @@ export class Game {
         await this.#level.loadTitle();
         this.#level.drawTitleScreen()
         await this.#level.loadDrawings();
+        await this.#sndMgr.preloadAllSounds();
         this.#ui.enambleRunButton('Start');
     }
 
     async #secondPrepare() {
         this.#ui.disableRunButton();
         this.#ui.showAfterGameButtons();
-        this.#level = new Level(this.#ui.canvas.ctx, this.#ctrl);
+        this.#level = new Level(this.#ui.canvas.ctx, this.#ctrl, this.#sndMgr);
         await this.#level.loadTitle();
         this.#addEndGameEvent();
         await this.#level.loadDrawings();
         this.#ui.enambleRunButton('Try again');
     }
 
-    #startGame() {
+    async #startGame() {
         this.#level.removeTitleScreen();
         this.#ui.hideControlButtons();
         this.#level.bringEnemiesToLife();
+        await this.#sndMgr.enable();
+        this.#music = this.#sndMgr.play('music');
+        this.#level.activateSharkie();
         this.#level.gameLoop(0);
     }
 
@@ -66,7 +74,11 @@ export class Game {
     }
 
     #addEndGameEvent() {
-        this.#level.onEndGame = () => this.#secondPrepare();
+        this.#level.onEndGame = () => {
+            this.#music.stop();
+            this.#music = null;
+            this.#secondPrepare();
+        }
     }
     //#endregion
 }

@@ -140,14 +140,18 @@ export class PufferFish extends Enemy {
     }
     // #endregion
 
+    playInjureSound(sndMgr) {
+        sndMgr.play('attack/slap');
+    }
+
     prepareDeath() {
         this.healthState = HEALTH_STATE.dead;
         this.img = this.#pufferState == PUFFER_STATE.EMPTY ? this.deathImg.empty : (this.#pufferState == PUFFER_STATE.FULL ? this.deathImg.full : this.deathImg.transition);
     }
 
-    hit(sharkie) {
+    hit(sharkie, sndMgr) {
         if (this.healthState != HEALTH_STATE.dead ) {
-            if(sharkie.healthState == HEALTH_STATE["attack/slap"]) this.injure(100);
+            if(sharkie.healthState == HEALTH_STATE["attack/slap"]) this.injure(100, sndMgr);
             else if (!sharkie.invulnerable
                 && sharkie.healthState != HEALTH_STATE["dead/poison"]
                 && sharkie.healthState != HEALTH_STATE["dead/electric"]
