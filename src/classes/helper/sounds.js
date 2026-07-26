@@ -4,6 +4,7 @@ export const sounds = {
     skill: 'skill.mp3',
     'attack/slap': 'attack-slap.mp3',
     'attack/bubble': 'attack-bubble.mp3',
+    'attack/orca': 'attack-orca.mp3',
     'collect/coin': 'coin.mp3',
     'collect/poison': 'jar.mp3',
     'hurt/poison': 'hurt-poison.mp3',

@@ -15,6 +15,7 @@ export class Sharkie extends HealthyObject {
     /** @type{Level} */
     #level;
     #ctrl;
+    #sndMgr;
     #longIdleTimer = 0;
     #poisonousJars = 0;
     #coins = 0;
@@ -23,7 +24,7 @@ export class Sharkie extends HealthyObject {
     #isBubbleThrown = false;
     #calledOrca = false;
 
-    constructor(level, ctrl) {
+    constructor(level, ctrl, sndMgr) {
         super(0, 0, 815, 1000, {
             top: 600,
             right: 250,
@@ -32,6 +33,7 @@ export class Sharkie extends HealthyObject {
         }, SHAKIE);
         this.#level = level;
         this.#ctrl = ctrl;
+        this.#sndMgr = sndMgr;
     }
 
     // #region Methods

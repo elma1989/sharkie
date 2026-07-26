@@ -36,11 +36,13 @@ import { CoinBar } from "./model/status/coin.js";
 import { PoisonBar } from "./model/status/poison.js";
 import { TitleScreen } from "./model/screen-title.js";
 import { DangerousJellyFish } from "./model/jellyfish-danger.js";
+import { SoundManager } from "./helper/snd-mgr.js";
 
 /** Manges inner cnavas objects. */
 export class Level {
     /** @type{CanvasRenderingContext2D} */
     #ctx;
+    #sndMgr;
     /** @type{Sharkie} */
     #sharkie;
     /** @type{Background[]} */
@@ -71,8 +73,16 @@ export class Level {
     #frameid = null;
     #gameEnd = false;
 
-    constructor(ctx, ctrl) {
-        this.#sharkie = new Sharkie(this, ctrl);
+    /**
+     * Creates the Level.
+     * @param {CanvasRenderingContext2D} ctx - Context of canvas.
+     * @param {Control} ctrl - User controls.
+     * @param {SoundManager} sndMgr - Instance of SoundManager.
+     */
+    constructor(ctx, ctrl, sndMgr) {
+        this.#ctx = ctx;
+        this.#sndMgr = sndMgr;
+        this.#sharkie = new Sharkie(this, ctrl, this.#sndMgr);
         this.#backgrounds = this.#createBackgrounds();
         this.#barries = this.#createBarries();
         this.#collectables = this.#createCollectables();
@@ -83,7 +93,6 @@ export class Level {
         this.#drawings = this.#createDrawings();
         this.#updateables = this.#createUpdatingObjects();
         this.#loadings = this.#createLoadings();
-        this.#ctx = ctx;
         this.#addEvents();
     }
 
