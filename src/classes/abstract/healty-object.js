@@ -1,3 +1,4 @@
+import { SoundManager } from "../helper/snd-mgr.js";
 import { Sharkie } from "../model/sharkie.js";
 import { HEALTH_STATE } from "../types.js";
 import { MovableObject } from "./moveable-object.js";
@@ -39,13 +40,23 @@ export class HealthyObject extends MovableObject {
     }
 
     /**
-     * Injures an healty object.
-     * @param {number} damage - Damage of hurt
+     * Plays the hurt sound.
+     * @param {SoundManager} sndMgr Instance of SoundManager.
      */
-    injure(damage) {
+    playInjureSound(sndMgr) {
+
+    }
+
+    /**
+     * Injures an healty object.
+     * @param {number} damage - Damage of hurt.
+     * @param {SoundManager} - Instace of SoundManager.
+     */
+    injure(damage, sndMgr) {
         if (this.deathState() || this.#invulnerable) return;
         this.#invulnerable = true;
         this.#invulnerableTimer = 0;
+        this.playInjureSound(sndMgr)
         this.#health -= damage;
         if (!(this instanceof Sharkie) && this.health <= 0) this.prepareDeath();
     }
@@ -53,9 +64,10 @@ export class HealthyObject extends MovableObject {
     /**
      * Hits an object.
      * @param {HealthyObject} opponent - Object to hit.
+     * @param {SoundManager} sndMgr - Instance SoundManager.
      */
-    hit(opponent) {
-        opponent.injure(10);
+    hit(opponent,sndMgr) {
+        opponent.injure(10, sndMgr);
     }
 
     updateState(timedelta) {

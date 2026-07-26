@@ -321,7 +321,7 @@ export class Level {
         this.#bubbles.forEach(bubble => {
             this.#enemies.forEach(enemy => {
                 if(bubble.isColliding(enemy)) {
-                    enemy.blubb(bubble);
+                    enemy.blubb(bubble, this.#sndMgr);
                     this.#removeBubble(bubble);
                 }
             });
@@ -334,7 +334,7 @@ export class Level {
 
     #checkEnemyCollision() {
         this.#enemies.forEach(enemy => {
-            if (this.#sharkie.isColliding(enemy)) enemy.hit(this.#sharkie);
+            if (this.#sharkie.isColliding(enemy)) enemy.hit(this.#sharkie, this.#sndMgr);
         })
         if (this.#sharkie.isColliding(this.#orca)) this.#sharkie.injure(20, 'poison');
     }

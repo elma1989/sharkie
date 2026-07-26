@@ -99,7 +99,7 @@ export class DangerousJellyFish extends JellyFish {
         sharkie.injure(20, 'electric');
     }
 
-    blubb(bubble) {
-        this.injure(50);
+    blubb(bubble, sndMgr) {
+        this.injure(50, sndMgr);
     }
 }

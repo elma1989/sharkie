@@ -1,3 +1,4 @@
+import { SoundManager } from "../helper/snd-mgr.js";
 import { Sharkie } from "../model/sharkie.js";
 import { DIRECTION, HEALTH_STATE } from "../types.js";
 import { Bubble } from "./bubble.js";
@@ -86,8 +87,18 @@ export class JellyFish extends Enemy {
      * @override
      * @inheritdoc
      * @param {Bubble} bubble
+     * @param {SoundManager} sndMgr
      */
-    blubb(bubble) {
-        this.injure(100);
+    blubb(bubble, sndMgr) {
+        this.injure(100, sndMgr);
+    }
+
+    /**
+     * @override
+     * @inheritdoc
+     * @param {SoundManager} sndMgr
+     */
+    playInjureSound(sndMgr) {
+        sndMgr.play('hurt/bubble');
     }
 }
