@@ -362,6 +362,13 @@ export class ImgHelper {
         ]
     }
 
+    static ICONS = {
+        music: [
+            'music-on.svg',
+            'music-off.svg'
+        ]
+    }
+
     static get background() { return this.#BACKGROUND; }
 
     static get sharkie() { return this.#SHARKIE; }
@@ -369,14 +376,16 @@ export class ImgHelper {
     /**
      * Gets url from file.
      * @param {string} file - Name from ImgHeloper-Getter.
+     * @param {boolean} icon - True, if it is icon (Default: false)
      * @returns {string} Complete url.
      */
-    static url(file) {
+    static url(file, icon = false) {
         const host = location.hostname;
         const local = host == 'localhost' || host == '127.0.0.1';
         const daServer = host.endsWith('developerakademie.net');
         const prefix = local ? '/' : (daServer ? '/sharkie/' : '/static/sharkie/');
-        return prefix + 'assets/img/' + file;
+        const base = 'assets/' + (icon ? 'icons/' : 'img/');
+        return prefix + base + file;
     }
 
     /**

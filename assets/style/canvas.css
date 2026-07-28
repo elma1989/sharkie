@@ -3,12 +3,12 @@
     height: 540px;
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    grid-template-rows: auto 6rem 6rem 2rem;
-    grid-template-areas: '. . .' '. rules .' 'run second inprint' '. . .';
+    grid-template-rows: 3rem auto 6rem 6rem 2rem;
+    grid-template-areas: '. sound .' '. . .' '. rules .' 'run second inprint' '. . .';
     place-items: center;
 }
 
 .cvs-full {
-    grid-area: 1 / 1 / span 4 / span 3;
+    grid-area: 1 / 1 / span 5 / span 3;
     border-radius: 1rem;
 }
