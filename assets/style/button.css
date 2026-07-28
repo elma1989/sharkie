@@ -41,6 +41,15 @@ button {
     cursor: wait;
 }
 
+.snd-ctrl {
+    grid-area: sound
+}
+
+.snd-ctrl-btn {
+    background: transparent;
+    border: none;
+}
+
 #btn-run {
     grid-area: run;
 }
