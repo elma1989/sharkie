@@ -26,6 +26,7 @@ export class Game {
         await this.#level.loadTitle();
         this.#level.drawTitleScreen()
         await this.#level.loadDrawings();
+        await this.#sndMgr.loadIconButtons();
         await this.#sndMgr.preloadAllSounds();
         this.#ui.enambleRunButton('Start');
     }
@@ -46,6 +47,7 @@ export class Game {
         this.#level.bringEnemiesToLife();
         await this.#sndMgr.enable();
         this.#music = this.#sndMgr.play('music');
+        this.#sndMgr.showBar();
         this.#level.activateSharkie();
         this.#level.gameLoop(0);
     }
@@ -77,6 +79,7 @@ export class Game {
         this.#level.onEndGame = () => {
             this.#music.stop();
             this.#music = null;
+            this.#sndMgr.hideBar();
             this.#secondPrepare();
         }
     }

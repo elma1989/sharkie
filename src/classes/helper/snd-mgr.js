@@ -5,9 +5,11 @@ export class SoundManager {
     #ctx;
     #masterGain;
     #musicGain;
-    #effectGain;
+    #sfxGain;
     #buffers;
     #ctrl;
+    #sndBar;
+    #music;
 
     constructor() {
         this.#ctx = new AudioContext();
@@ -15,18 +17,68 @@ export class SoundManager {
         this.#ctrl = {
             music: new MusicButton()
         }
+        this.music = this.#loadStorage('music');
+        this.#sndBar = document.querySelector('.snd-ctrl');
 
+        this.#initGain();
+        this.#addEvents();
+    }
+
+    get music() { return this.#music; }
+
+    set music(state) {
+        if (typeof state != 'boolean') return;
+        this.#music = state;
+        this.#saveStorage();
+        this.onChangeMusic?.(state);
+    }
+
+    #initGain() {
         this.#masterGain = this.#ctx.createGain();
         this.#musicGain = this.#ctx.createGain();
-        this.#effectGain = this.#ctx.createGain();
+        this.#sfxGain = this.#ctx.createGain();
 
         this.#musicGain.connect(this.#masterGain);
-        this.#effectGain.connect(this.#masterGain);
+        this.#sfxGain.connect(this.#masterGain);
         this.#masterGain.connect(this.#ctx.destination);
 
         this.#musicGain.gain.value = 0.3;
     }
 
+    // #region Events
+    #addPointerEvents() {
+        this.#ctrl.music.onPointerDown = () => this.#ctrl.music.toggle();
+    }
+
+    #addChangeEvents() {
+        this.#ctrl.music.onChange = (state) => this.music = state;
+    }
+
+    #addEvents() {
+        this.#addPointerEvents();
+        this.#addChangeEvents();
+    }
+    // #endregion
+
+    // #region Storage
+    /** Saves in local storage. */
+    #saveStorage() {
+        localStorage.setItem('sound', JSON.stringify({music: this.music}));
+    }
+
+    /**
+     * Loads from storage.
+     * @param {string} name - Name of entrie
+     * @returns {boolean} True, if enabled
+     */
+    #loadStorage(name) {
+        const sound = JSON.parse(localStorage.getItem('sound'));
+        if (!sound || !Object.keys(sound).includes(name)) return true;
+        return sound[name];
+    }
+    // #endregion
+
+    // #region Load
     /**
      * Gets url for file.
      * @param {string} file - Name of file
@@ -63,27 +115,44 @@ export class SoundManager {
         this.#buffers = Object.fromEntries(entries);
     }
 
+    async loadIconButtons() {
+        await this.#ctrl.music.load(this.#music);
+    }
+    // #endregion
+
     /** Enables sound by user. */
     async enable() {
         if (this.#ctx.state != 'suspended') return;
         await this.#ctx.resume();
     }
 
+    // #region Manager-Methods
     /**
      * Plays a sound.
      * @param {string} name - Name of sound in map.
      * @returns {{stop: fuction}}
      */
     play(name) {
-        if (!Object.keys(this.#buffers).includes(name)) return null;
+        if (!this.music && name == 'music' || !Object.keys(this.#buffers).includes(name)) return null;
         const buffer = this.#buffers[name];
         if (!buffer) return null;
 
         const src = this.#ctx.createBufferSource();
-        const gain = name == 'music' ? this.#musicGain : this.#effectGain;
+        const gain = name == 'music' ? this.#musicGain : this.#sfxGain;
         src.buffer = buffer;
         src.connect(gain);
         src.start();
         return {stop: () => src.stop()};
     }
+
+    /** Shows the soundbar. */
+    showBar() {
+        this.#sndBar.classList.remove('d-none');
+    }
+
+    /** Hides the soundbar. */
+    hideBar() {
+        this.#sndBar.classList.add('d-none');
+    }
+    // #endregion
 }
