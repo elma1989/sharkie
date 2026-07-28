@@ -60,6 +60,7 @@ export class Game {
 
     #addEvents() {
         this.#addButtonEvents();
+        this.#addSoundEvents();
         this.#addEndGameEvent();
     }
 
@@ -73,6 +74,16 @@ export class Game {
         this.#ui.closeBtns.ctrl.onPointerDown = () => this.#ui.closeOverlay('ctrl');
         this.#ui.closeBtns.rules.onPointerDown = () => this.#ui.closeOverlay('rules');
         this.#ui.closeBtns.inprint.onPointerDown = () => this.#ui.closeOverlay('inprint');
+    }
+
+    #addSoundEvents() {
+        this.#sndMgr.onChangeMusic = (state) => {
+            if (state) this.#music = this.#sndMgr.play('music');
+            else if (this.#music) {
+                this.#music.stop();
+                this.#music = null;
+            }
+        }
     }
 
     #addEndGameEvent() {
