@@ -1,3 +1,4 @@
+import { MusicButton } from "../ui/btn-music.js";
 import { sounds } from "./sounds.js";
 
 export class SoundManager {
@@ -6,10 +7,14 @@ export class SoundManager {
     #musicGain;
     #effectGain;
     #buffers;
+    #ctrl;
 
     constructor() {
         this.#ctx = new AudioContext();
         this.#buffers = {};
+        this.#ctrl = {
+            music: new MusicButton()
+        }
 
         this.#masterGain = this.#ctx.createGain();
         this.#musicGain = this.#ctx.createGain();
