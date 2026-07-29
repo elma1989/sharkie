@@ -88,8 +88,10 @@ export class Game {
 
     #addEndGameEvent() {
         this.#level.onEndGame = () => {
-            this.#music.stop();
-            this.#music = null;
+            if (this.#music) {
+                this.#music.stop();
+                this.#music = null;
+            }
             this.#sndMgr.hideBar();
             this.#secondPrepare();
         }
