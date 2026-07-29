@@ -70,6 +70,7 @@ export class Level {
     #lastTime = 0;
     #translationX = 0;
     #frameid = null;
+    #gameStart = false;
     #gameEnd = false;
 
     /**
@@ -101,6 +102,11 @@ export class Level {
     set translationX(value) {
         if (value < 0 || value > 3 * GameConfig.WIDTH) return;
         this.#translationX = value;
+    }
+
+    start() {
+        this.#gameStart = true;
+        this.gameLoop(0);
     }
 
     // #region Create Objects
@@ -255,7 +261,7 @@ export class Level {
 
     /** Draws all drawings. */
     #drawAll() {
-        if (this.#gameEnd) return;
+        if (!this.#gameStart || this.#gameEnd) return;
         this.#ctx.clearRect(0, 0, GameConfig.WIDTH, GameConfig.HEIGHT);
         this.#ctx.translate(-this.#translationX, 0);
         this.#drawings.forEach(drawing => drawing.draw(this.#ctx));
@@ -270,7 +276,7 @@ export class Level {
      * @param {number} timedelta - Time to next frame.
      */
     #updateAll(timedelta) {
-        if (!this.#gameEnd) this.#updateables.forEach(updateObj => updateObj.update(timedelta));
+        if (this.#gameStart && !this.#gameEnd) this.#updateables.forEach(updateObj => updateObj.update(timedelta));
     }
 
     /**
@@ -419,7 +425,7 @@ export class Level {
     /** Add event for focus on the game. */
     #addFocusEvent() {
         window.addEventListener('focus', () => {
-            if(!this.#frameid) {
+            if(!this.#frameid && this.#gameStart && !this.#gameEnd) {
                 this.#frameid = requestAnimationFrame(this.gameLoop);
             }
         })

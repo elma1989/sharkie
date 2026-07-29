@@ -45,7 +45,7 @@ export class Game {
         this.#music = this.#sndMgr.play('music');
         this.#sndMgr.showBar();
         this.#level.activateSharkie();
-        this.#level.gameLoop(0);
+        this.#level.start();
     }
 
     #showMain() {
