@@ -23,8 +23,6 @@ export class Game {
     /** Will be executed after create of game. */
     async init() {
         this.#addEvents();
-        await this.#level.loadTitle();
-        this.#level.drawTitleScreen()
         await this.#level.loadDrawings();
         await this.#sndMgr.loadIconButtons();
         await this.#sndMgr.preloadAllSounds();
@@ -35,14 +33,12 @@ export class Game {
         this.#ui.disableRunButton();
         this.#ui.showAfterGameButtons();
         this.#level = new Level(this.#ui.canvas.ctx, this.#ctrl, this.#sndMgr);
-        await this.#level.loadTitle();
         this.#addEndGameEvent();
         await this.#level.loadDrawings();
         this.#ui.enambleRunButton('Try again');
     }
 
     async #startGame() {
-        this.#level.removeTitleScreen();
         this.#ui.hideControlButtons();
         this.#level.bringEnemiesToLife();
         await this.#sndMgr.enable();
@@ -53,7 +49,6 @@ export class Game {
     }
 
     #showMain() {
-        this.#level.drawTitleScreen();
         this.#ui.ctrlBtns.run.description = 'Start';
         this.#ui.showControlButtons()
     }

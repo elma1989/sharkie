@@ -34,7 +34,6 @@ import { SharkieHealthBar } from "./model/status/health-sharkie.js";
 import { OrcaHealthBar } from "./model/status/health-orca.js";
 import { CoinBar } from "./model/status/coin.js";
 import { PoisonBar } from "./model/status/poison.js";
-import { TitleScreen } from "./model/screen-title.js";
 import { DangerousJellyFish } from "./model/jellyfish-danger.js";
 import { Control } from "./helper/control.js";
 import { SoundManager } from "./helper/snd-mgr.js";
@@ -58,7 +57,6 @@ export class Level {
     #collectables = [];
     /** @type{Bubble[]} */
     #bubbles = [];
-    #titleScreen = null;
     /** @type{Screen[]} */
     #screens = [];
     /** @type{Statusbar[]} */
@@ -243,13 +241,6 @@ export class Level {
     // #endregion
 
     // #region Draw
-    /** Draws title screen at first. */
-    async loadTitle() {
-        const title = new TitleScreen();
-        await title.load();
-        this.#titleScreen = title;
-    }
-
     /** Calls for all drawings the load()-method. */
     async loadDrawings() {
         await Promise.all(this.#loadings.map(loading => loading.load()));
@@ -262,10 +253,6 @@ export class Level {
         });
     }
 
-    drawTitleScreen() {
-        this.#titleScreen?.draw(this.#ctx);
-    }
-
     /** Draws all drawings. */
     #drawAll() {
         if (this.#gameEnd) return;
@@ -273,7 +260,6 @@ export class Level {
         this.#ctx.translate(-this.#translationX, 0);
         this.#drawings.forEach(drawing => drawing.draw(this.#ctx));
         this.#drawBars();
-        this.drawTitleScreen();
         this.#ctx.translate(this.#translationX, 0);
     }
     // #endregion
@@ -382,10 +368,6 @@ export class Level {
     }
 
     // #region Object Management
-    removeTitleScreen() {
-        this.#titleScreen = null;
-    }
-
     /**
      * Adds bubble to level.
      * @param {Bubble} bubble - Bubble to add.
