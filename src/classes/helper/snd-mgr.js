@@ -1,4 +1,5 @@
 import { MusicButton } from "../ui/btn-music.js";
+import { SfxButton } from "../ui/btn-sfx.js";
 import { sounds } from "./sounds.js";
 
 export class SoundManager {
@@ -10,14 +11,17 @@ export class SoundManager {
     #ctrl;
     #sndBar;
     #music;
+    #sfx;
 
     constructor() {
         this.#ctx = new AudioContext();
         this.#buffers = {};
         this.#ctrl = {
-            music: new MusicButton()
+            music: new MusicButton(),
+            sfx: new SfxButton()
         }
-        this.music = this.#loadStorage('music');
+        this.#music = this.#loadStorage('music');
+        this.#sfx = this.#loadStorage('sfx');
         this.#sndBar = document.querySelector('.snd-ctrl');
 
         this.#initGain();
@@ -31,6 +35,15 @@ export class SoundManager {
         this.#music = state;
         this.#saveStorage();
         this.onChangeMusic?.(state);
+    }
+
+    get sfx() { return this.#sfx; };
+
+    set sfx(state) {
+        if (typeof state != 'boolean') return;
+        this.#sfx = state;
+        this.#saveStorage();
+        this.onChangeSfx?.(state);
     }
 
     #initGain() {
@@ -48,10 +61,12 @@ export class SoundManager {
     // #region Events
     #addPointerEvents() {
         this.#ctrl.music.onPointerDown = () => this.#ctrl.music.toggle();
+        this.#ctrl.sfx.onPointerDown = () => this.#ctrl.sfx.toggle();
     }
 
     #addChangeEvents() {
         this.#ctrl.music.onChange = (state) => this.music = state;
+        this.#ctrl.sfx.onChange = (state) => this.sfx = state;
     }
 
     #addEvents() {
@@ -63,7 +78,7 @@ export class SoundManager {
     // #region Storage
     /** Saves in local storage. */
     #saveStorage() {
-        localStorage.setItem('sound', JSON.stringify({music: this.music}));
+        localStorage.setItem('sound', JSON.stringify({music: this.music, sfx: this.sfx}));
     }
 
     /**
@@ -116,7 +131,8 @@ export class SoundManager {
     }
 
     async loadIconButtons() {
-        await this.#ctrl.music.load(this.#music);
+        await this.#ctrl.music.load(this.music);
+        await this.#ctrl.sfx.load(this.sfx);
     }
     // #endregion
 
@@ -133,7 +149,7 @@ export class SoundManager {
      * @returns {{stop: fuction}}
      */
     play(name) {
-        if (!this.music && name == 'music' || !Object.keys(this.#buffers).includes(name)) return null;
+        if (!this.sfx && name != 'music' || !this.music && name == 'music' || !Object.keys(this.#buffers).includes(name)) return null;
         const buffer = this.#buffers[name];
         if (!buffer) return null;
 
