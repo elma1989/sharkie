@@ -42,12 +42,15 @@ button {
 }
 
 .snd-ctrl {
-    grid-area: sound
+    grid-area: sound;
+    display: flex;
+    gap: 1.5rem;
 }
 
 .snd-ctrl-btn {
     background: transparent;
     border: none;
+    outline: none;
 }
 
 #btn-run {

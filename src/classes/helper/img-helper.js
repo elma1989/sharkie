@@ -366,6 +366,10 @@ export class ImgHelper {
         music: [
             'music-on.svg',
             'music-off.svg'
+        ],
+        sfx: [
+            'sfx-on.svg',
+            'sfx-off.svg'
         ]
     }
 
