@@ -16,7 +16,7 @@
             <div class="canvas-container">
                 <canvas id="canvas"
                 class="w-full h-full cvs-full"></canvas>
-                <overlay-controls class="overlay cvs-full transparent">
+                <overlay-controls class="overlay cvs-full bg-blue transparent m-none">
                     <div class="control-container">
                         <div class="control-group">
                             <div class="control-keys">
@@ -43,7 +43,7 @@
                         </div>
                     </div>
                 </overlay-controls>
-                <overlay-rules class="overlay cvs-full transparent">
+                <overlay-rules class="overlay cvs-full bg-blue transparent">
                     <div class="rules-container">
                         <p>Skarkie can be injured by all fishes and the orca at the end of game.</p>
                         <p>There are puffer fishes, which can be killed by slap of Sharkie.</p>
@@ -52,7 +52,7 @@
                         <p>If Sharkie collected 5 bottles of poison, <br/>it will get the skill to throw poisonous bubbles.</p>
                     </div>
                 </overlay-rules>
-                <overlay-inprint class="overlay cvs-full transparent">
+                <overlay-inprint class="overlay cvs-full bg-blue transparent">
                     <div class="inprint-content">
                         <p>Marco Elste<br/>Karl-Marx-Ring 5<br/>06317 Seegebiet Mansfelder Land</p>
                         <p>
@@ -61,6 +61,7 @@
                         </p>
                     </div>
                 </overlay-inprint>
+                <overlay-hero class="overlay cvs-full"></overlay-hero>
                 <div class="snd-ctrl d-none">
                     <button id="btn-music" class="snd-ctrl-btn"></button>
                     <button id="btn-sfx" class="snd-ctrl-btn"></button>
@@ -68,7 +69,7 @@
                 <button id="btn-rules" class="btn-control font-lucky">Rules</button>
                 <button id="btn-run" class="btn-control font-lucky" disabled>LOADING</button>
                 <button id="btn-menu" class="btn-control font-lucky">Menu</button>
-                <button id="btn-controls" class="btn-control font-lucky">Controls</button>
+                <button id="btn-controls" class="btn-control font-lucky m-none">Controls</button>
                 <button id="btn-inprint" class="btn-control font-lucky">Impressum</button>
             </div>
         </div>
