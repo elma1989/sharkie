@@ -1,11 +1,18 @@
+overlay-hero {
+    background: url(../img/04_Screen/title.png) center / cover;
+}
+
 .overlay {
     display: flex;
     flex-direction: column;
-    background: #0080ff;
     width: 100%;
     height: 100%;
     padding: 2rem;
     transition: opacity 300ms linear;
+}
+
+.bg-blue {
+    background: #0080ff;
 }
 
 .overlay header {
