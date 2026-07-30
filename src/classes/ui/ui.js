@@ -48,6 +48,7 @@ export class UI {
 
     #createOverlays() {
         return {
+            hero: document.querySelector('overlay-hero'),
             ctrl: document.querySelector('overlay-controls'),
             rules: document.querySelector('overlay-rules'),
             inprint: document.querySelector('overlay-inprint')
@@ -102,7 +103,10 @@ export class UI {
     openOverlay(name) {
         if (!Object.keys(this.overlays).includes(name)) return;
         this.hideControlButtons();
-        this.overlays[name].show();
+        Object.entries(this.overlays).forEach(([olName, ol]) => {
+            if (olName == name) ol.show();
+            else ol.hide();
+        });
     }
 
     /**
@@ -112,6 +116,7 @@ export class UI {
     closeOverlay(name) {
         if (!Object.keys(this.overlays).includes(name)) return;
         this.overlays[name].hide();
+        if (name != 'hero') this.overlays.hero.show();
         this.showControlButtons();
     }
     // #endregion

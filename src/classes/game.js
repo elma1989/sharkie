@@ -39,6 +39,7 @@ export class Game {
     }
 
     async #startGame() {
+        this.#ui.closeOverlay('hero');
         this.#ui.hideControlButtons();
         this.#level.bringEnemiesToLife();
         await this.#sndMgr.enable();
@@ -50,6 +51,7 @@ export class Game {
 
     #showMain() {
         this.#ui.ctrlBtns.run.description = 'Start';
+        this.#ui.openOverlay('hero');
         this.#ui.showControlButtons()
     }
 
