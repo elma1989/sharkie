@@ -34,7 +34,6 @@ import { SharkieHealthBar } from "./model/status/health-sharkie.js";
 import { OrcaHealthBar } from "./model/status/health-orca.js";
 import { CoinBar } from "./model/status/coin.js";
 import { PoisonBar } from "./model/status/poison.js";
-import { TitleScreen } from "./model/screen-title.js";
 import { DangerousJellyFish } from "./model/jellyfish-danger.js";
 import { Control } from "./helper/control.js";
 import { SoundManager } from "./helper/snd-mgr.js";
@@ -58,7 +57,6 @@ export class Level {
     #collectables = [];
     /** @type{Bubble[]} */
     #bubbles = [];
-    #titleScreen = null;
     /** @type{Screen[]} */
     #screens = [];
     /** @type{Statusbar[]} */
@@ -72,6 +70,7 @@ export class Level {
     #lastTime = 0;
     #translationX = 0;
     #frameid = null;
+    #gameStart = false;
     #gameEnd = false;
 
     /**
@@ -103,6 +102,11 @@ export class Level {
     set translationX(value) {
         if (value < 0 || value > 3 * GameConfig.WIDTH) return;
         this.#translationX = value;
+    }
+
+    start() {
+        this.#gameStart = true;
+        this.gameLoop(0);
     }
 
     // #region Create Objects
@@ -243,13 +247,6 @@ export class Level {
     // #endregion
 
     // #region Draw
-    /** Draws title screen at first. */
-    async loadTitle() {
-        const title = new TitleScreen();
-        await title.load();
-        this.#titleScreen = title;
-    }
-
     /** Calls for all drawings the load()-method. */
     async loadDrawings() {
         await Promise.all(this.#loadings.map(loading => loading.load()));
@@ -262,18 +259,13 @@ export class Level {
         });
     }
 
-    drawTitleScreen() {
-        this.#titleScreen?.draw(this.#ctx);
-    }
-
     /** Draws all drawings. */
     #drawAll() {
-        if (this.#gameEnd) return;
+        if (!this.#gameStart || this.#gameEnd) return;
         this.#ctx.clearRect(0, 0, GameConfig.WIDTH, GameConfig.HEIGHT);
         this.#ctx.translate(-this.#translationX, 0);
         this.#drawings.forEach(drawing => drawing.draw(this.#ctx));
         this.#drawBars();
-        this.drawTitleScreen();
         this.#ctx.translate(this.#translationX, 0);
     }
     // #endregion
@@ -284,7 +276,7 @@ export class Level {
      * @param {number} timedelta - Time to next frame.
      */
     #updateAll(timedelta) {
-        if (!this.#gameEnd) this.#updateables.forEach(updateObj => updateObj.update(timedelta));
+        if (this.#gameStart && !this.#gameEnd) this.#updateables.forEach(updateObj => updateObj.update(timedelta));
     }
 
     /**
@@ -382,10 +374,6 @@ export class Level {
     }
 
     // #region Object Management
-    removeTitleScreen() {
-        this.#titleScreen = null;
-    }
-
     /**
      * Adds bubble to level.
      * @param {Bubble} bubble - Bubble to add.
@@ -437,7 +425,7 @@ export class Level {
     /** Add event for focus on the game. */
     #addFocusEvent() {
         window.addEventListener('focus', () => {
-            if(!this.#frameid) {
+            if(!this.#frameid && this.#gameStart && !this.#gameEnd) {
                 this.#frameid = requestAnimationFrame(this.gameLoop);
             }
         })

@@ -1,8 +1,7 @@
-import { Overlay } from "../abstract/overlay.js";
-import { Template } from "../helper/template.js";
+import { TitleOverlay } from "../abstract/overlay-title.js";
 
 /** An overlay for the game rules */
-export class RulesOverlay extends Overlay {
+export class RulesOverlay extends TitleOverlay {
     constructor() {
         super('rules', 'Game-Rules');
     }

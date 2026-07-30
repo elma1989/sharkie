@@ -2,10 +2,19 @@
     display: none;
 }
 
+.m-none {
+    @media (max-height: 667px) {
+        display: none;
+    }
+}
+
 .w-full {
     width: 100%;
 }
 
 .h-full {
     height: 100%;
+    @media(max-height: 540px) {
+        height: 100dvh;
+    }
 }

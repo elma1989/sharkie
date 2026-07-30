@@ -62,3 +62,44 @@ a:hover {
     justify-content: center;
     align-items: center;
 }
+
+@media (min-height: 1800px) {
+    main > header {
+        height: 15dvh;
+    }
+
+    .content {
+        height: 85dvh;
+    }
+
+    h1 {
+        font-size: 12rem;
+    }
+
+    h2 {
+        font-size: 6rem;
+    }
+
+    h3 {
+        font-size: 4rem;
+    }
+}
+
+@media(max-height: 620px) {
+    main > header {
+        display: none;
+    }
+    .content {
+        height: 100dvh;
+    }
+}
+
+@media (max-height: 420px) {
+    h2 {
+        font-size: 1.5rem;
+    }
+
+    h3 {
+        font-size: 1.5rem;
+    }
+}

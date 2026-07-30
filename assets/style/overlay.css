@@ -1,11 +1,18 @@
+    overlay-hero {
+    background: url(../img/04_Screen/title.png) center / cover;
+}
+
 .overlay {
     display: flex;
     flex-direction: column;
-    background: #0080ff;
     width: 100%;
     height: 100%;
     padding: 2rem;
     transition: opacity 300ms linear;
+}
+
+.bg-blue {
+    background: #0080ff;
 }
 
 .overlay header {
@@ -30,6 +37,9 @@
 .overlay-content p{
     font-size: 1.5rem;
     margin-bottom: 0.5rem;
+    @media(max-height: 450px) {
+        font-size: 1rem;
+    }
 }
 
 .control-container {
@@ -73,4 +83,36 @@
 
 .inprint-content p {
     margin-bottom: 1rem;
+}
+
+@media (min-height: 1800px) {
+    .overlay {
+        padding: 4rem;
+    }
+
+    .overlay-content p {
+        font-size: 3.5rem;
+    }
+
+    .control-group {
+        gap: 4rem;
+    }
+
+    .control-keys {
+        width: 12rem;
+        height: 12rem;
+        grid-template-rows: repeat(3, 4rem);
+        grid-template-columns: repeat(3, 4rem);
+    }
+
+    .key {
+        width: 3rem;
+        height: 3rem;
+        border-radius: 0.5rem;
+        font-size: 2rem;
+    }
+
+    .wide-key {
+        width: 8rem;
+    }
 }
