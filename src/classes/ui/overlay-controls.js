@@ -1,7 +1,7 @@
-import { Overlay } from "../abstract/overlay.js";
+import { TitleOverlay } from "../abstract/overlay-title.js";
 
 /** An overlay for controls. */
-export class ControlsOverlay extends Overlay {
+export class ControlsOverlay extends TitleOverlay {
     constructor() {
         super('ctrl', 'Controls');
     }

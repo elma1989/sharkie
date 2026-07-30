@@ -1,25 +1,19 @@
-import { Template } from "../helper/template.js";
-
 /** A Element lays over the main content. */
 export class Overlay extends HTMLElement {
     #name
-    #title;
     #visible;
 
     /**
      * Creates an overlay.
      * @param {string} name - Name of overlay.
-     * @param {string} title - Title of overlay.
      */
-    constructor(name, title) {
+    constructor(name, visible = false) {
         super();
         this.#name = name;
-        this.#title = title;
+        this.visible = visible;
     }
 
     get name() { return this.#name; }
-
-    get title() {return this.#title; }
 
     get visible() { return this.#visible; }
 
@@ -38,15 +32,5 @@ export class Overlay extends HTMLElement {
     /** Hides this overlay. */
     hide() {
         this.visible = false;
-    }
-
-    render() {
-        const children = this.innerHTML;
-        this.innerHTML = Template.overlay(this.name, this.title, children);
-    }
-
-    connectedCallback() {
-        this.hide();
-        this.render();
     }
 }
