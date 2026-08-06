@@ -16,6 +16,7 @@ export class Statusbar extends DrawableObject {
      */
     constructor(x, y, value, active = true) {
         super(x, y, 595, 158);
+        this.#value = value;
         this.#active = active;
     }
 

@@ -5,6 +5,8 @@ import { NormalBubble } from './normal-bubble.js';
 import { PoisonousBubble } from './poison-bubble.js';
 import { HealthyObject } from '../abstract/healty-object.js';
 import { GameConfig } from '../game-config.js';
+import { Control } from '../helper/control.js';
+import { SoundManager } from '../helper/snd-mgr.js';
 
 /**
  * @typedef {import('../types.js').Direction} Direction
@@ -13,7 +15,6 @@ import { GameConfig } from '../game-config.js';
 export class Sharkie extends HealthyObject {
 
     /** @type{Level} */
-    #level;
     #ctrl;
     #sndMgr;
     #longIdleTimer = 0;
@@ -25,14 +26,18 @@ export class Sharkie extends HealthyObject {
     #calledOrca = false;
     #gameStarted = false;
 
-    constructor(level, ctrl, sndMgr) {
+    /**
+     * Creeates sharkie
+     * @param {Control} ctrl - Control for movement.
+     * @param {SoundManager} sndMgr - Soundmanager for control sound.
+     */
+    constructor(ctrl, sndMgr) {
         super(0, 0, 815, 1000, {
             top: 600,
             right: 250,
             bottom: 300,
             left: 250
         }, SHAKIE);
-        this.#level = level;
         this.#ctrl = ctrl;
         this.#sndMgr = sndMgr;
     }
@@ -135,10 +140,6 @@ export class Sharkie extends HealthyObject {
         const speed = 800;
         const nextX = this.x + inputX * speed * timedelta / 1000;
         const nextY = this.y + inputY * speed * timedelta / 1000;
-        if (this.#level.canMoveTo(this, nextX, nextY)) {
-            this.x = nextX;
-            this.y = nextY;
-        }
     }
 
     /** Checks conditons for call orca. */
