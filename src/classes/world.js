@@ -142,5 +142,21 @@ export class World {
         ]
     }
     // #endregion
+
+    /**
+     * Loads the world.
+     * @returns {Promise<void>[]}
+     */
+    loadWorld() {
+        const loadings = [
+            ...this.backgrounds,
+            ...this.barriers,
+            ...this.collectables,
+            ...this.enemies,
+            this.orca,
+            this.sharkie
+        ];
+        return loadings.map(loading => loading.load());
+    }
     // #endregion
 }

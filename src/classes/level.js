@@ -19,4 +19,13 @@ export class Level {
     constructor(ctrl, sndMgr) {
         this.#world = new World(ctrl, sndMgr);
     }
+
+    /** Loads the level. */
+    async loadLevel() {
+        const loadings = [
+            ...this.#world.loadWorld(),
+            ...this.#hud.loadHud()
+        ]
+        await Promise.all(loadings);
+    }
 }

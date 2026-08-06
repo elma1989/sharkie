@@ -23,7 +23,7 @@ export class Game {
     /** Will be executed after create of game. */
     async init() {
         this.#addEvents();
-        await this.#level.loadDrawings();
+        await this.#level.loadLevel();
         await this.#sndMgr.loadIconButtons();
         await this.#sndMgr.preloadAllSounds();
         this.#ui.enambleRunButton('Start');
@@ -34,7 +34,7 @@ export class Game {
         this.#ui.showAfterGameButtons();
         this.#level = new Level(this.#ui.canvas.ctx, this.#ctrl, this.#sndMgr);
         this.#addEndGameEvent();
-        await this.#level.loadDrawings();
+        await this.#level.loadLevel();
         this.#ui.enambleRunButton('Try again');
     }
 

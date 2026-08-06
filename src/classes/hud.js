@@ -20,4 +20,16 @@ export class HUD {
     get bars() { return this.#bars; }
 
     get screens() { return this.#screens; }
+
+    /**
+     * Loads the HUD.
+     * @returns {Promise<void>[]}
+     */
+    loadHud() {
+        const loadings = [
+            ...Object.values(this.bars),
+            ...Object.values(this.screens)
+        ]
+        return loadings.map(loading => loading.load());
+    }
 }
