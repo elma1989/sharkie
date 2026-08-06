@@ -60,18 +60,9 @@ export class JellyFish extends Enemy {
         } else if(this.healthState == HEALTH_STATE.dead) this.moveDead(this.movement(800, timedelta));
     }
 
-    /**
-     * @override
-     * @inheritdoc
-     * @param {number} timedelta
-     */
-    updateAnimation(timedelta) {
-        this.animationTimer += timedelta;
-        if (this.animationTimer >= this.durationFrame) {
-            if (this.healthState == HEALTH_STATE.swim) this.playAnimation('swim');
-            else if (this.healthState == HEALTH_STATE.dead) this.playAnimation('dead');
-            this.animationTimer -= this.durationFrame;
-        }
+    animationLoop() {
+        if (this.healthState == HEALTH_STATE.swim) this.playAnimation('swim');
+        else if (this.healthState == HEALTH_STATE.dead) this.playAnimation('dead');
     }
 
     /**

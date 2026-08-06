@@ -17,8 +17,9 @@ export class Game {
         this.#ctrl = new Control();
         new Keyboard(this.#ctrl);
         this.#sndMgr = new SoundManager();
-        this.#level = new Level(this.#ui.canvas.ctx, this.#ctrl, this.#sndMgr);
+        this.#level = new Level(this.#ctrl, this.#sndMgr, this.#ui.canvas.ctx);
     }
+
     // #region Methods
     /** Will be executed after create of game. */
     async init() {
@@ -41,11 +42,9 @@ export class Game {
     async #startGame() {
         this.#ui.closeOverlay('hero');
         this.#ui.hideControlButtons();
-        this.#level.bringEnemiesToLife();
         await this.#sndMgr.enable();
         this.#music = this.#sndMgr.play('music');
         this.#sndMgr.showBar();
-        this.#level.activateSharkie();
         this.#level.start();
     }
 

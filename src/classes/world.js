@@ -23,6 +23,7 @@ import { Sharkie } from './model/sharkie.js';
  * @typedef {import('./helper/control.js').Control} Control
  * @typedef {import('./helper/snd-mgr.js').SoundManager} SoundManager
  * @typedef {import('./abstract/background.js').Background} Background
+ * @typedef {import('./abstract/animatad-object.js').AnimatedObject} AnimatedObject
  * @typedef {import('./abstract/barrier.js').Barrier} Barrier
  * @typedef {import('./abstract/collectable.js').Collectable} Collectable
  * @typedef {import('./abstract/enemy.js').Enemy} Enemy
@@ -37,6 +38,7 @@ export class World {
     #enemies;
     #orca = new Orca();
     #sharkie;
+    #updateables;
 
     /**
      * Creates the world.
@@ -49,7 +51,7 @@ export class World {
         this.#collectables = this.#createCollectables();
         this.#enemies = this.#createEnemies();
         this.#sharkie = new Sharkie(ctrl, sndMgr);
-
+        this.#updateables = this.#createUpdateables();
     }
 
     // #region Methods
@@ -141,6 +143,18 @@ export class World {
             new DangerousJellyFish()
         ]
     }
+
+    /**
+     * Creates a list for updating-object.
+     * @returns {AnimatedObject[]}
+     */
+    #createUpdateables() {
+        return [
+            ...this.collectables,
+            ...this.enemies,
+            this.sharkie
+        ]
+    }
     // #endregion
 
     /**
@@ -157,6 +171,14 @@ export class World {
             this.sharkie
         ];
         return loadings.map(loading => loading.load());
+    }
+
+    /**
+     * Updates all objects.
+     * @param {number} timedelta - Time since last frame in ms.
+     */
+    updateAll(timedelta) {
+        this.#updateables.forEach(updateable => updateable.update(timedelta));
     }
     // #endregion
 }

@@ -102,11 +102,20 @@ export class AnimatedObject extends CollidingObject {
      */
     updateState(timedelta) {}
 
+    animationLoop() {}
+
     /**
      * Updates the animation.
      * @param {number} timedelta - Time to next frame.
      */
-    updateAnimation(timedelta) {}
+    updateAnimation(timedelta) {
+        this.animationTimer += timedelta;
+        const duration = this.durationFrame;
+        if (this.animationTimer >= duration) {
+            this.animationLoop();
+            this.animationTimer -= duration;
+        }
+    }
 
     /**
      * Updates an object.

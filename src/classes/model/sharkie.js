@@ -24,7 +24,6 @@ export class Sharkie extends HealthyObject {
     #canThrowBubble = true;
     #isBubbleThrown = false;
     #calledOrca = false;
-    #gameStarted = false;
 
     /**
      * Creeates sharkie
@@ -51,7 +50,6 @@ export class Sharkie extends HealthyObject {
         const oldX = this.x;
         if (newX < -280) return;
         super.x = value;
-        if (oldX != value) this.onMoveX?.(this.x);
     }
 
     get y() { return super.y; }
@@ -138,22 +136,11 @@ export class Sharkie extends HealthyObject {
      */
     #moveToNewPositon(inputX, inputY, timedelta) {
         const speed = 800;
-        const nextX = this.x + inputX * speed * timedelta / 1000;
-        const nextY = this.y + inputY * speed * timedelta / 1000;
+        this.x += inputX * speed * timedelta / 1000;
+        this.y += inputY * speed * timedelta / 1000;
     }
-
-    /** Checks conditons for call orca. */
-    #checkCallOrca() {
-        if (!this.#calledOrca && this.hitbox.x + this.hitbox.width >= 3 * GameConfig.WIDTH) {
-            this.#calledOrca = true;
-            this.onCallOrca?.();
-        }
-    }
-
-    activate() { this.#gameStarted = true; }
-
     updateMovement(timedelta) {
-        if (!this.#gameStarted || this.#isDead()) return;
+        if (this.#isDead()) return;
         const inputs = this.#controlImput();
         this.#checkAttack();
         if (inputs.moving) {
@@ -161,11 +148,9 @@ export class Sharkie extends HealthyObject {
             if (this.#isIdle()) this.healthState = HEALTH_STATE.swim;
             this.#moveToNewPositon(inputs.moveX, inputs.moveY, timedelta);
         } else if (this.healthState == HEALTH_STATE.swim) this.healthState = HEALTH_STATE.idle;
-        this.#checkCallOrca();
     }
 
     updateState(timedelta) {
-        if (!this.#gameStarted) return;
         super.updateState(timedelta);
         if (this.#isAttack() && this.curImg == 8) {
             this.healthState = HEALTH_STATE.idle;
@@ -181,16 +166,8 @@ export class Sharkie extends HealthyObject {
         if (this.healthState == HEALTH_STATE.idle && this.#longIdleTimer >= 5000) this.healthState = HEALTH_STATE.longIdle;
     }
 
-    updateAnimation(timedelta) {
-        if (!this.#gameStarted) return;
-        this.animationTimer += timedelta;
-        const duration = this.durationFrame;
-        if (this.animationTimer >= duration) {
-            this.playAnimation(this.healthState);
-            if (this.#isDead() && this.curImg == this.lengthAnimation) this.onDead?.();
-            else if (this.#isAttackBubble() && this.curImg == 8) this.#sndMgr.play('attack/bubble');
-            this.animationTimer -= duration;
-        }
+    animationLoop() {
+        this.playAnimation(this.healthState);
     }
 
     resetAnimation() {
@@ -202,14 +179,13 @@ export class Sharkie extends HealthyObject {
     // #region Collect
     /** Adds a poisonous jar. */
     addPoisonousJar() {
-        this.onCollectJar?.(++this.#poisonousJars / 5 * 100);
+        this.#poisonousJars++;
         if (this.#poisonousJars == 5) this.#sndMgr.play('skill');
     }
 
     /** Adds a coin. */
     addCoin() {
         this.#coins++;
-        this.onCollectCoin?.(this.#coins / 20 * 100);
     }
     // #endregion
 

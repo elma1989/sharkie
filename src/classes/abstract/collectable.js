@@ -22,13 +22,8 @@ export class Collectable extends AnimatedObject {
         super(x, y, width, height, offset, animations);
     }
 
-    updateAnimation(timedelta) {
-        this.animationTimer += timedelta;
-        const duration = this.durationFrame;
-        if (this.animationTimer >= duration) {
-            this.playAnimation('idle');
-            this.animationTimer -= duration;
-        }
+    animationLoop() {
+        this.playAnimation('idle');
     }
 
     /**

@@ -30,6 +30,7 @@ export class Enemy extends HealthyObject {
         super(x, y, width, height, offset, animations);
         this.#direction = direction;
         this.#limits = limits;
+        this.healthState = HEALTH_STATE.swim;
     }
 
     get direction() { return this.#direction; }
@@ -49,10 +50,6 @@ export class Enemy extends HealthyObject {
         ctx.stroke.width = 3;
         ctx.strokeStyle = 'green';
         ctx.strokeRect(this.limits.minX, this.limits.minY, this.limits.maxX - this.limits.minX, this.limits.maxY - this.limits.minY);
-    }
-
-    bringToLife() {
-        this.healthState = HEALTH_STATE.swim;
     }
 
     // #region Movemnt
