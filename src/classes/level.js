@@ -6,6 +6,9 @@ import { World } from "./world.js";
  * @typedef {import('./helper/control.js').Control} Control
  * @typedef {import('./helper/snd-mgr.js').SoundManager} SoundManager
  * @typedef {import('./abstract/drawable-object.js').DrawableObject} DrawableObject
+ * @typedef {import('./abstract/collectable.js').Collectable} Collectable
+ * @typedef {import('./abstract/enemy.js').Enemy} Enemy
+ * @typedef {import('./abstract/bubble.js').Bubble} Bubble
  */
 
 /** Manges inner cnavas objects. */
@@ -17,6 +20,7 @@ export class Level {
     #running = false;
     #lastTime = 0;
     #frameId = 0;
+    #sndMgr;
 
     /**
      * Creates the level.
@@ -28,6 +32,7 @@ export class Level {
         this.#world = new World(ctrl, sndMgr);
         this.#drawings = this.#createDrawings();
         this.#ctx = ctx;
+        this.#sndMgr = sndMgr;
     }
 
     // #region Methods
@@ -54,6 +59,74 @@ export class Level {
             ...this.#world.barriers,
             ...Object.values(this.#hud.bars).slice(0, 3)
         ]
+    }
+    // #endregion
+
+    // #region Object-Management
+    /**
+     * Removes an object.
+     * @param {DrawableObject} obj - Object to remove
+     */
+    #removeObject(obj) {
+        const index = this.#drawings.indexOf(obj);
+        if (index != -1) this.#drawings.splice(index, 1);
+    }
+
+    /**
+     * Removes a object after collect.
+     * @param {Collectable} col - Collectable object to remove.
+     */
+    #removeCollectable(col) {
+        const collectables = this.#world.collectables;
+        const index = collectables.indexOf(col);
+        if (index >= 0) {
+            collectables.splice(index, 1);
+            this.#world.removeUpate(col);
+            this.#removeObject(col);
+        }
+    }
+
+    /**
+     * Removes an enemy after dead.
+     * @param {Enemy} enemy - Enemy to remove.
+     */
+    #removeEnemy(enemy) {
+        const enemies = this.#world.enemies;
+        const index = enemies.indexOf(enemy);
+        if (index >= 0) {
+            enemies.splice(index, 1);
+            this.#world.removeUpate(enemy);
+            this.#removeObject(enemy);
+        }
+    }
+
+    /**
+     * Adds a bubble.
+     * @param {Bubble} bubble - Bubble for add.
+     */
+    #addBubble(bubble) {
+        const iSharkie = this.#drawings.indexOf(this.#world.sharkie);
+        if (iSharkie >= 0) {
+            this.#world.bubbles.push(bubble);
+            this.#world.addUpdate(bubble);
+            this.#drawings.splice(iSharkie + 1, 0, bubble);
+            this.#sndMgr.play('attack/bubble');
+        }
+    }
+
+    /**
+     * Removes a bubble.
+     * @param {Bubble} bubble - Bubble to remove.
+     */
+    #remvoeBubble(bubble) {
+        const bubbles = this.#world.bubbles;
+        const index = bubbles.indexOf(bubble);
+        if (index >= 0) {
+            bubbles.splice(index, 1);
+            this.#world.removeUpate(bubble);
+            this.#removeObject(bubble);
+            this.#sndMgr.play('hurt/bubble');
+        }
     }
     // #endregion
 

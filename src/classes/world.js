@@ -39,6 +39,7 @@ export class World {
     #orca = new Orca();
     #sharkie;
     #updateables;
+    #bubbles = [];
 
     /**
      * Creates the world.
@@ -66,6 +67,8 @@ export class World {
     get orca() { return this.#orca; }
 
     get sharkie() { return this.#sharkie; }
+
+    get bubbles() { return this.#bubbles; }
 
     // #region Object Createion
     /**
@@ -157,6 +160,7 @@ export class World {
     }
     // #endregion
 
+    // #region Object Management
     /**
      * Loads the world.
      * @returns {Promise<void>[]}
@@ -180,5 +184,23 @@ export class World {
     updateAll(timedelta) {
         this.#updateables.forEach(updateable => updateable.update(timedelta));
     }
+
+    /**
+     * Adds an object to updateables.
+     * @param {AnimatedObject} obj - Object to add.
+     */
+    addUpdate(obj) {
+        this.#updateables.push(obj);
+    }
+
+    /**
+     * Removes an object.
+     * @param {AnimatedObject} obj - Object to remove.
+     */
+    removeUpate(obj) {
+        const index = this.#updateables.indexOf(obj);
+        if (index >= 0) this.#updateables.splice(index, 1);
+    }
+    // #endregion
     // #endregion
 }
