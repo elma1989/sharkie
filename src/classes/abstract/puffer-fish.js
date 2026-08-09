@@ -62,43 +62,15 @@ export class PufferFish extends Enemy {
     get deathImg() { return this.#deathImg; }
 
     // #region Movment
-    changeDirection() {
-        this.direction = this.direction == DIRECTION.WEST ? DIRECTION.EAST : DIRECTION.WEST;
+    moveSwim(timedelta) {
         this.mirrorHorzontally = this.direction == DIRECTION.EAST;
+        super.moveSwim(timedelta);
     }
 
-    /**
-     * @override
-     * @inheritdoc
-     * @param {number} movement
-     */
-    moveSwim(movement) {
-        this.x += this.direction == DIRECTION.WEST ? -movement : movement;
-    }
-
-    /**
-     * @override
-     * @inheritdoc
-     * @param {number} movement
-     */
-    moveDead(movement) {
-        this.x -= movement;
-        this.y -= movement;
-        if (this.y + this.height <= 0) this.onDead?.();
-    }
-
-    /**
-     * @override
-     * @inheritdoc
-     * @param {number} timedelta
-     */
-    updateMovement(timedelta) {
-        if(this.healthState == HEALTH_STATE.swim) {
-            this.moveSwim(this.movement(400, timedelta));
-            this.checkDirection()
-        } else if (this.healthState == HEALTH_STATE.dead) {
-            this.moveDead(this.movement(1500, timedelta));
-        }
+    moveDead(timedelta) {
+        const speed = 1200;
+        this.x -= speed * timedelta / 1000;
+        this.y -= speed * timedelta / 1000;
     }
     // #endregion
 

@@ -19,12 +19,4 @@ export class NormalJellyFish extends JellyFish {
             maxY: maxY
         });
     }
-
-    changeDirection() {
-        this.direction = this.direction == DIRECTION.SOUTH ? DIRECTION.NORTH : DIRECTION.SOUTH;
-    }
-
-    moveSwim(movement) {
-        this.y += this.direction == DIRECTION.SOUTH ? movement : -movement;
-    }
 }

@@ -16,7 +16,7 @@ export class DangerousJellyFish extends JellyFish {
             maxY: 1000
         }
         const pos = DangerousJellyFish.startPos(limits);
-        super(pos.x, pos.y, DIRECTION.EAST, limits);
+        super(pos.x, pos.y, DIRECTION.SOUTH, limits);
     }
 
     /**
@@ -37,39 +37,7 @@ export class DangerousJellyFish extends JellyFish {
         this.animations.dead.frames = await this.loadImages(ImgHelper.urls(ImgHelper.ENEMY["jellyfish/green/dead"]));
     }
 
-    /**
-     * Gets movement data.
-     * @param {number} movement - Time to next frame.
-     * @returns {{moveX: number, moveY: number}} Data of movement.
-     */
-    #movedata(movement) {
-        let moveX = 0;
-        let moveY = 0;
-        if (this.healthState == HEALTH_STATE.swim) {
-            switch(this.direction) {
-                case DIRECTION.SOUTH:
-                    moveX = -movement;
-                    moveY = movement;
-                    break;
-
-                case DIRECTION.WEST:
-                    moveX = -movement;
-                    moveY = -movement;
-                    break;
-
-                case DIRECTION.NORTH:
-                    moveX = movement;
-                    moveY = -movement;
-                    break;
-
-                case DIRECTION.EAST:
-                    moveX = movement;
-                    moveY = movement;
-            }
-        } else if (this.healthState == HEALTH_STATE.dead) moveY = -timedelta / 2;
-        return {moveX, moveY}
-    }
-
+    // #region Movement
     changeDirection() {
         switch(this.direction) {
             case DIRECTION.SOUTH:
@@ -89,10 +57,41 @@ export class DangerousJellyFish extends JellyFish {
         }
     }
 
-    moveSwim(movement) {
-        const moveData = this.#movedata(movement);
-        this.x += moveData.moveX;
-        this.y += moveData.moveY;
+    #getDirection() {
+        let x,y;
+        switch(this.direction) {
+            case DIRECTION.NORTH:
+                x = 1;
+                y = -1;
+                break;
+
+            case DIRECTION.EAST:
+                x = 1;
+                y = 1;
+                break;
+
+            case DIRECTION.SOUTH:
+                x = -1;
+                y = 1;
+                break;
+
+            case DIRECTION.WEST:
+                x = -1;
+                y = -1;
+        }
+        return {x, y};
+    }
+
+    moveSwim(timedelta) {
+        const speed = 600;
+        const vector = this.#getDirection();
+        const newX = this.x + vector.x * speed * timedelta / 1000;
+        const newY = this.y + vector.y * speed * timedelta / 1000;
+        if (this.limtitAt(newX, newY)) this.changeDirection();
+        else {
+            this.x = newX;
+            this.y = newY;
+        }
     }
 
     hit(sharkie) {

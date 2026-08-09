@@ -35,29 +35,7 @@ export class JellyFish extends Enemy {
                 duration: 1000,
                 loop: true
             }
-        }, direction, limits)
-    }
-
-    /**
-     * @override
-     * @inheritdoc
-     * @param {number} movement
-     */
-    moveDead(movement) {
-        this.y -= movement;
-        if (this.y + this.height < 0) this.onDead?.();
-    }
-
-    /**
-     * @override
-     * @inheritdoc
-     * @param {number} timedelta
-     */
-    updateMovement(timedelta) {
-        if (this.healthState == HEALTH_STATE.swim) {
-            this.moveSwim(this.movement(300, timedelta));
-            this.checkDirection();
-        } else if(this.healthState == HEALTH_STATE.dead) this.moveDead(this.movement(800, timedelta));
+        }, direction, limits);
     }
 
     animationLoop() {
@@ -81,5 +59,9 @@ export class JellyFish extends Enemy {
      */
     blubb(bubble) {
         this.injure(100);
+    }
+
+    moveDead(timedelta) {
+        this.y -= 800 * timedelta / 1000;
     }
 }
