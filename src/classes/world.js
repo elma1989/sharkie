@@ -51,7 +51,7 @@ export class World {
         this.#barriers = this.#createBarriers();
         this.#collectables = this.#createCollectables();
         this.#enemies = this.#createEnemies();
-        this.#sharkie = new Sharkie(ctrl, sndMgr);
+        this.#sharkie = new Sharkie(ctrl, sndMgr, this.barriers);
         this.#updateables = this.#createUpdateables();
     }
 

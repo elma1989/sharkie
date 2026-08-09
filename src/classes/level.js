@@ -130,6 +130,61 @@ export class Level {
     }
     // #endregion
 
+    // #region Collison
+    /** Checks collision for collectabels. */
+    #checkCollisionCollectable() {
+        const sharkie = this.#world.sharkie;
+        this.#world.collectables.forEach(col => {
+            if (sharkie.isColliding(col)) {
+                col.collect(sharkie);
+                this.#hud.bars.coin.value = sharkie.coin / 20 * 100;
+                this.#hud.bars.poison.value = sharkie.poison / 5 * 100;
+                this.#removeCollectable(col);
+            }
+        });
+    }
+
+    /** Checks collisoin Sharkie with enemy. */
+    #checkCollisonEnemy() {
+        const shark = this.#world.sharkie;
+        this.#world.enemies.forEach(enemy => {
+            if (shark.isColliding(enemy)) {
+                enemy.hit(shark);
+                this.#hud.bars.sharkie.value = shark.health;
+            }
+        });
+    }
+
+    /** Checks collision bubble with barrier. */
+    #checkCollisionBubbleBarrier() {
+        this.#world.barriers.forEach(barrier => {
+            this.#world.bubbles.forEach(bubble => {
+                if (bubble.isColliding(barrier)) this.#remvoeBubble(bubble);
+            });
+        });
+    }
+
+    /** Checks collison bubble with enemy. */
+    #checkCollisionBubbleEnemy() {
+        this.#world.enemies.forEach(enemy => {
+            this.#world.bubbles.forEach(bubble => {
+                if (bubble.isColliding(enemy)) {
+                    enemy.blubb(bubble);
+                    this.#remvoeBubble(bubble);
+                }
+            });
+        });
+    }
+
+    /** Checks all collsions. */
+    #checkCollision() {
+        this.#checkCollisionCollectable();
+        this.#checkCollisonEnemy();
+        this.#checkCollisionBubbleBarrier();
+        this.#checkCollisionBubbleEnemy();
+    }
+    // #endregion
+
     // #region Game-Loop
     /** Draws all objects. */
     #drawAll() {
@@ -144,6 +199,7 @@ export class Level {
         this.#lastTime = timestamp;
 
         this.#world.updateAll(timedelta);
+        this.#checkCollision();
         this.#drawAll();
         this.#frameId = requestAnimationFrame(this.#gameLoop);
     }

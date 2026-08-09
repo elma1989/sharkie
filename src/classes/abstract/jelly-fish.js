@@ -71,25 +71,15 @@ export class JellyFish extends Enemy {
      * @param {Sharkie} sharkie
      */
     hit(sharkie) {
-        sharkie.injure(10, 'electric');
+        sharkie.injureBy('electric', 10);
     }
 
     /**
      * @override
      * @inheritdoc
      * @param {Bubble} bubble
-     * @param {SoundManager} sndMgr
      */
-    blubb(bubble, sndMgr) {
-        this.injure(100, sndMgr);
-    }
-
-    /**
-     * @override
-     * @inheritdoc
-     * @param {SoundManager} sndMgr
-     */
-    playInjureSound(sndMgr) {
-        sndMgr.play('hurt/bubble');
+    blubb(bubble) {
+        this.injure(100);
     }
 }

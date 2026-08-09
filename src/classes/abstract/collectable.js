@@ -29,9 +29,6 @@ export class Collectable extends AnimatedObject {
     /**
      * Will be executed on collision with sharkie.
      * @param {Sharkie} skarkie - Instanz of sharkie.
-     * @param {SoundManager} sndMgr - Instanz of SoundManager.
      */
-    collect(skarkie, sndMgr) {
-        this.onCollect?.();
-    }
+    collect(skarkie) {}
 }

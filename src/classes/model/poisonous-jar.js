@@ -23,10 +23,8 @@ export class PoisonousJar extends Collectable {
         this.animations.idle.frames = await this.loadImages(ImgHelper.urls(ImgHelper.COLLECTABLE.poison));
     }
 
-    collect(sharkie, sndMgr) {
+    collect(sharkie) {
         if (!sharkie instanceof Sharkie) return;
-        sndMgr.play('collect/poison');
         sharkie.addPoisonousJar();
-        this.onCollect?.()
     }
 }

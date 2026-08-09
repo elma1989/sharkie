@@ -1,8 +1,10 @@
 import { DrawableObject } from './drawable-object.js';
-import { Barrier } from './barrier.js';
 
-/** @typedef {import(../types.js).Offset} Offset */
-/** @typedef {import(../types.js).Hitbox} */
+/** 
+ * @typedef {import(../types.js).Offset} Offset
+ * @typedef {import(../types.js).Hitbox} Hitbox
+ * @typedef {import('./barrier.js').Barrier} Barrier
+/**
 
 /**
  * Represents an object, which has collision.

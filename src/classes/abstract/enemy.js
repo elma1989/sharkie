@@ -80,7 +80,6 @@ export class Enemy extends HealthyObject {
     /**
      * Will be executed on collision width bubble and enemy.
      * @param {Bubble} bubble - Bubble from collision.
-     * @param {SoundManager} sndMgr - Instance of SoundManager.
      */
-    blubb(bubble, sndMgr) {}
+    blubb(bubble) {}
 }

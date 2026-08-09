@@ -96,10 +96,10 @@ export class DangerousJellyFish extends JellyFish {
     }
 
     hit(sharkie) {
-        sharkie.injure(20, 'electric');
+        sharkie.injureBy('electric', 20);
     }
 
-    blubb(bubble, sndMgr) {
-        this.injure(50, sndMgr);
+    blubb(bubble) {
+        this.injure(50);
     }
 }
