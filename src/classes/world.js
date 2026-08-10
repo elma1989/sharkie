@@ -36,7 +36,7 @@ export class World {
     #barriers;
     #collectables;
     #enemies;
-    #orca = new Orca();
+    #orca
     #sharkie;
     #updateables;
     #bubbles = [];
@@ -52,6 +52,7 @@ export class World {
         this.#collectables = this.#createCollectables();
         this.#enemies = this.#createEnemies();
         this.#sharkie = new Sharkie(ctrl, sndMgr, this.barriers);
+        this.#orca = new Orca(sndMgr);
         this.#updateables = this.#createUpdateables();
     }
 

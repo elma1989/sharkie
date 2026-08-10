@@ -2,13 +2,19 @@ import { Enemy } from "../abstract/enemy.js";
 import { GameConfig } from "../game-config.js";
 import { ORCA } from "../helper/animation.js";
 import { ImgHelper } from "../helper/img-helper.js";
+import { SoundManager } from "../helper/snd-mgr.js";
 import { DIRECTION, HEALTH_STATE } from "../types.js";
 import { PoisonousBubble } from "./poison-bubble.js";
 
 export class Orca extends Enemy {
     #attackTimer = 0;
+    #sndMgr
 
-    constructor() {
+    /**
+     * Creates Oraca.
+     * @param {SoundManager} sndMgr - Sound-Manger for control of sound.
+     */
+    constructor(sndMgr) {
         super(GameConfig.WIDTH * 3 + 450, 0, 1041, 1216, {
             top: 750,
             right: 300,
@@ -20,6 +26,14 @@ export class Orca extends Enemy {
             minY: 0,
             maxY: GameConfig.HEIGHT
         });
+        this.#sndMgr = sndMgr;
+    }
+
+    get healthState() { return super.healthState; }
+
+    set healthState(value) {
+        super.healthState = value;
+        if (value == HEALTH_STATE.attack) this.#sndMgr.play('attack/orca');
     }
 
     async load() {
@@ -33,6 +47,7 @@ export class Orca extends Enemy {
 
     approach() {
         this.healthState = HEALTH_STATE.spawn;
+        this.#sndMgr.play('approach');
     }
 
     updateState(timedelta) {
@@ -101,6 +116,7 @@ export class Orca extends Enemy {
         super.injure(damage);
         if (this.health < health) {
             this.#attackTimer = 0;
+            this.#sndMgr.play('hurt/orca');
             this.onInjure?.(this.health);
         }
         if (this.health >= 0) this.healthState = HEALTH_STATE.hurt;
