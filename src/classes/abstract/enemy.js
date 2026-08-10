@@ -106,7 +106,9 @@ export class Enemy extends HealthyObject {
      * Move enemy after dead.
      * @param {number} timedelta - Time to next frame in ms.
      */
-    moveDead(timedelta) {}
+    moveDead(timedelta) {
+        if (this.y < -300) this.onDead?.();
+    }
 
     /**
      * @inheritdoc

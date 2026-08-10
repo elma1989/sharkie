@@ -54,6 +54,11 @@ export class Sharkie extends HealthyObject {
         const oldX = this.x;
         if (newX < -280) return;
         super.x = value;
+        this.onMoveX?.(value);
+        if(!this.#calledOrca && value >= 4900) {
+            this.#calledOrca = true;
+            this.onCallOrca?.();
+        }
     }
 
     get y() { return super.y; }
@@ -67,6 +72,15 @@ export class Sharkie extends HealthyObject {
     get coin() { return this.#coins; }
 
     get poison() { return this.#poisonousJars; }
+
+    get healthState() { return super.healthState; }
+
+    set healthState(value) {
+        const bubbleAttack = value == HEALTH_STATE['attack/bubble/normal'] || value == HEALTH_STATE['attack/bubble/poison'];
+        if (this.#isAttackBubble() && !bubbleAttack) this.#resetBubble();
+        super.healthState = value;
+    }
+
     async load() {
         this.img = await this.loadImage(ImgHelper.url(ImgHelper.sharkie.idle[0]));
         this.animations.idle.frames = await this.loadImages(ImgHelper.urls(ImgHelper.sharkie.idle));
@@ -131,10 +145,6 @@ export class Sharkie extends HealthyObject {
         return {moveX, moveY, moving: length > 0}
     }
 
-    /** Checks Attack-Controls */
-    #checkAttack() {
-        if (this.#ctrl.ctrl.attackSlap) this.#attackSlap();
-        if (this.#ctrl.ctrl.attackBubble) this.#attackBubble();
     /**
      * Checkes, if Sharkie can move to position.
      * @param {number} x - X-Pos to check.
@@ -185,6 +195,9 @@ export class Sharkie extends HealthyObject {
 
     animationLoop() {
         this.playAnimation(this.healthState);
+        if (this.#isAttackBubble() && this.#bubble && this.curImg == 8 && !this.#isBubbleThrown) this.#shotBubble();
+        if (this.healthState == HEALTH_STATE['dead/poison'] && this.curImg == 12 || this.healthState == HEALTH_STATE['dead/electric'] && this.curImg == 10)
+            this.onDead?.();
     }
 
     resetAnimation() {
@@ -208,82 +221,62 @@ export class Sharkie extends HealthyObject {
     }
     // #endregion
 
-    // #region Bubble-Mangement
-    /** Sets position of bubble. */
-    #setBubblePos() {
-        const x = this.#bubble.direction == DIRECTION.EAST ? this.hitbox.x + this.hitbox.width + 50 : this.hitbox.x - 150;
-        this.#bubble.x = x;
-        this.#bubble.startX = x;
-        this.#bubble.y = this.hitbox.y + this.hitbox.height - 100;
-    }
-
-    /**
-     * Loads a bubble
-     * @param {Bubble} bubble - Bubble to load.
-     */
-    async #loadBubble(bubble) {
-        await bubble.load();
-        this.#bubble = bubble;
-        this.#canThrowBubble = true;
-    }
-
-    /**
-     * Adds events for a bubbe
-     * @param {Bubble} bubble - Bubble for add events
-     */
-    #addBubbleEvents(bubble) {
-        bubble.onBurst = () => {
-            this.#isBubbleThrown = false;
-        }
-        bubble.onDistanceSharkie = () => {
-            this.#isBubbleThrown = false;
-        }
-    }
-
-    /** Enables bubblesshot again. */
-    enableBubbleShot() {
-        this.#isBubbleThrown = false;
-    /** Plays sound for slap. */
-    playSlap (enemy) {
-        if (enemy.healthState != HEALTH_STATE.dead) this.#sndMgr.play('attack/slap');
-    }
-    // #endregion
-
     // #region Attack
+    #checkAttack() {
+        if (this.#ctrl.ctrl.attackSlap) this.#attackSlap();
+        if (this.#ctrl.ctrl.attackBubble) this.#attackBubble();
+    }
+
     /** Executes an attack for slap. */
     #attackSlap() {
         if (this.healthState == HEALTH_STATE['dead/electric'] || this.healthState == HEALTH_STATE['dead/poison']) return;
         if (this.healthState != HEALTH_STATE['attack/slap']) this.healthState = HEALTH_STATE['attack/slap'];
     }
 
-    /** Executes an attack for bubble-shot. */
-    #attackBubble() {
-        if (this.#isDead() || this.#isAttack()) return
-        if (!this.#canThrowBubble || this.#isBubbleThrown) return;
-        this.#canThrowBubble = false;
-        this.#isBubbleThrown = true;
-        const direction = this.mirrorHorzontally ? DIRECTION.WEST : DIRECTION.EAST;
-        let bubble;
-        if (this.#poisonousJars == 5) {
-            this.healthState = HEALTH_STATE['attack/bubble/poison'];
-            bubble = new PoisonousBubble(direction);
-        } else {
-            this.healthState = HEALTH_STATE['attack/bubble/normal'];
-            bubble = new NormalBubble(direction);
-        }
-        this.#addBubbleEvents(bubble);
-        this.#loadBubble(bubble);
+    /** Plays sound for slap. */
+    playSlap (enemy) {
+        if (enemy.healthState != HEALTH_STATE.dead) this.#sndMgr.play('attack/slap');
     }
     // #endregion
-    prepareDeath(attackType) {
-        this.healthState = `dead/${attackType}`;
+
+    // #region Bubble
+    /** Preperes a bubble for shot. */
+    async #attackBubble() {
+        const bubble = this.poison < 5 ? new NormalBubble() : new PoisonousBubble();
+        this.healthState = this.poison < 5 ? HEALTH_STATE['attack/bubble/normal'] : HEALTH_STATE['attack/bubble/poison'];
+        await bubble.load();
+        this.#bubble = bubble;
     }
+
+    /** Sets the bubble data */
+    #setBubble() {
+        if (!this.#bubble) return;
+        const direction = this.mirrorHorzontally ? DIRECTION.WEST : DIRECTION.EAST;
+        const x = this.mirrorHorzontally ? this.hitbox.x : this.hitbox.x + this.hitbox.width;
+        this.#bubble.startX = x;
+        this.#bubble.x = x;
+        this.#bubble.y = (this.hitbox.y + this.hitbox.y + this.hitbox.height) / 2 - 50;
+        this.#bubble.direction = direction;
+    }
+
+    /** Shots a bubble. */
+    #shotBubble() {
+        this.#isBubbleThrown = true;
+        this.#setBubble();
+        this.onShotBubble?.(this.#bubble);
+    }
+
+    /** Resets the shot state. */
+    #resetBubble() {
+        this.#bubble = null;
+        this.#isBubbleThrown = false;
+    }
+    // #endregion
 
     /**
      * Injures Sharkie by poisonous or electric attacks.
      * @param {'poison' | 'electric'} attactType Type for injure.
      * @param {number} damage - Value of damage in percent of health
-     * @returns
      */
     injureBy(attactType, damage) {
         let health = this.health;

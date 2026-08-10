@@ -71,6 +71,7 @@ export class PufferFish extends Enemy {
         const speed = 1200;
         this.x -= speed * timedelta / 1000;
         this.y -= speed * timedelta / 1000;
+        super.moveDead(timedelta);
     }
     // #endregion
 

@@ -21,6 +21,7 @@ export class Level {
     #lastTime = 0;
     #frameId = 0;
     #sndMgr;
+    #translationX = 0;
 
     /**
      * Creates the level.
@@ -33,9 +34,19 @@ export class Level {
         this.#drawings = this.#createDrawings();
         this.#ctx = ctx;
         this.#sndMgr = sndMgr;
+        this.#addEvents();
     }
 
     // #region Methods
+
+    get translationX() {return this.#translationX; }
+
+    set translationX(value) {
+        if(value < 0 || value > 5700) return;
+        this.#translationX = value;
+        this.#hud.moveBars(value);
+    }
+
     // #region Obejct-Mangement
     /** Loads the level. */
     async loadLevel() {
@@ -189,7 +200,9 @@ export class Level {
     /** Draws all objects. */
     #drawAll() {
         this.#ctx.clearRect(0, 0, GameConfig.WIDTH, GameConfig.HEIGHT);
+        this.#ctx.translate(-this.translationX, 0);
         this.#drawings.forEach(drawing => drawing.draw(this.#ctx));
+        this.#ctx.translate(this.translationX, 0);
     }
 
     /** Procedure to repeat in loop. */
@@ -215,6 +228,57 @@ export class Level {
     #stop() {
         this.#running = false;
         cancelAnimationFrame(this.#frameId);
+    }
+    // #endregion
+
+    // #region Events
+    /** Event to spawn orca. */
+    #approachOrca() {
+        const orca = this.#world.orca;
+        const iSharkie = this.#drawings.indexOf(this.#world.sharkie);
+        orca.approach();
+        this.#world.enemies.push(orca);
+        this.#world.addUpdate(orca);
+        this.#drawings.splice(iSharkie + 1, 0 , orca);
+        this.#drawings.push(this.#hud.bars.orca);
+    }
+
+    /**
+     * Event for finish of game.
+     * @param {"win" | "lose"} state - Result of game.
+     */
+    #finish(state) {
+        const screen = this.#hud.screens[state];
+        screen.setMiddle(this.#world.sharkie.x - 500);
+        this.#drawings.push(screen);
+        this.#drawAll();
+        this.#stop();
+        this.onEndGame?.();
+    }
+
+    /** Adds events for Sharkie. */
+    #addSharkieEvents() {
+        const sharkie = this.#world.sharkie;
+        sharkie.onMoveX = (xPos) => this.translationX = xPos - 500;
+        sharkie.onShotBubble = (bubble) => this.#addBubble(bubble);
+        sharkie.onCallOrca = () => this.#approachOrca();
+        sharkie.onDead = () => this.#finish('lose');
+    }
+
+    /** Adds events for all enemies. */
+    #addEnemyEvents() {
+        const orca = this.#world.orca;
+        this.#world.enemies.forEach(enemy => {
+            enemy.onDead = () => this.#removeEnemy(enemy);
+        });
+        orca.onInjure = (health) => this.#hud.bars.orca.value = health;
+        orca.onDead = () => this.#finish('win');
+    }
+
+    /** Adds all events. */
+    #addEvents() {
+        this.#addSharkieEvents();
+        this.#addEnemyEvents();
     }
     // #endregion
     // #endregion

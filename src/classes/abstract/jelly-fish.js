@@ -63,5 +63,6 @@ export class JellyFish extends Enemy {
 
     moveDead(timedelta) {
         this.y -= 800 * timedelta / 1000;
+        super.moveDead(timedelta);
     }
 }

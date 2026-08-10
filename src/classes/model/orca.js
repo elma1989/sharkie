@@ -31,6 +31,10 @@ export class Orca extends Enemy {
         this.animations.dead.frames = await this.loadImages(ImgHelper.urls(ImgHelper.ENEMY["orca/dead"]));
     }
 
+    approach() {
+        this.healthState = HEALTH_STATE.spawn;
+    }
+
     updateState(timedelta) {
         super.updateState(timedelta);
         this.#attackTimer += timedelta;
@@ -93,8 +97,12 @@ export class Orca extends Enemy {
     }
     // #endregion
     injure(damage) {
+        const health = this.health;
         super.injure(damage);
-        this.#attackTimer = 0;
+        if (this.health < health) {
+            this.#attackTimer = 0;
+            this.onInjure?.(this.health);
+        }
         if (this.health >= 0) this.healthState = HEALTH_STATE.hurt;
         else this.prepareDeath();
     }

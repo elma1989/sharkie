@@ -32,4 +32,8 @@ export class HUD {
         ]
         return loadings.map(loading => loading.load());
     }
+
+    moveBars(xPos) {
+        Object.values(this.bars).forEach(bar => bar.x = xPos);
+    }
 }
