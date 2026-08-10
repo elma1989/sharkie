@@ -4,7 +4,7 @@ import { ImgHelper } from "../../helper/img-helper.js";
 /** A statusbar for Sharkie's health. */
 export class SharkieHealthBar extends LeftStatusbar {
     constructor() {
-        super(0, 0, 100);
+        super(0, 100);
     }
 
     async load() {

@@ -34,10 +34,8 @@ export class Coin extends Collectable {
         this.animations.idle.frames = await this.loadImages(ImgHelper.urls(ImgHelper.COLLECTABLE.coin));
     }
 
-    collect(sharkie, sndMgr) {
+    collect(sharkie) {
         if (!sharkie instanceof Sharkie) return;
-        sndMgr.play('collect/coin');
         sharkie.addCoin();
-        this.onCollect?.();
     }
 }

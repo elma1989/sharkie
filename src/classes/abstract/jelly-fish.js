@@ -35,43 +35,12 @@ export class JellyFish extends Enemy {
                 duration: 1000,
                 loop: true
             }
-        }, direction, limits)
+        }, direction, limits);
     }
 
-    /**
-     * @override
-     * @inheritdoc
-     * @param {number} movement
-     */
-    moveDead(movement) {
-        this.y -= movement;
-        if (this.y + this.height < 0) this.onDead?.();
-    }
-
-    /**
-     * @override
-     * @inheritdoc
-     * @param {number} timedelta
-     */
-    updateMovement(timedelta) {
-        if (this.healthState == HEALTH_STATE.swim) {
-            this.moveSwim(this.movement(300, timedelta));
-            this.checkDirection();
-        } else if(this.healthState == HEALTH_STATE.dead) this.moveDead(this.movement(800, timedelta));
-    }
-
-    /**
-     * @override
-     * @inheritdoc
-     * @param {number} timedelta
-     */
-    updateAnimation(timedelta) {
-        this.animationTimer += timedelta;
-        if (this.animationTimer >= this.durationFrame) {
-            if (this.healthState == HEALTH_STATE.swim) this.playAnimation('swim');
-            else if (this.healthState == HEALTH_STATE.dead) this.playAnimation('dead');
-            this.animationTimer -= this.durationFrame;
-        }
+    animationLoop() {
+        if (this.healthState == HEALTH_STATE.swim) this.playAnimation('swim');
+        else if (this.healthState == HEALTH_STATE.dead) this.playAnimation('dead');
     }
 
     /**
@@ -80,25 +49,20 @@ export class JellyFish extends Enemy {
      * @param {Sharkie} sharkie
      */
     hit(sharkie) {
-        sharkie.injure(10, 'electric');
+        sharkie.injureBy('electric', 10);
     }
 
     /**
      * @override
      * @inheritdoc
      * @param {Bubble} bubble
-     * @param {SoundManager} sndMgr
      */
-    blubb(bubble, sndMgr) {
-        this.injure(100, sndMgr);
+    blubb(bubble) {
+        this.injure(100);
     }
 
-    /**
-     * @override
-     * @inheritdoc
-     * @param {SoundManager} sndMgr
-     */
-    playInjureSound(sndMgr) {
-        sndMgr.play('hurt/bubble');
+    moveDead(timedelta) {
+        this.y -= 800 * timedelta / 1000;
+        super.moveDead(timedelta);
     }
 }

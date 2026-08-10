@@ -17,13 +17,14 @@ export class Game {
         this.#ctrl = new Control();
         new Keyboard(this.#ctrl);
         this.#sndMgr = new SoundManager();
-        this.#level = new Level(this.#ui.canvas.ctx, this.#ctrl, this.#sndMgr);
+        this.#level = new Level(this.#ctrl, this.#sndMgr, this.#ui.canvas.ctx);
     }
+
     // #region Methods
     /** Will be executed after create of game. */
     async init() {
         this.#addEvents();
-        await this.#level.loadDrawings();
+        await this.#level.loadLevel();
         await this.#sndMgr.loadIconButtons();
         await this.#sndMgr.preloadAllSounds();
         this.#ui.enambleRunButton('Start');
@@ -34,18 +35,16 @@ export class Game {
         this.#ui.showAfterGameButtons();
         this.#level = new Level(this.#ui.canvas.ctx, this.#ctrl, this.#sndMgr);
         this.#addEndGameEvent();
-        await this.#level.loadDrawings();
+        await this.#level.loadLevel();
         this.#ui.enambleRunButton('Try again');
     }
 
     async #startGame() {
         this.#ui.closeOverlay('hero');
         this.#ui.hideControlButtons();
-        this.#level.bringEnemiesToLife();
         await this.#sndMgr.enable();
         this.#music = this.#sndMgr.play('music');
         this.#sndMgr.showBar();
-        this.#level.activateSharkie();
         this.#level.start();
     }
 
