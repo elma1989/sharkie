@@ -85,7 +85,7 @@ a:hover {
     }
 }
 
-@media(max-height: 620px) {
+@media(max-height: 620px) or (max-width: 450px) {
     main > header {
         display: none;
     }
