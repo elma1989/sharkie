@@ -57,7 +57,22 @@ button {
     outline: none;
 }
 
-#btn-run {
+.mob-ctrl {
+    display: flex;
+    justify-content: space-between;
+    z-index: 1;
+}
+
+.btn-mob-ctrl {
+    background: transparent;
+    border: none;
+    outline: none;
+    img {
+        height: 6rem;
+    }
+}
+
+#btn-run, #mob-ctrl-left {
     grid-area: run;
 }
 
