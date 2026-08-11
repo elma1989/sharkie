@@ -42,6 +42,7 @@ export class Game {
     async #startGame() {
         this.#ui.closeOverlay('hero');
         this.#ui.hideControlButtons();
+        this.#ui.start();
         await this.#sndMgr.enable();
         this.#music = this.#sndMgr.play('music');
         this.#sndMgr.showBar();
@@ -89,6 +90,7 @@ export class Game {
                 this.#music = null;
             }
             this.#sndMgr.hideBar();
+            this.#ui.stop();
             this.#secondPrepare();
         }
     }

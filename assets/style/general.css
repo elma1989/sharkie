@@ -8,6 +8,12 @@
     }
 }
 
+.s-none {
+    @media (max-width: 450px) {
+        display: none;
+    }
+}
+
 .w-full {
     width: 100%;
 }

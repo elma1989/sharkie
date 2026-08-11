@@ -19,6 +19,12 @@
     height: auto;
 }
 
+.c-box {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 .transparent {
     opacity: 0;
 }
@@ -85,6 +91,15 @@
     margin-bottom: 1rem;
 }
 
+.smart-wrapper {
+    width: 280px;
+    height: 280px;
+    img {
+        height: 280px;
+        animation: rotation 1200ms ease-in-out infinite;
+    }
+}
+
 @media (min-height: 1800px) {
     .overlay {
         padding: 4rem;
@@ -114,5 +129,25 @@
 
     .wide-key {
         width: 8rem;
+    }
+}
+
+@media (max-width: 450px) {
+    .overlay {
+        padding: 0;
+    }
+}
+
+@keyframes rotation {
+    0% {
+        transform: rotate(0);
+    }
+
+    33% {
+        transform: rotate(90deg);
+    }
+
+    100% {
+        transform: rotate(90deg);
     }
 }
