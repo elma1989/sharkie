@@ -16,12 +16,16 @@ export class UI {
     #controlButtons;
     #closeButtons;
     #overlays;
+    #running = false;
+    #resizeTimer;
 
     constructor() {
         this.#canvas = new Canvas();
         this.#controlButtons = this.#createControlButtons();
         this.#overlays = this.#createOverlays();
         this.#closeButtons = this.#createCloseButtons();
+        this.#checkPortait();
+        this.#addResizeEvent();
     }
 
     get canvas() { return this.#canvas; }
@@ -51,7 +55,8 @@ export class UI {
             hero: document.querySelector('overlay-hero'),
             ctrl: document.querySelector('overlay-controls'),
             rules: document.querySelector('overlay-rules'),
-            inprint: document.querySelector('overlay-inprint')
+            inprint: document.querySelector('overlay-inprint'),
+            landscape: document.querySelector('overlay-landscape')
         }
     }
 
@@ -96,6 +101,16 @@ export class UI {
     // #endregion
 
     // #region Overlay-Control
+    /** Action after start game. */
+    start() {
+        this.#running = true;
+    }
+
+    /** Actions after end game. */
+    stop() {
+        this.#running = false;
+    }
+
     /**
      * Opens an overlay.
      * @param {string} name - Name of overlay
@@ -116,8 +131,32 @@ export class UI {
     closeOverlay(name) {
         if (!Object.keys(this.overlays).includes(name)) return;
         this.overlays[name].hide();
-        if (name != 'hero') this.overlays.hero.show();
-        this.showControlButtons();
+        if (name != 'hero' && !this.#running)
+            this.overlays.hero.show();
+        if (!this.#running) this.showControlButtons();
+    }
+
+    /**
+     * Checkes if user has Portait-Mode.
+     * @returns {boolean}
+     */
+    #isPortrait() {
+        return window.innerWidth / window.innerHeight <= 1;
+    }
+
+    /** Opens and closes landscape overlay. */
+    #checkPortait() {
+        if (this.#isPortrait()) this.openOverlay('landscape');
+        else this.closeOverlay('landscape');
     }
     // #endregion
+
+    #addResizeEvent() {
+        window.addEventListener('resize', () => {
+            clearTimeout(this.#resizeTimer);
+            this.#resizeTimer = setTimeout(() => {
+                this.#checkPortait();
+            }, 700);
+        });
+    }
 }
