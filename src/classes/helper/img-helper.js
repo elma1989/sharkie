@@ -370,6 +370,10 @@ export class ImgHelper {
         sfx: [
             'sfx-on.svg',
             'sfx-off.svg'
+        ],
+        right: [
+            'right-on.svg',
+            'right-off.svg'
         ]
     }
 
