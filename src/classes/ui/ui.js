@@ -4,6 +4,7 @@ import { ControlsCloseButton } from "./btn-close-ctrl.js";
 import { ImpressumCloseButton } from "./btn-close-impressum.js";
 import { RulesCloseButton } from "./btn-close-rules.js";
 import { ControlsButton } from "./btn-controls.js";
+import { LeftControlButton } from "./btn-ctrl-left.js";
 import { RightControlButton } from "./btn-ctrl-right.js";
 import { ImpressumButton } from "./btn-impressum.js";
 import { MenuButton } from "./btn-menu.js";
@@ -59,6 +60,7 @@ export class UI {
 
     #createMobControlButtons() {
         return {
+            left: new LeftControlButton(),
             right: new RightControlButton()
         }
     }
