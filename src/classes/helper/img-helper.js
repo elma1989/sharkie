@@ -382,6 +382,10 @@ export class ImgHelper {
         up: [
             'up-on.svg',
             'up-off.svg'
+        ],
+        down: [
+            'down-on.svg',
+            'down-off.svg'
         ]
     }
 
