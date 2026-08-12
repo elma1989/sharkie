@@ -25,6 +25,7 @@ export class Game {
     async init() {
         this.#addEvents();
         await this.#level.loadLevel();
+        await this.#ui.loadMobileControlButtons();
         await this.#sndMgr.loadIconButtons();
         await this.#sndMgr.preloadAllSounds();
         this.#ui.enambleRunButton('Start');
@@ -33,7 +34,7 @@ export class Game {
     async #secondPrepare() {
         this.#ui.disableRunButton();
         this.#ui.showAfterGameButtons();
-        this.#level = new Level(this.#ui.canvas.ctx, this.#ctrl, this.#sndMgr);
+        this.#level = new Level(this.#ctrl, this.#sndMgr, this.#ui.canvas.ctx);
         this.#addEndGameEvent();
         await this.#level.loadLevel();
         this.#ui.enambleRunButton('Try again');
@@ -43,6 +44,7 @@ export class Game {
         this.#ui.closeOverlay('hero');
         this.#ui.hideControlButtons();
         this.#ui.start();
+        this.#ui.checkMobileControl();
         await this.#sndMgr.enable();
         this.#music = this.#sndMgr.play('music');
         this.#sndMgr.showBar();
@@ -55,8 +57,10 @@ export class Game {
         this.#ui.showControlButtons()
     }
 
+    // #region Events
     #addEvents() {
         this.#addButtonEvents();
+        this.#addMobCtrlEvents();
         this.#addSoundEvents();
         this.#addEndGameEvent();
     }
@@ -83,6 +87,21 @@ export class Game {
         }
     }
 
+    /**
+     * Turns mobile control buttons on and off.
+     * @param {string} name - Name of Button.
+     * @param {boolean} state - Active-state for button.
+     */
+    #handleMobCtrlButton(name, state) {
+        this.#ui.mobCtrlBtns[name].active = state;
+        this.#ctrl.ctrl[name] = state;
+    }
+
+    #addMobCtrlEvents() {
+        this.#ui.mobCtrlBtns.right.onPointerDown = () => this.#handleMobCtrlButton('right', true);
+        this.#ui.mobCtrlBtns.right.onPointerUp = () => this.#handleMobCtrlButton('right', false);
+    }
+
     #addEndGameEvent() {
         this.#level.onEndGame = () => {
             if (this.#music) {
@@ -91,8 +110,10 @@ export class Game {
             }
             this.#sndMgr.hideBar();
             this.#ui.stop();
+            this.#ui.checkMobileControl();
             this.#secondPrepare();
         }
     }
-    //#endregion
+    // #endregion
+    // #endregion
 }
