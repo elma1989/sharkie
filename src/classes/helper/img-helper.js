@@ -378,6 +378,10 @@ export class ImgHelper {
         left: [
             'left-on.svg',
             'left-off.svg'
+        ],
+        up: [
+            'up-on.svg',
+            'up-off.svg'
         ]
     }
 

@@ -102,6 +102,8 @@ export class Game {
         this.#ui.mobCtrlBtns.left.onPointerUp = () => this.#handleMobCtrlButton('left', false);
         this.#ui.mobCtrlBtns.right.onPointerDown = () => this.#handleMobCtrlButton('right', true);
         this.#ui.mobCtrlBtns.right.onPointerUp = () => this.#handleMobCtrlButton('right', false);
+        this.#ui.mobCtrlBtns.up.onPointerDown = () => this.#handleMobCtrlButton('up', true);
+        this.#ui.mobCtrlBtns.up.onPointerUp = () => this.#handleMobCtrlButton('up', false);
     }
 
     #addEndGameEvent() {
