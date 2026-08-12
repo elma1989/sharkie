@@ -4,6 +4,7 @@ import { ControlsCloseButton } from "./btn-close-ctrl.js";
 import { ImpressumCloseButton } from "./btn-close-impressum.js";
 import { RulesCloseButton } from "./btn-close-rules.js";
 import { ControlsButton } from "./btn-controls.js";
+import { RightControlButton } from "./btn-ctrl-right.js";
 import { ImpressumButton } from "./btn-impressum.js";
 import { MenuButton } from "./btn-menu.js";
 import { RulesButton } from "./btn-rules.js";
@@ -14,6 +15,8 @@ import { ControlsOverlay } from "./overlay-controls.js";
 export class UI {
     #canvas;
     #controlButtons;
+    #mobControlButtons;
+    #mobControlAreas;
     #closeButtons;
     #overlays;
     #running = false;
@@ -22,6 +25,8 @@ export class UI {
     constructor() {
         this.#canvas = new Canvas();
         this.#controlButtons = this.#createControlButtons();
+        this.#mobControlButtons = this.#createMobControlButtons();
+        this.#mobControlAreas = document.querySelectorAll('.mob-ctrl');
         this.#overlays = this.#createOverlays();
         this.#closeButtons = this.#createCloseButtons();
         this.#checkPortait();
@@ -31,6 +36,8 @@ export class UI {
     get canvas() { return this.#canvas; }
 
     get ctrlBtns() { return this.#controlButtons; }
+
+    get mobCtrlBtns() { return this.#mobControlButtons; }
 
     get closeBtns() { return this.#closeButtons; }
 
@@ -47,6 +54,12 @@ export class UI {
             controls: new ControlsButton(),
             rules: new RulesButton(),
             inprint: new ImpressumButton()
+        }
+    }
+
+    #createMobControlButtons() {
+        return {
+            right: new RightControlButton()
         }
     }
 
@@ -69,6 +82,11 @@ export class UI {
     }
 
     // #region Button-Control
+    async loadMobileControlButtons() {
+        const mobctrls = Object.values(this.#mobControlButtons).map(btn => btn.load());
+        await Promise.all(mobctrls);
+    }
+
     /**
      * Enables Run-Button.
      * @param {string} description - Text on button after disable-state.
@@ -97,6 +115,30 @@ export class UI {
     /** Shows Try again and Menu - Button */
     showAfterGameButtons() {
         Object.values(this.ctrlBtns).slice(0,2).forEach(btn => btn.visible = true);
+    }
+
+    /**
+     * Checks for mobile device.
+     * @returns {booblean} True, if user has mobile device.
+     */
+    #isMobile() {
+        return !this.#isPortrait() && window.innerHeight <= 800 && window.innerWidth <= 1200;
+    }
+
+    /** Shows mobile control buttons. */
+    #showMobileControl() {
+        this.#mobControlAreas.forEach(mobctrl => mobctrl.classList.remove('d-none'));
+    }
+
+    /** Hides mobile control buttons. */
+    #hideMobileControl() {
+        this.#mobControlAreas.forEach(mobctrl => mobctrl.classList.add('d-none'));
+    }
+
+    /** Decides for enable mobile control. */
+    checkMobileControl() {
+        if (this.#running && this.#isMobile()) this.#showMobileControl();
+        else this.#hideMobileControl();
     }
     // #endregion
 
@@ -156,6 +198,7 @@ export class UI {
             clearTimeout(this.#resizeTimer);
             this.#resizeTimer = setTimeout(() => {
                 this.#checkPortait();
+                this.checkMobileControl();
             }, 700);
         });
     }
