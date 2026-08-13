@@ -4,6 +4,7 @@ import { ControlsCloseButton } from "./btn-close-ctrl.js";
 import { ImpressumCloseButton } from "./btn-close-impressum.js";
 import { RulesCloseButton } from "./btn-close-rules.js";
 import { ControlsButton } from "./btn-controls.js";
+import { BubbleControlButton } from "./btn-ctrl-bubble.js";
 import { DownControlButton } from "./btn-ctrl-down.js";
 import { LeftControlButton } from "./btn-ctrl-left.js";
 import { RightControlButton } from "./btn-ctrl-right.js";
@@ -65,7 +66,8 @@ export class UI {
             left: new LeftControlButton(),
             right: new RightControlButton(),
             up: new UpControlButton(),
-            down: new DownControlButton()
+            down: new DownControlButton(),
+            attackBubble: new BubbleControlButton()
         }
     }
 
