@@ -386,6 +386,10 @@ export class ImgHelper {
         down: [
             'down-on.svg',
             'down-off.svg'
+        ],
+        attackBubble: [
+            'bubble-on.svg',
+            'bubble-off.svg'
         ]
     }
 
