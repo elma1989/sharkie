@@ -1,5 +1,6 @@
 import { TextButton } from "../abstract/button-text.js";
 import { Overlay } from "../abstract/overlay.js";
+import { SlapControlButton } from "../btn-ctrl-slap.js";
 import { ControlsCloseButton } from "./btn-close-ctrl.js";
 import { ImpressumCloseButton } from "./btn-close-impressum.js";
 import { RulesCloseButton } from "./btn-close-rules.js";
@@ -67,7 +68,8 @@ export class UI {
             right: new RightControlButton(),
             up: new UpControlButton(),
             down: new DownControlButton(),
-            attackBubble: new BubbleControlButton()
+            attackBubble: new BubbleControlButton(),
+            attackSlap: new SlapControlButton()
         }
     }
 

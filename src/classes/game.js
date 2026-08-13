@@ -108,6 +108,8 @@ export class Game {
         this.#ui.mobCtrlBtns.down.onPointerUp = () => this.#handleMobCtrlButton('down', false);
         this.#ui.mobCtrlBtns.attackBubble.onPointerDown = () => this.#handleMobCtrlButton('attackBubble', true);
         this.#ui.mobCtrlBtns.attackBubble.onPointerUp = () => this.#handleMobCtrlButton('attackBubble', false);
+        this.#ui.mobCtrlBtns.attackSlap.onPointerDown = () => this.#handleMobCtrlButton('attackSlap', true);
+        this.#ui.mobCtrlBtns.attackSlap.onPointerUp = () => this.#handleMobCtrlButton('attackSlap', false);
     }
 
     #addEndGameEvent() {

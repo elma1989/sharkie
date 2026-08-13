@@ -390,6 +390,10 @@ export class ImgHelper {
         attackBubble: [
             'bubble-on.svg',
             'bubble-off.svg'
+        ],
+        attackSlap: [
+            'slap-on.svg',
+            'slap-off.svg'
         ]
     }
 
