@@ -132,7 +132,7 @@ export class UI {
      * @returns {booblean} True, if user has mobile device.
      */
     #isMobile() {
-        return !this.#isPortrait() && window.innerHeight <= 800 && window.innerWidth <= 1200;
+        return !this.#isPortrait() && window.innerHeight <= 820 && window.innerWidth <= 1180;
     }
 
     /** Shows mobile control buttons. */
