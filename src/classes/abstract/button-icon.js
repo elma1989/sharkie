@@ -35,50 +35,6 @@ export class IconButton extends Button {
         this.#active = state;
     }
 
-    // #region Load
-    /**
-     * Gets icom from url.
-     * @param {string} url - URL for image.
-     * @returns {Promise<Image>} Image from url.
-     */
-    async #icon(url) {
-        return new Promise(resolve => {
-            const img = new Image();
-            img.src = url;
-            img.onload = () => resolve(img);
-        });
-    }
-
-    /**
-     * Loads image from url.
-     * @param {string} url - URL for image
-     * @returns {Promise<image>} Image from url.
-     */
-    async #loadIcon(url) {
-        const resp = await fetch(url);
-        if (!resp.ok) return null;
-        return this.#icon(url);
-    }
-
-    /**
-     * Puts images in a map for buttton.
-     * @param {string} name - Name of button.
-     * @returns {{on: Image | null, off: Image | null}} Map of images.
-     */
-    async loadIcons(name) {
-        if (!Object.keys(ImgHelper.ICONS).includes(name)) return null;
-        return {
-            on: await this.#loadIcon(ImgHelper.url(ImgHelper.ICONS[name][0], true)),
-            off: await this.#loadIcon(ImgHelper.url(ImgHelper.ICONS[name][1], true))
-        }
-    }
-
-    /** Manages the load-process. */
-    async load() {
-
-    }
-    // #endregion
-
     /** Changes active state. */
     toggle() {
         this.active = !this.active;

@@ -129,11 +129,6 @@ export class SoundManager {
         ]));
         this.#buffers = Object.fromEntries(entries);
     }
-
-    async loadIconButtons() {
-        await this.#ctrl.music.load(this.music);
-        await this.#ctrl.sfx.load(this.sfx);
-    }
     // #endregion
 
     /** Enables sound by user. */

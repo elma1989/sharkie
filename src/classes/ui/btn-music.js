@@ -6,9 +6,4 @@ export class MusicButton extends IconButton {
     constructor() {
         super('btn-music');
     }
-
-    async load(music) {
-        this.icons = await this.loadIcons('music');
-        this.active = music;
-    }
 }
