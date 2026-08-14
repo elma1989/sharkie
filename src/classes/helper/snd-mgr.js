@@ -103,7 +103,7 @@ export class SoundManager {
         const host = window.location.hostname;
         const path = '/assets/sounds/';
         if (host == 'localhost' || host == '127.0.0.1' ) return path + file;
-        if (host.endsWith('developer-akademie.net')) return '/sharkie' + path + file;
+        if (host.endsWith('developerakademie.net')) return '/sharkie' + path + file;
         return '/static/sharkie' + path + file;
     }
 
