@@ -6,7 +6,7 @@ export class FirstBottomBarrier extends Barrier {
     constructor() {
             super(GameConfig.WIDTH + 100, 0, 1682, 1080, {
                 top: 800,
-                right: 0,
+                right: 100,
                 bottom: 0,
                 left: 0
             })
