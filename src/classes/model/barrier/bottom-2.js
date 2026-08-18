@@ -9,7 +9,7 @@ export class SecondBottomBarrier extends Barrier {
             top: 100,
             right: 100,
             bottom: 0,
-            left: 100
+            left: 300
         });
     }
 
