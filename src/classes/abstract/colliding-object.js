@@ -34,6 +34,14 @@ export class CollidingObject extends DrawableObject {
         }
     }
 
+    get offset() { return this.#offset; }
+
+    /**
+     * Sets a new offset.
+     * @param {Offset} offset - Offet to set
+     */
+    set offset(offset) { this.#offset = offset;}
+
     /**
      * Draws a full frame around the object.
      * @param {CanvasRenderingContext2D} ctx - Context from canvas

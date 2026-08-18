@@ -35,10 +35,10 @@ export class Sharkie extends HealthyObject {
      */
     constructor(ctrl, sndMgr, barriers) {
         super(0, 0, 815, 1000, {
-            top: 600,
-            right: 250,
-            bottom: 300,
-            left: 250
+            top: 520,
+            right: 160,
+            bottom: 250,
+            left: 180
         }, SHAKIE);
         this.#ctrl = ctrl;
         this.#sndMgr = sndMgr;
@@ -78,6 +78,9 @@ export class Sharkie extends HealthyObject {
     set healthState(value) {
         const bubbleAttack = value == HEALTH_STATE['attack/bubble/normal'] || value == HEALTH_STATE['attack/bubble/poison'];
         if (this.#isAttackBubble() && !bubbleAttack) this.#resetBubble();
+        if (value == HEALTH_STATE.longIdle && this.healthState != HEALTH_STATE.longIdle
+            || value != HEALTH_STATE.longIdle && this.healthState == HEALTH_STATE.longIdle
+        ) this.#changeOffset();
         super.healthState = value;
     }
 
@@ -122,6 +125,21 @@ export class Sharkie extends HealthyObject {
      * @returns {boolean} True if it is attack.
      */
     #isAttack() { return this.isAttackSlap() || this.#isAttackBubble()};
+
+    /** Changes offet for long idle and leave long idle. */
+    #changeOffset() {
+        this.offset = this.healthState == HEALTH_STATE.longIdle ? {
+            top: 520,
+            right: 160,
+            bottom: 250,
+            left: 180
+        } : {
+            top: 600,
+            right: 160,
+            bottom: 140,
+            left: 180
+        }
+    }
 
     /**
      * Gets control-data.
