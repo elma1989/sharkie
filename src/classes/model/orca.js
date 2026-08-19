@@ -16,10 +16,10 @@ export class Orca extends Enemy {
      */
     constructor(sndMgr) {
         super(GameConfig.WIDTH * 3 + 450, 0, 1041, 1216, {
-            top: 750,
-            right: 300,
+            top: 600,
+            right: 250,
             bottom: 270,
-            left: 150
+            left: 100
         }, ORCA, DIRECTION.WEST, {
             minX: GameConfig.WIDTH * 3,
             maxX: GameConfig.WIDTH * 4 - 450,
