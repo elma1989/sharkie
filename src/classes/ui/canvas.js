@@ -1,5 +1,5 @@
 import { GameConfig } from "../game-config.js";
-import { HTMLCustomElement } from "./html-custom.js";
+import { HTMLCustomElement } from "../abstract/custom-element.js";
 
 export class Canvas extends HTMLCustomElement {
     #ctx;
