@@ -25,8 +25,6 @@ export class Game {
     async init() {
         this.#addEvents();
         await this.#level.loadLevel();
-        await this.#ui.loadMobileControlButtons();
-        await this.#sndMgr.loadIconButtons();
         await this.#sndMgr.preloadAllSounds();
         this.#ui.enambleRunButton('Start');
     }

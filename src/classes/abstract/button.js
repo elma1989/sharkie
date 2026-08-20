@@ -13,7 +13,7 @@ export class Button extends HTMLCustomElement {
     constructor(id, disabled = false, visible = true) {
         super(id, visible);
         this.disabled = disabled;
-        this.#addPointerDownEvent();
+        this.#addPointerEvents();
     }
 
     get disabled() { return this.#disabled; }
@@ -25,7 +25,11 @@ export class Button extends HTMLCustomElement {
         this.#disabled = state;
     }
 
-    #addPointerDownEvent() {
-        this.element?.addEventListener('pointerdown', () => this.onPointerDown?.());
+    /** Adds all pointer events. */
+    #addPointerEvents() {
+        const btn = this.element;
+        if (!btn) return;
+        btn.addEventListener('pointerdown', () => this.onPointerDown?.());
+        btn.addEventListener('pointerup', () => this.onPointerUp?.());
     }
 }

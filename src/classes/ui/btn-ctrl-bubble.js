@@ -1,12 +1,7 @@
-import { ControlButton } from "../abstract/button-ctrl.js";
+import { IconButton } from "../abstract/button-icon.js";
 
-export class BubbleControlButton extends ControlButton {
+export class BubbleControlButton extends IconButton {
     constructor() {
         super('btn-mobctrl-bubble');
-    }
-
-    async load() {
-        this.icons = await this.loadIcons('attackBubble');
-        this.active = false;
     }
 }

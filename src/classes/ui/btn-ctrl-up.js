@@ -1,12 +1,7 @@
-import { ControlButton } from "../abstract/button-ctrl.js";
+import { IconButton } from "../abstract/button-icon.js";
 
-export class UpControlButton extends ControlButton {
+export class UpControlButton extends IconButton {
     constructor() {
         super('btn-mobctrl-up');
-    }
-
-    async load() {
-        this.icons = await this.loadIcons('up');
-        this.active = false;
     }
 }

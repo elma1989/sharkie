@@ -1,12 +1,7 @@
-import { ControlButton } from "../abstract/button-ctrl.js";
+import { IconButton } from "../abstract/button-icon.js";
 
-export class LeftControlButton extends ControlButton {
+export class LeftControlButton extends IconButton {
     constructor() {
         super('btn-mobctrl-left');
-    }
-
-    async load() {
-        this.icons = await this.loadIcons('left');
-        this.active = false;
     }
 }
