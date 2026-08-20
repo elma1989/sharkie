@@ -7,10 +7,5 @@ export class ControlButton extends IconButton {
      */
     constructor(id) {
         super(id);
-        this.#addPointerUpEvent();
-    }
-
-    #addPointerUpEvent() {
-        this.element?.addEventListener('pointerup', () => this.onPointerUp?.());
     }
 }
