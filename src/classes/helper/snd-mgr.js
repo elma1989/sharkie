@@ -24,6 +24,9 @@ export class SoundManager {
         this.#sfx = this.#loadStorage('sfx');
         this.#sndBar = document.querySelector('.snd-ctrl');
 
+        this.#ctrl.music.active = this.music;
+        this.#ctrl.sfx.active = this.sfx;
+
         this.#initGain();
         this.#addEvents();
     }
