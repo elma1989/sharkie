@@ -26,6 +26,7 @@ export class IconButton extends Button {
             icons[0].classList.remove('d-none');
             icons[1].classList.add('d-none');
         }
+        if (this.active != state) this.onChange?.(state);
         this.#active = state;
     }
 
