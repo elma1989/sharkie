@@ -77,7 +77,7 @@ export class DrawableObject {
      * @returns {Promise<HTMLImageElement[]>}
      */
     async loadImages(urls) {
-        return await Promise.all(urls.map(url => this.loadImage(url)));
+        return Promise.all(urls.map(url => this.loadImage(url)));
     }
     // #endregion
 
