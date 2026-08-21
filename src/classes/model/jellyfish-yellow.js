@@ -15,8 +15,12 @@ export class YellowJellyFish extends NormalJellyFish {
     }
 
     async load() {
-        this.img = await this.loadImage(ImgHelper.url(ImgHelper.ENEMY["jellyfish/yellow/swim"][0]));
-        this.animations.swim.frames = await this.loadImages(ImgHelper.urls(ImgHelper.ENEMY["jellyfish/yellow/swim"]));
-        this.animations.dead.frames = await this.loadImages(ImgHelper.urls(ImgHelper.ENEMY["jellyfish/yellow/dead"]));
+        const [swim, dead] = await Promise.all([
+            this.loadImages(ImgHelper.urls(ImgHelper.ENEMY["jellyfish/yellow/swim"])),
+            this.loadImages(ImgHelper.urls(ImgHelper.ENEMY["jellyfish/yellow/dead"]))
+        ]);
+        this.animations.swim.frames = swim;
+        this.animations.dead.frames = dead;
+        this.img = swim[0];
     }
 }
