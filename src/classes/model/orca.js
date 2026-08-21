@@ -37,12 +37,19 @@ export class Orca extends Enemy {
     }
 
     async load() {
-        this.img = await this.loadImage(ImgHelper.url(ImgHelper.ENEMY["orca/spawn"][0]));
-        this.animations.spawn.frames = await this.loadImages(ImgHelper.urls(ImgHelper.ENEMY["orca/spawn"]));
-        this.animations.swim.frames = await this.loadImages(ImgHelper.urls(ImgHelper.ENEMY["orca/swim"]));
-        this.animations.attack.frames = await this.loadImages(ImgHelper.urls(ImgHelper.ENEMY["orca/attack"]));
-        this.animations.hurt.frames = await this.loadImages(ImgHelper.urls(ImgHelper.ENEMY["orca/hurt"]));
-        this.animations.dead.frames = await this.loadImages(ImgHelper.urls(ImgHelper.ENEMY["orca/dead"]));
+        const [spawn, swim, attack, hurt, dead] = await Promise.all([
+            this.loadImages(ImgHelper.urls(ImgHelper.ENEMY["orca/spawn"])),
+            this.loadImages(ImgHelper.urls(ImgHelper.ENEMY["orca/swim"])),
+            this.loadImages(ImgHelper.urls(ImgHelper.ENEMY["orca/attack"])),
+            this.loadImages(ImgHelper.urls(ImgHelper.ENEMY["orca/hurt"])),
+            this.loadImages(ImgHelper.urls(ImgHelper.ENEMY["orca/dead"]))
+        ]);
+        this.animations.spawn.frames = spawn;
+        this.animations.swim.frames = swim;
+        this.animations.attack.frames = attack;
+        this.animations.hurt.frames = hurt;
+        this.animations.dead.frames = dead;
+        this.img = spawn[0];
     }
 
     approach() {

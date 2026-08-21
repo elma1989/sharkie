@@ -84,18 +84,27 @@ export class Sharkie extends HealthyObject {
         super.healthState = value;
     }
 
+    #urls() {
+        return [
+            ImgHelper.urls(ImgHelper.sharkie.idle),
+            ImgHelper.urls(ImgHelper.sharkie.longIdle),
+            ImgHelper.urls(ImgHelper.sharkie.swim),
+            ImgHelper.urls(ImgHelper.sharkie['hurt/poison']),
+            ImgHelper.urls(ImgHelper.sharkie['hurt/electric']),
+            ImgHelper.urls(ImgHelper.sharkie['dead/poison']),
+            ImgHelper.urls(ImgHelper.sharkie['dead/electric']),
+            ImgHelper.urls(ImgHelper.sharkie['attack/slap']),
+            ImgHelper.urls(ImgHelper.sharkie['attack/bubble/normal']),
+            ImgHelper.urls(ImgHelper.sharkie['attack/bubble/poison'])
+        ]
+    }
+
     async load() {
-        this.img = await this.loadImage(ImgHelper.url(ImgHelper.sharkie.idle[0]));
-        this.animations.idle.frames = await this.loadImages(ImgHelper.urls(ImgHelper.sharkie.idle));
-        this.animations.longIdle.frames = await this.loadImages(ImgHelper.urls(ImgHelper.sharkie.longIdle));
-        this.animations.swim.frames = await this.loadImages(ImgHelper.urls(ImgHelper.sharkie.swim));
-        this.animations['hurt/poison'].frames = await this.loadImages(ImgHelper.urls(ImgHelper.sharkie['hurt/poison']));
-        this.animations['hurt/electric'].frames = await this.loadImages(ImgHelper.urls(ImgHelper.sharkie['hurt/electric']));
-        this.animations['dead/poison'].frames = await this.loadImages(ImgHelper.urls(ImgHelper.sharkie['dead/poison']));
-        this.animations['dead/electric'].frames = await this.loadImages(ImgHelper.urls(ImgHelper.sharkie['dead/electric']));
-        this.animations['attack/slap'].frames = await this.loadImages(ImgHelper.urls(ImgHelper.sharkie['attack/slap']));
-        this.animations['attack/bubble/normal'].frames = await this.loadImages(ImgHelper.urls(ImgHelper.sharkie['attack/bubble/normal']));
-        this.animations['attack/bubble/poison'].frames = await this.loadImages(ImgHelper.urls(ImgHelper.sharkie['attack/bubble/poison']));
+        const urls = this.#urls();
+        const animations = Object.values(this.animations);
+        const images = await Promise.all(urls.map(url => this.loadImages(url)));
+        animations.forEach((animation, i) => animation.frames = images[i]);
+        this.img = this.animations.idle.frames[0];
     }
 
     /**
