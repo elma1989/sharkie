@@ -28,7 +28,6 @@ export class Game {
             this.#level.loadLevel(),
             this.#sndMgr.preloadAllSounds()
         ]);
-        this.#ui.enambleRunButton('Start');
     }
 
     async #secondPrepare() {
@@ -37,44 +36,12 @@ export class Game {
         this.#level = new Level(this.#ctrl, this.#sndMgr, this.#ui.canvas.ctx);
         this.#addEndGameEvent();
         await this.#level.loadLevel();
-        this.#ui.enambleRunButton('Try again');
-    }
-
-    async #startGame() {
-        this.#ui.closeOverlay('hero');
-        this.#ui.hideControlButtons();
-        this.#ui.start();
-        this.#ui.checkMobileControl();
-        await this.#sndMgr.enable();
-        this.#music = this.#sndMgr.play('music');
-        this.#sndMgr.showBar();
-        this.#level.start();
-    }
-
-    #showMain() {
-        this.#ui.ctrlBtns.run.description = 'Start';
-        this.#ui.openOverlay('hero');
-        this.#ui.showControlButtons()
     }
 
     // #region Events
     #addEvents() {
-        this.#addButtonEvents();
-        this.#addMobCtrlEvents();
         this.#addSoundEvents();
         this.#addEndGameEvent();
-    }
-
-    #addButtonEvents() {
-        this.#ui.ctrlBtns.run.onPointerDown = () => this.#startGame();
-        this.#ui.ctrlBtns.menu.onPointerDown = () => this.#showMain();
-        this.#ui.ctrlBtns.controls.onPointerDown = () => this.#ui.openOverlay('ctrl');
-        this.#ui.ctrlBtns.rules.onPointerDown = () => this.#ui.openOverlay('rules');
-        this.#ui.ctrlBtns.inprint.onPointerDown = () => this.#ui.openOverlay('inprint')
-
-        this.#ui.closeBtns.ctrl.onPointerDown = () => this.#ui.closeOverlay('ctrl');
-        this.#ui.closeBtns.rules.onPointerDown = () => this.#ui.closeOverlay('rules');
-        this.#ui.closeBtns.inprint.onPointerDown = () => this.#ui.closeOverlay('inprint');
     }
 
     #addSoundEvents() {
@@ -87,31 +54,6 @@ export class Game {
         }
     }
 
-    /**
-     * Turns mobile control buttons on and off.
-     * @param {string} name - Name of Button.
-     * @param {boolean} state - Active-state for button.
-     */
-    #handleMobCtrlButton(name, state) {
-        this.#ui.mobCtrlBtns[name].active = state;
-        this.#ctrl.ctrl[name] = state;
-    }
-
-    #addMobCtrlEvents() {
-        this.#ui.mobCtrlBtns.left.onPointerDown = () => this.#handleMobCtrlButton('left', true);
-        this.#ui.mobCtrlBtns.left.onPointerUp = () => this.#handleMobCtrlButton('left', false);
-        this.#ui.mobCtrlBtns.right.onPointerDown = () => this.#handleMobCtrlButton('right', true);
-        this.#ui.mobCtrlBtns.right.onPointerUp = () => this.#handleMobCtrlButton('right', false);
-        this.#ui.mobCtrlBtns.up.onPointerDown = () => this.#handleMobCtrlButton('up', true);
-        this.#ui.mobCtrlBtns.up.onPointerUp = () => this.#handleMobCtrlButton('up', false);
-        this.#ui.mobCtrlBtns.down.onPointerDown = () => this.#handleMobCtrlButton('down', true);
-        this.#ui.mobCtrlBtns.down.onPointerUp = () => this.#handleMobCtrlButton('down', false);
-        this.#ui.mobCtrlBtns.attackBubble.onPointerDown = () => this.#handleMobCtrlButton('attackBubble', true);
-        this.#ui.mobCtrlBtns.attackBubble.onPointerUp = () => this.#handleMobCtrlButton('attackBubble', false);
-        this.#ui.mobCtrlBtns.attackSlap.onPointerDown = () => this.#handleMobCtrlButton('attackSlap', true);
-        this.#ui.mobCtrlBtns.attackSlap.onPointerUp = () => this.#handleMobCtrlButton('attackSlap', false);
-    }
-
     #addEndGameEvent() {
         this.#level.onEndGame = () => {
             if (this.#music) {
@@ -120,7 +62,6 @@ export class Game {
             }
             this.#sndMgr.hideBar();
             this.#ui.stop();
-            this.#ui.checkMobileControl();
             this.#secondPrepare();
         }
     }

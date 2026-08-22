@@ -1,5 +1,3 @@
-import { MusicButton } from "../ui/btn-music.js";
-import { SfxButton } from "../ui/btn-sfx.js";
 import { sounds } from "./sounds.js";
 
 export class SoundManager {
@@ -8,7 +6,6 @@ export class SoundManager {
     #musicGain;
     #sfxGain;
     #buffers;
-    #ctrl;
     #sndBar;
     #music;
     #sfx;
@@ -16,19 +13,11 @@ export class SoundManager {
     constructor() {
         this.#ctx = new AudioContext();
         this.#buffers = {};
-        this.#ctrl = {
-            music: new MusicButton(),
-            sfx: new SfxButton()
-        }
         this.#music = this.#loadStorage('music');
         this.#sfx = this.#loadStorage('sfx');
         this.#sndBar = document.querySelector('.snd-ctrl');
 
-        this.#ctrl.music.active = this.music;
-        this.#ctrl.sfx.active = this.sfx;
-
         this.#initGain();
-        this.#addEvents();
     }
 
     get music() { return this.#music; }
@@ -60,23 +49,6 @@ export class SoundManager {
 
         this.#musicGain.gain.value = 0.3;
     }
-
-    // #region Events
-    #addPointerEvents() {
-        this.#ctrl.music.onPointerDown = () => this.#ctrl.music.toggle();
-        this.#ctrl.sfx.onPointerDown = () => this.#ctrl.sfx.toggle();
-    }
-
-    #addChangeEvents() {
-        this.#ctrl.music.onChange = (state) => this.music = state;
-        this.#ctrl.sfx.onChange = (state) => this.sfx = state;
-    }
-
-    #addEvents() {
-        this.#addPointerEvents();
-        this.#addChangeEvents();
-    }
-    // #endregion
 
     // #region Storage
     /** Saves in local storage. */
