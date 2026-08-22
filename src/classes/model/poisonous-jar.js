@@ -19,8 +19,8 @@ export class PoisonousJar extends Collectable {
     }
 
     async load() {
-        this.img = await this.loadImage(ImgHelper.url(ImgHelper.COLLECTABLE.poison[0]));
         this.animations.idle.frames = await this.loadImages(ImgHelper.urls(ImgHelper.COLLECTABLE.poison));
+        this.img = this.animations.idle.frames[0];
     }
 
     collect(sharkie) {

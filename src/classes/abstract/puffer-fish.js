@@ -17,9 +17,6 @@ export class PufferFish extends Enemy {
         transition: null,
         full: null
     }
-    #imgDeadEmpty = null;
-    #imgDeadTransition = null;
-    #imgDeadFull = null;
 
     /**
      * Creates a puffer fish.

@@ -30,8 +30,8 @@ export class Coin extends Collectable {
     }
 
     async load() {
-        this.img = await this.loadImage(ImgHelper.url(ImgHelper.COLLECTABLE.coin[0]));
         this.animations.idle.frames = await this.loadImages(ImgHelper.urls(ImgHelper.COLLECTABLE.coin));
+        this.img = this.animations.idle.frames[0];
     }
 
     collect(sharkie) {
