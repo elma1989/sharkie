@@ -18,14 +18,16 @@ export class Game {
         new Keyboard(this.#ctrl);
         this.#sndMgr = new SoundManager();
         this.#level = new Level(this.#ctrl, this.#sndMgr, this.#ui.canvas.ctx);
+        this.#addEvents();
     }
 
     // #region Methods
     /** Will be executed after create of game. */
     async init() {
-        this.#addEvents();
-        await this.#level.loadLevel();
-        await this.#sndMgr.preloadAllSounds();
+        await Promise.all([
+            this.#level.loadLevel(),
+            this.#sndMgr.preloadAllSounds()
+        ]);
         this.#ui.enambleRunButton('Start');
     }
 
