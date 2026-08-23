@@ -11,6 +11,7 @@ export class Game {
     #level;
     #sndMgr;
     #music;
+    #ready = false;
 
     constructor() {
         this.#ui = new UI();
@@ -28,20 +29,34 @@ export class Game {
             this.#level.loadLevel(),
             this.#sndMgr.preloadAllSounds()
         ]);
+        this.#ui.enableRunButton('start');
+        this.#ready = true;
     }
 
+    /** Prepares the second or more run. */
     async #secondPrepare() {
+        this.#ready = false;
         this.#ui.disableRunButton();
         this.#ui.showAfterGameButtons();
         this.#level = new Level(this.#ctrl, this.#sndMgr, this.#ui.canvas.ctx);
         this.#addEndGameEvent();
         await this.#level.loadLevel();
+        this.#ui.enableRunButton('Try again');
+        this.#ready = true;
+    }
+
+    async #startGame() {
+        if (!this.#ready) return;
+        await this.#sndMgr.enable();
+        this.#ui.hideMainButtons();
+        this.#ui.closeOverlay('hero');
+        this.#level.start();
     }
 
     // #region Events
-    #addEvents() {
-        this.#addSoundEvents();
-        this.#addEndGameEvent();
+    /** Adds all events for main buttons and close overlay buttons. */
+    #addRunButtonEvent() {
+        this.#ui.btns.main.run.addEventListener('pointerdown', () => this.#startGame());
     }
 
     #addSoundEvents() {
@@ -64,6 +79,12 @@ export class Game {
             this.#ui.stop();
             this.#secondPrepare();
         }
+    }
+
+    #addEvents() {
+        this.#addRunButtonEvent();
+        this.#addSoundEvents();
+        this.#addEndGameEvent();
     }
     // #endregion
     // #endregion
