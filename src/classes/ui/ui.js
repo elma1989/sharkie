@@ -5,6 +5,7 @@ export class UI {
     #mobControlAreas;
     #btns;
     #overlays;
+    #sndCtrl;
     #running = false;
     #resizeTimer;
 
@@ -13,6 +14,7 @@ export class UI {
         this.#mobControlAreas = document.querySelectorAll('.mob-ctrl');
         this.#btns = this.#createButtons();
         this.#overlays = this.#createOverlays();
+        this.#sndCtrl = document.querySelector('.snd-ctrl');
         this.#checkPortait();
         this.#addEvents();
     }
@@ -36,6 +38,10 @@ export class UI {
                 rules: document.getElementById('btn-close-rules'),
                 ctrl: document.getElementById('btn-close-ctrl'),
                 inprint: document.getElementById('btn-close-inprint')
+            },
+            snd: {
+                music: document.getElementById('btn-music'),
+                sfx: document.getElementById('btn-sfx')
             }
         }
     }
@@ -67,6 +73,19 @@ export class UI {
         btn.innerText = 'LOADING';
     }
 
+    /**
+     * Sets sound button state.
+     * @param {'music' | 'sfx'} name - Music or Sfx for button name.
+     * @param {boolean} state - True for on and false for off.
+     */
+    setSndButton(name, state) {
+        const imgaes = this.btns.snd[name].children;
+        imgaes[0].classList.toggle('d-none', state);
+        imgaes[1].classList.toggle('d-none', !state);
+    }
+
+
+
     /** Shows main buttons. */
     showMainButtons() {
         const mainBtns = Object.values(this.btns.main);
@@ -83,6 +102,16 @@ export class UI {
     showAfterGameButtons() {
         const btnsAfter = [this.btns.main.run, this.btns.main.menu];
         btnsAfter.forEach(btn => btn.classList.remove('d-none'));
+    }
+
+    /** Shows sound control butttons. */
+    showSndBtns() {
+        this.#sndCtrl.classList.remove('d-none');
+    }
+
+    /** Hides sound control button. */
+    hideSndBtns() {
+        this.#sndCtrl.classList.add('d-none');
     }
     // #endregion
 

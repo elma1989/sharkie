@@ -14,10 +14,12 @@ export class Game {
     #ready = false;
 
     constructor() {
-        this.#ui = new UI();
         this.#ctrl = new Control();
         new Keyboard(this.#ctrl);
+        this.#ui = new UI();
         this.#sndMgr = new SoundManager();
+        this.#ui.setSndButton('music', this.#sndMgr.music);
+        this.#ui.setSndButton('sfx', this.#sndMgr.sfx);
         this.#level = new Level(this.#ctrl, this.#sndMgr, this.#ui.canvas.ctx);
         this.#addEvents();
     }
@@ -48,10 +50,47 @@ export class Game {
     async #startGame() {
         if (!this.#ready) return;
         await this.#sndMgr.enable();
+        if (this.#sndMgr.music) this.#music = this.#sndMgr.play('music');
         this.#ui.hideMainButtons();
         this.#ui.closeOverlay('hero');
+        this.#ui.showSndBtns();
         this.#level.start();
     }
+
+    // #region Sound-Management
+    /**
+     * Sets music state.
+     * @param {boolean} state - True for on, false for off.
+     */
+    #setMusic(state) {
+        this.#ui.setSndButton('music', state);
+        this.#sndMgr.music = state;
+        if (state) this.#music = this.#sndMgr.play('music');
+        else if (this.#music) {
+            this.#music.stop();
+            this.#music = null;
+        }
+    }
+
+    /**
+     * Sets SFX-state.
+     * @param {boolean} state - True for on and false for off.
+     */
+    #setSfx(state) {
+        this.#ui.setSndButton('sfx', state);
+        this.#sndMgr.sfx = state;
+    }
+
+    /** Turns music on and off. */
+    #toggleMusic() {
+        this.#setMusic(!this.#sndMgr.music);
+    }
+
+    /** Turns SFX on and off. */
+    #toggleSfx() {
+        this.#setSfx(!this.#sndMgr.sfx);
+    }
+    // #endregion
 
     // #region Events
     /** Adds all events for main buttons and close overlay buttons. */
@@ -59,14 +98,10 @@ export class Game {
         this.#ui.btns.main.run.addEventListener('pointerdown', () => this.#startGame());
     }
 
+    /** Adds events for sound buttons. */
     #addSoundEvents() {
-        this.#sndMgr.onChangeMusic = (state) => {
-            if (state) this.#music = this.#sndMgr.play('music');
-            else if (this.#music) {
-                this.#music.stop();
-                this.#music = null;
-            }
-        }
+        this.#ui.btns.snd.music.addEventListener('pointerdown', () => this.#toggleMusic());
+        this.#ui.btns.snd.sfx.addEventListener('pointerdown', () => this.#toggleSfx());
     }
 
     #addEndGameEvent() {
@@ -75,7 +110,7 @@ export class Game {
                 this.#music.stop();
                 this.#music = null;
             }
-            this.#sndMgr.hideBar();
+            this.#ui.hideSndBtns();
             this.#ui.stop();
             this.#secondPrepare();
         }

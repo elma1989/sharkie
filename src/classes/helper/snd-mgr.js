@@ -6,7 +6,6 @@ export class SoundManager {
     #musicGain;
     #sfxGain;
     #buffers;
-    #sndBar;
     #music;
     #sfx;
 
@@ -15,8 +14,6 @@ export class SoundManager {
         this.#buffers = {};
         this.#music = this.#loadStorage('music');
         this.#sfx = this.#loadStorage('sfx');
-        this.#sndBar = document.querySelector('.snd-ctrl');
-
         this.#initGain();
     }
 
@@ -129,16 +126,6 @@ export class SoundManager {
         src.connect(gain);
         src.start();
         return {stop: () => src.stop()};
-    }
-
-    /** Shows the soundbar. */
-    showBar() {
-        this.#sndBar.classList.remove('d-none');
-    }
-
-    /** Hides the soundbar. */
-    hideBar() {
-        this.#sndBar.classList.add('d-none');
     }
     // #endregion
 }
