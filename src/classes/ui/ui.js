@@ -42,6 +42,14 @@ export class UI {
             snd: {
                 music: document.getElementById('btn-music'),
                 sfx: document.getElementById('btn-sfx')
+            },
+            mobctrl: {
+                left: document.getElementById('btn-mobctrl-left'),
+                right: document.getElementById('btn-mobctrl-right'),
+                up: document.getElementById('btn-mobctrl-up'),
+                down: document.getElementById('btn-mobctrl-down'),
+                attackBubble: document.getElementById('btn-mobctrl-bubble'),
+                attackSlap: document.getElementById('btn-mobctrl-slap')
             }
         }
     }
@@ -75,16 +83,15 @@ export class UI {
 
     /**
      * Sets sound button state.
+     * @param {string} group - Name of button-group.
      * @param {'music' | 'sfx'} name - Music or Sfx for button name.
      * @param {boolean} state - True for on and false for off.
      */
-    setSndButton(name, state) {
-        const imgaes = this.btns.snd[name].children;
-        imgaes[0].classList.toggle('d-none', state);
-        imgaes[1].classList.toggle('d-none', !state);
+    setButton(group, name, state) {
+        const images = this.btns[group][name].children;
+        images[0].classList.toggle('d-none', state);
+        images[1].classList.toggle('d-none', !state);
     }
-
-
 
     /** Shows main buttons. */
     showMainButtons() {
@@ -102,6 +109,16 @@ export class UI {
     showAfterGameButtons() {
         const btnsAfter = [this.btns.main.run, this.btns.main.menu];
         btnsAfter.forEach(btn => btn.classList.remove('d-none'));
+    }
+
+    /** Shows the mobile control buttons. */
+    showMobCtrlButtons() {
+        this.#mobControlAreas.forEach(mobctrl => mobctrl.classList.remove('d-none'));
+    }
+
+    /** Hides the mobile control buttons. */
+    hideMobCtrlButtons() {
+        this.#mobControlAreas.forEach(mobctrl => mobctrl.classList.add('d-none'));
     }
 
     /** Shows sound control butttons. */
@@ -137,6 +154,7 @@ export class UI {
             if (olName == name) ol.show();
             else ol.hide();
         });
+        if (name == 'landscape') this.hideMobCtrlButtons();
     }
 
     /**
@@ -146,10 +164,11 @@ export class UI {
     closeOverlay(name) {
         if (!Object.keys(this.overlays).includes(name)) return;
         this.overlays[name].hide();
-        if (name != 'hero' && !this.#running) {
+        if (name != 'hero' && !this.#running && name != 'landscape') {
             this.overlays.hero.show();
             this.showMainButtons();
         }
+        if (name == 'landscape') this.showMobCtrlButtons();
     }
 
     /** Goes to main page. */

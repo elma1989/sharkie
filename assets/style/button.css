@@ -64,10 +64,13 @@ button {
 }
 
 .mob-ctrl {
-    display: flex;
+    display: none;
     width: 70%;
     justify-content: space-between;
     z-index: 1;
+    @media (max-width: 1025px) and (max-height: 769px) {
+        display: flex;
+    }
 }
 
 .btn-mob-ctrl {

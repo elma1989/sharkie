@@ -18,8 +18,8 @@ export class Game {
         new Keyboard(this.#ctrl);
         this.#ui = new UI();
         this.#sndMgr = new SoundManager();
-        this.#ui.setSndButton('music', this.#sndMgr.music);
-        this.#ui.setSndButton('sfx', this.#sndMgr.sfx);
+        this.#ui.setButton('snd', 'music', this.#sndMgr.music);
+        this.#ui.setButton('snd', 'sfx', this.#sndMgr.sfx);
         this.#level = new Level(this.#ctrl, this.#sndMgr, this.#ui.canvas.ctx);
         this.#addEvents();
     }
@@ -52,6 +52,7 @@ export class Game {
         await this.#sndMgr.enable();
         if (this.#sndMgr.music) this.#music = this.#sndMgr.play('music');
         this.#ui.hideMainButtons();
+        this.#ui.showMobCtrlButtons();
         this.#ui.closeOverlay('hero');
         this.#ui.showSndBtns();
         this.#level.start();
@@ -63,7 +64,7 @@ export class Game {
      * @param {boolean} state - True for on, false for off.
      */
     #setMusic(state) {
-        this.#ui.setSndButton('music', state);
+        this.#ui.setButton('snd', 'music', state);
         this.#sndMgr.music = state;
         if (state) this.#music = this.#sndMgr.play('music');
         else if (this.#music) {
@@ -77,7 +78,7 @@ export class Game {
      * @param {boolean} state - True for on and false for off.
      */
     #setSfx(state) {
-        this.#ui.setSndButton('sfx', state);
+        this.#ui.setButton('snd','sfx', state);
         this.#sndMgr.sfx = state;
     }
 
@@ -93,17 +94,44 @@ export class Game {
     // #endregion
 
     // #region Events
+    /**
+     * Changes controls states for button and control.
+     * @param {string} name - Name of control.
+     * @param {boolean} state - True for on and false for off.
+     */
+    #handleMobButton(name, state) {
+        this.#ui.setButton('mobctrl', name, state);
+        this.#ctrl.setCtrl(name, state);
+    }
+
     /** Adds all events for main buttons and close overlay buttons. */
     #addRunButtonEvent() {
-        this.#ui.btns.main.run.addEventListener('pointerdown', () => this.#startGame());
+        this.#ui.btns.main.run.addEventListener('click', () => this.#startGame());
     }
 
     /** Adds events for sound buttons. */
     #addSoundEvents() {
-        this.#ui.btns.snd.music.addEventListener('pointerdown', () => this.#toggleMusic());
-        this.#ui.btns.snd.sfx.addEventListener('pointerdown', () => this.#toggleSfx());
+        this.#ui.btns.snd.music.addEventListener('click', () => this.#toggleMusic());
+        this.#ui.btns.snd.sfx.addEventListener('click', () => this.#toggleSfx());
     }
 
+    /** Adds events for mobile control buttons. */
+    #addMobCtrlEvents() {
+        this.#ui.btns.mobctrl.left.addEventListener('touchstart', () => this.#handleMobButton('left', true));
+        this.#ui.btns.mobctrl.left.addEventListener('touchend', () => this.#handleMobButton('left', false));
+        this.#ui.btns.mobctrl.right.addEventListener('touchstart', () => this.#handleMobButton('right', true));
+        this.#ui.btns.mobctrl.right.addEventListener('touchend', () => this.#handleMobButton('right', false));
+        this.#ui.btns.mobctrl.up.addEventListener('touchstart', () => this.#handleMobButton('up', true));
+        this.#ui.btns.mobctrl.up.addEventListener('touchend', () => this.#handleMobButton('up', false));
+        this.#ui.btns.mobctrl.down.addEventListener('touchstart', () => this.#handleMobButton('down', true));
+        this.#ui.btns.mobctrl.down.addEventListener('touchend', () => this.#handleMobButton('down', false));
+        this.#ui.btns.mobctrl.attackBubble.addEventListener('touchstart', () => this.#handleMobButton('attackBubble', true));
+        this.#ui.btns.mobctrl.attackBubble.addEventListener('touchend', () => this.#handleMobButton('attackBubble', false));
+        this.#ui.btns.mobctrl.attackSlap.addEventListener('touchstart', () => this.#handleMobButton('attackSlap', true));
+        this.#ui.btns.mobctrl.attackSlap.addEventListener('touchend', () => this.#handleMobButton('attackSlap', false));
+    }
+
+    /** Adds events for end of game. */
     #addEndGameEvent() {
         this.#level.onEndGame = () => {
             if (this.#music) {
@@ -111,6 +139,7 @@ export class Game {
                 this.#music = null;
             }
             this.#ui.hideSndBtns();
+            this.#ui.hideMobCtrlButtons();
             this.#ui.stop();
             this.#secondPrepare();
         }
@@ -119,6 +148,7 @@ export class Game {
     #addEvents() {
         this.#addRunButtonEvent();
         this.#addSoundEvents();
+        this.#addMobCtrlEvents();
         this.#addEndGameEvent();
     }
     // #endregion
