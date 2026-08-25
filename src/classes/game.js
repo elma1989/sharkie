@@ -11,12 +11,15 @@ export class Game {
     #level;
     #sndMgr;
     #music;
+    #ready = false;
 
     constructor() {
-        this.#ui = new UI();
         this.#ctrl = new Control();
         new Keyboard(this.#ctrl);
+        this.#ui = new UI();
         this.#sndMgr = new SoundManager();
+        this.#ui.setButton('snd', 'music', this.#sndMgr.music);
+        this.#ui.setButton('snd', 'sfx', this.#sndMgr.sfx);
         this.#level = new Level(this.#ctrl, this.#sndMgr, this.#ui.canvas.ctx);
         this.#addEvents();
     }
@@ -28,101 +31,125 @@ export class Game {
             this.#level.loadLevel(),
             this.#sndMgr.preloadAllSounds()
         ]);
-        this.#ui.enambleRunButton('Start');
+        this.#ui.enableRunButton('start');
+        this.#ready = true;
     }
 
+    /** Prepares the second or more run. */
     async #secondPrepare() {
+        this.#ready = false;
         this.#ui.disableRunButton();
         this.#ui.showAfterGameButtons();
         this.#level = new Level(this.#ctrl, this.#sndMgr, this.#ui.canvas.ctx);
         this.#addEndGameEvent();
         await this.#level.loadLevel();
-        this.#ui.enambleRunButton('Try again');
+        this.#ui.enableRunButton('Try again');
+        this.#ready = true;
     }
 
     async #startGame() {
-        this.#ui.closeOverlay('hero');
-        this.#ui.hideControlButtons();
-        this.#ui.start();
-        this.#ui.checkMobileControl();
+        if (!this.#ready) return;
         await this.#sndMgr.enable();
-        this.#music = this.#sndMgr.play('music');
-        this.#sndMgr.showBar();
+        if (this.#sndMgr.music) this.#music = this.#sndMgr.play('music');
+        this.#ui.hideMainButtons();
+        this.#ui.showMobCtrlButtons();
+        this.#ui.closeOverlay('hero');
+        this.#ui.showSndBtns();
         this.#level.start();
     }
 
-    #showMain() {
-        this.#ui.ctrlBtns.run.description = 'Start';
-        this.#ui.openOverlay('hero');
-        this.#ui.showControlButtons()
-    }
-
-    // #region Events
-    #addEvents() {
-        this.#addButtonEvents();
-        this.#addMobCtrlEvents();
-        this.#addSoundEvents();
-        this.#addEndGameEvent();
-    }
-
-    #addButtonEvents() {
-        this.#ui.ctrlBtns.run.onPointerDown = () => this.#startGame();
-        this.#ui.ctrlBtns.menu.onPointerDown = () => this.#showMain();
-        this.#ui.ctrlBtns.controls.onPointerDown = () => this.#ui.openOverlay('ctrl');
-        this.#ui.ctrlBtns.rules.onPointerDown = () => this.#ui.openOverlay('rules');
-        this.#ui.ctrlBtns.inprint.onPointerDown = () => this.#ui.openOverlay('inprint')
-
-        this.#ui.closeBtns.ctrl.onPointerDown = () => this.#ui.closeOverlay('ctrl');
-        this.#ui.closeBtns.rules.onPointerDown = () => this.#ui.closeOverlay('rules');
-        this.#ui.closeBtns.inprint.onPointerDown = () => this.#ui.closeOverlay('inprint');
-    }
-
-    #addSoundEvents() {
-        this.#sndMgr.onChangeMusic = (state) => {
-            if (state) this.#music = this.#sndMgr.play('music');
-            else if (this.#music) {
-                this.#music.stop();
-                this.#music = null;
-            }
+    // #region Sound-Management
+    /**
+     * Sets music state.
+     * @param {boolean} state - True for on, false for off.
+     */
+    #setMusic(state) {
+        this.#ui.setButton('snd', 'music', state);
+        this.#sndMgr.music = state;
+        if (state) this.#music = this.#sndMgr.play('music');
+        else if (this.#music) {
+            this.#music.stop();
+            this.#music = null;
         }
     }
 
     /**
-     * Turns mobile control buttons on and off.
-     * @param {string} name - Name of Button.
-     * @param {boolean} state - Active-state for button.
+     * Sets SFX-state.
+     * @param {boolean} state - True for on and false for off.
      */
-    #handleMobCtrlButton(name, state) {
-        this.#ui.mobCtrlBtns[name].active = state;
-        this.#ctrl.ctrl[name] = state;
+    #setSfx(state) {
+        this.#ui.setButton('snd','sfx', state);
+        this.#sndMgr.sfx = state;
     }
 
+    /** Turns music on and off. */
+    #toggleMusic() {
+        this.#setMusic(!this.#sndMgr.music);
+    }
+
+    /** Turns SFX on and off. */
+    #toggleSfx() {
+        this.#setSfx(!this.#sndMgr.sfx);
+    }
+    // #endregion
+
+    // #region Events
+    /**
+     * Changes controls states for button and control.
+     * @param {string} name - Name of control.
+     * @param {boolean} state - True for on and false for off.
+     */
+    #handleMobButton(name, state) {
+        this.#ui.setButton('mobctrl', name, state);
+        this.#ctrl.setCtrl(name, state);
+    }
+
+    /** Adds all events for main buttons and close overlay buttons. */
+    #addRunButtonEvent() {
+        this.#ui.btns.main.run.addEventListener('click', () => this.#startGame());
+    }
+
+    /** Adds events for sound buttons. */
+    #addSoundEvents() {
+        this.#ui.btns.snd.music.addEventListener('click', () => this.#toggleMusic());
+        this.#ui.btns.snd.sfx.addEventListener('click', () => this.#toggleSfx());
+    }
+
+    /** Adds events for mobile control buttons. */
     #addMobCtrlEvents() {
-        this.#ui.mobCtrlBtns.left.onPointerDown = () => this.#handleMobCtrlButton('left', true);
-        this.#ui.mobCtrlBtns.left.onPointerUp = () => this.#handleMobCtrlButton('left', false);
-        this.#ui.mobCtrlBtns.right.onPointerDown = () => this.#handleMobCtrlButton('right', true);
-        this.#ui.mobCtrlBtns.right.onPointerUp = () => this.#handleMobCtrlButton('right', false);
-        this.#ui.mobCtrlBtns.up.onPointerDown = () => this.#handleMobCtrlButton('up', true);
-        this.#ui.mobCtrlBtns.up.onPointerUp = () => this.#handleMobCtrlButton('up', false);
-        this.#ui.mobCtrlBtns.down.onPointerDown = () => this.#handleMobCtrlButton('down', true);
-        this.#ui.mobCtrlBtns.down.onPointerUp = () => this.#handleMobCtrlButton('down', false);
-        this.#ui.mobCtrlBtns.attackBubble.onPointerDown = () => this.#handleMobCtrlButton('attackBubble', true);
-        this.#ui.mobCtrlBtns.attackBubble.onPointerUp = () => this.#handleMobCtrlButton('attackBubble', false);
-        this.#ui.mobCtrlBtns.attackSlap.onPointerDown = () => this.#handleMobCtrlButton('attackSlap', true);
-        this.#ui.mobCtrlBtns.attackSlap.onPointerUp = () => this.#handleMobCtrlButton('attackSlap', false);
+        this.#ui.btns.mobctrl.left.addEventListener('touchstart', () => this.#handleMobButton('left', true));
+        this.#ui.btns.mobctrl.left.addEventListener('touchend', () => this.#handleMobButton('left', false));
+        this.#ui.btns.mobctrl.right.addEventListener('touchstart', () => this.#handleMobButton('right', true));
+        this.#ui.btns.mobctrl.right.addEventListener('touchend', () => this.#handleMobButton('right', false));
+        this.#ui.btns.mobctrl.up.addEventListener('touchstart', () => this.#handleMobButton('up', true));
+        this.#ui.btns.mobctrl.up.addEventListener('touchend', () => this.#handleMobButton('up', false));
+        this.#ui.btns.mobctrl.down.addEventListener('touchstart', () => this.#handleMobButton('down', true));
+        this.#ui.btns.mobctrl.down.addEventListener('touchend', () => this.#handleMobButton('down', false));
+        this.#ui.btns.mobctrl.attackBubble.addEventListener('touchstart', () => this.#handleMobButton('attackBubble', true));
+        this.#ui.btns.mobctrl.attackBubble.addEventListener('touchend', () => this.#handleMobButton('attackBubble', false));
+        this.#ui.btns.mobctrl.attackSlap.addEventListener('touchstart', () => this.#handleMobButton('attackSlap', true));
+        this.#ui.btns.mobctrl.attackSlap.addEventListener('touchend', () => this.#handleMobButton('attackSlap', false));
     }
 
+    /** Adds events for end of game. */
     #addEndGameEvent() {
         this.#level.onEndGame = () => {
             if (this.#music) {
                 this.#music.stop();
                 this.#music = null;
             }
-            this.#sndMgr.hideBar();
+            this.#ui.hideSndBtns();
+            this.#ui.hideMobCtrlButtons();
             this.#ui.stop();
-            this.#ui.checkMobileControl();
             this.#secondPrepare();
         }
+    }
+
+    #addEvents() {
+        this.#addRunButtonEvent();
+        this.#addSoundEvents();
+        this.#addMobCtrlEvents();
+        this.#addEndGameEvent();
     }
     // #endregion
     // #endregion
