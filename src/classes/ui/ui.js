@@ -154,7 +154,7 @@ export class UI {
             if (olName == name) ol.show();
             else ol.hide();
         });
-        if (name == 'landscape') this.hideMobCtrlButtons();
+        this.hideMobCtrlButtons();
     }
 
     /**
@@ -164,11 +164,10 @@ export class UI {
     closeOverlay(name) {
         if (!Object.keys(this.overlays).includes(name)) return;
         this.overlays[name].hide();
-        if (name != 'hero' && !this.#running && name != 'landscape') {
-            this.overlays.hero.show();
+        if (name != 'hero' && !this.#running) {
+            this.openOverlay('hero');
             this.showMainButtons();
-        }
-        if (name == 'landscape') this.showMobCtrlButtons();
+        } else if (name == 'landscape') this.showMobCtrlButtons();
     }
 
     /** Goes to main page. */

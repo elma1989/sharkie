@@ -51,6 +51,7 @@ export class Game {
         if (!this.#ready) return;
         await this.#sndMgr.enable();
         if (this.#sndMgr.music) this.#music = this.#sndMgr.play('music');
+        this.#ui.start();
         this.#ui.hideMainButtons();
         this.#ui.showMobCtrlButtons();
         this.#ui.closeOverlay('hero');
