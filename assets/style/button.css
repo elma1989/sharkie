@@ -24,12 +24,7 @@ button {
     }
 }
 
-.btn-control:disabled {
-    color: rgba(255, 255, 255, 0.5);
-    border-color: rgba(255, 255, 255, 0.5);
-}
-
-.btn-control:not(:disabled):hover {
+.btn-control:hover {
     color: #0080ff;
     border-color: #0080ff;
 }
@@ -45,10 +40,6 @@ button {
     padding: 0.25rem;
     border: 1pt solid white;
     border-radius: 50%;
-}
-
-.waiting {
-    cursor: wait;
 }
 
 .snd-ctrl {
