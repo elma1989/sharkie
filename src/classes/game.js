@@ -96,10 +96,12 @@ export class Game {
     // #region Events
     /**
      * Changes controls states for button and control.
+     * @param {TouchEvent} event - Event from event listener.
      * @param {string} name - Name of control.
      * @param {boolean} state - True for on and false for off.
      */
-    #handleMobButton(name, state) {
+    #handleMobButton(event, name, state) {
+        if(event.cancelable) event.preventDefault();
         this.#ui.setButton('mobctrl', name, state);
         this.#ctrl.setCtrl(name, state);
     }
@@ -117,18 +119,18 @@ export class Game {
 
     /** Adds events for mobile control buttons. */
     #addMobCtrlEvents() {
-        this.#ui.btns.mobctrl.left.addEventListener('touchstart', () => this.#handleMobButton('left', true));
-        this.#ui.btns.mobctrl.left.addEventListener('touchend', () => this.#handleMobButton('left', false));
-        this.#ui.btns.mobctrl.right.addEventListener('touchstart', () => this.#handleMobButton('right', true));
-        this.#ui.btns.mobctrl.right.addEventListener('touchend', () => this.#handleMobButton('right', false));
-        this.#ui.btns.mobctrl.up.addEventListener('touchstart', () => this.#handleMobButton('up', true));
-        this.#ui.btns.mobctrl.up.addEventListener('touchend', () => this.#handleMobButton('up', false));
-        this.#ui.btns.mobctrl.down.addEventListener('touchstart', () => this.#handleMobButton('down', true));
-        this.#ui.btns.mobctrl.down.addEventListener('touchend', () => this.#handleMobButton('down', false));
-        this.#ui.btns.mobctrl.attackBubble.addEventListener('touchstart', () => this.#handleMobButton('attackBubble', true));
-        this.#ui.btns.mobctrl.attackBubble.addEventListener('touchend', () => this.#handleMobButton('attackBubble', false));
-        this.#ui.btns.mobctrl.attackSlap.addEventListener('touchstart', () => this.#handleMobButton('attackSlap', true));
-        this.#ui.btns.mobctrl.attackSlap.addEventListener('touchend', () => this.#handleMobButton('attackSlap', false));
+        this.#ui.btns.mobctrl.left.addEventListener('touchstart', (e) => this.#handleMobButton(e, 'left', true));
+        this.#ui.btns.mobctrl.left.addEventListener('touchend', (e) => this.#handleMobButton(e, 'left', false));
+        this.#ui.btns.mobctrl.right.addEventListener('touchstart', (e) => this.#handleMobButton(e, 'right', true));
+        this.#ui.btns.mobctrl.right.addEventListener('touchend', (e) => this.#handleMobButton(e, 'right', false));
+        this.#ui.btns.mobctrl.up.addEventListener('touchstart', (e) => this.#handleMobButton(e, 'up', true));
+        this.#ui.btns.mobctrl.up.addEventListener('touchend', (e) => this.#handleMobButton(e,'up', false));
+        this.#ui.btns.mobctrl.down.addEventListener('touchstart', (e) => this.#handleMobButton(e, 'down', true));
+        this.#ui.btns.mobctrl.down.addEventListener('touchend', (e) => this.#handleMobButton(e, 'down', false));
+        this.#ui.btns.mobctrl.attackBubble.addEventListener('touchstart', (e) => this.#handleMobButton(e, 'attackBubble', true));
+        this.#ui.btns.mobctrl.attackBubble.addEventListener('touchend', (e) => this.#handleMobButton(e, 'attackBubble', false));
+        this.#ui.btns.mobctrl.attackSlap.addEventListener('touchstart', (e) => this.#handleMobButton(e, 'attackSlap', true));
+        this.#ui.btns.mobctrl.attackSlap.addEventListener('touchend', (e) => this.#handleMobButton(e, 'attackSlap', false));
     }
 
     /** Adds events for end of game. */
