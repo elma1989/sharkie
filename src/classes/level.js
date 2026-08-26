@@ -18,6 +18,7 @@ export class Level {
     #drawings;
     #ctx;
     #running = false;
+    #ready = false;
     #lastTime = 0;
     #frameId = 0;
     #sndMgr;
@@ -55,6 +56,7 @@ export class Level {
             ...this.#hud.loadHud()
         ]
         await Promise.all(loadings);
+        this.#ready = true;
     }
 
     /**
@@ -211,9 +213,11 @@ export class Level {
         const timedelta = Math.min(100, timestamp - this.#lastTime);
         this.#lastTime = timestamp;
 
-        this.#world.updateAll(timedelta);
-        this.#checkCollision();
-        this.#drawAll();
+        if (this.#ready) {
+            this.#world.updateAll(timedelta);
+            this.#checkCollision();
+            this.#drawAll();
+        }
         this.#frameId = requestAnimationFrame(this.#gameLoop);
     }
 
