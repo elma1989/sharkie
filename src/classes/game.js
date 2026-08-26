@@ -11,7 +11,6 @@ export class Game {
     #level;
     #sndMgr;
     #music;
-    #ready = false;
 
     constructor() {
         this.#ctrl = new Control();
@@ -31,21 +30,17 @@ export class Game {
             this.#level.loadLevel(),
             this.#sndMgr.preloadAllSounds()
         ]);
-        this.#ready = true;
     }
 
     /** Prepares the second or more run. */
     async #secondPrepare() {
-        this.#ready = false;
         this.#ui.showAfterGameButtons();
         this.#level = new Level(this.#ctrl, this.#sndMgr, this.#ui.canvas.ctx);
         this.#addEndGameEvent();
         await this.#level.loadLevel();
-        this.#ready = true;
     }
 
     async #startGame() {
-        if (!this.#ready) return;
         await this.#sndMgr.enable();
         if (this.#sndMgr.music) this.#music = this.#sndMgr.play('music');
         this.#ui.start();
