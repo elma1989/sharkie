@@ -66,6 +66,14 @@ export class UI {
 
     // #region Button-Control
     /**
+     * Renames the run button.
+     * @param {string} name - new name for Run-Button.
+     */
+    setRunButtonName(name) {
+        this.btns.main.run.innerText = name;
+    }
+
+    /**
      * Sets sound button state.
      * @param {string} group - Name of button-group.
      * @param {'music' | 'sfx'} name - Music or Sfx for button name.

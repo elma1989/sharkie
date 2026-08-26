@@ -136,6 +136,7 @@ export class Game {
             this.#ui.hideSndBtns();
             this.#ui.hideMobCtrlButtons();
             this.#ui.stop();
+            this.#ui.setRunButtonName('Try again');
             this.#secondPrepare();
         }
     }
