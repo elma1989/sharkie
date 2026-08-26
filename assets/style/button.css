@@ -75,6 +75,7 @@ button {
 
 .btn-mob-ctrl {
     background: transparent;
+    touch-action: none;
     img {
         height: 6rem;
         @media (max-height: 450px) {
