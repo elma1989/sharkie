@@ -31,19 +31,16 @@ export class Game {
             this.#level.loadLevel(),
             this.#sndMgr.preloadAllSounds()
         ]);
-        this.#ui.enableRunButton('start');
         this.#ready = true;
     }
 
     /** Prepares the second or more run. */
     async #secondPrepare() {
         this.#ready = false;
-        this.#ui.disableRunButton();
         this.#ui.showAfterGameButtons();
         this.#level = new Level(this.#ctrl, this.#sndMgr, this.#ui.canvas.ctx);
         this.#addEndGameEvent();
         await this.#level.loadLevel();
-        this.#ui.enableRunButton('Try again');
         this.#ready = true;
     }
 

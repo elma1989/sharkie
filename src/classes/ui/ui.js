@@ -65,22 +65,6 @@ export class UI {
     }
 
     // #region Button-Control
-    /** Enables the run button. */
-    enableRunButton(name) {
-        const btn = this.btns.main.run;
-        btn.classList.remove('waiting');
-        btn.disabled = false;
-        btn.innerText = name;
-    }
-
-    /** Disables run button. */
-    disableRunButton() {
-        const btn = this.btns.main.run;
-        btn.disabled = true;
-        btn.classList.add('waiting');
-        btn.innerText = 'LOADING';
-    }
-
     /**
      * Sets sound button state.
      * @param {string} group - Name of button-group.
