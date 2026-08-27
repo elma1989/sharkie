@@ -1,8 +1,10 @@
 import { GameConfig } from "../game-config.js";
-import { Canvas } from "../ui/canvas.js";
 import { DrawableObject } from "./drawable-object.js";
 
-/** A background to draw. */
+/** 
+ * A background to draw.
+ * @extends DrawableObject
+ */
 export class Background extends DrawableObject {
     #offset;
 

@@ -1,11 +1,28 @@
-import { Canvas } from "../ui/canvas.js";
 
 /** An Object to draw. */
 export class DrawableObject {
+    /**
+     * X-Position of object.
+     * @type {number}
+     */
     #x;
+    /**
+     * Y-Position of object.
+     * @type {number}
+     */
     #y;
+    /** Width of object.
+     * @type {number}
+     */
     #width;
+    /** Height of object.
+     * @type {number}
+     */
     #height;
+    /** 
+     * Impage for object.
+     * @type {Image?}
+     */
     #img = null;
 
     /**
@@ -52,7 +69,7 @@ export class DrawableObject {
      * @param {string} url - Url from image.
      * @returns {Promise<Image>} Image after load.
      */
-    async #getImage(url) {
+    async getImage(url) {
         const img = new Image();
         return new Promise(resolve => {
             img.src = url;
@@ -68,13 +85,13 @@ export class DrawableObject {
     async loadImage(url) {
         const resp = await fetch(url);
         if (!resp.ok) throw new Error(`HTTP-Error: ${resp.status}, url: ${url}`);
-        return this.#getImage(url);
+        return this.getImage(url);
     }
 
     /**
      * Gets a list of images from urls
      * @param {string[]} urls - Urls for animation.
-     * @returns {Promise<HTMLImageElement[]>}
+     * @returns {Promise<Image[]>}
      */
     async loadImages(urls) {
         return Promise.all(urls.map(url => this.loadImage(url)));
