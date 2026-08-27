@@ -2,6 +2,10 @@ import { Barrier } from "../../abstract/barrier.js";
 import { GameConfig } from "../../game-config.js";
 import { ImgHelper } from "../../helper/img-helper.js";
 
+/**
+ * It's the barrier, which is on the botton only.
+ * @extends Barrier
+ */
 export class SecondBottomBarrier extends Barrier {
     constructor() {
         const height = 649;
@@ -13,7 +17,11 @@ export class SecondBottomBarrier extends Barrier {
         });
     }
 
+    /**
+     * Loads the barrier on the bottom.
+     * @override
+     */
     async load() {
-        this.img = await this.loadImage(ImgHelper.url(ImgHelper.background.barrier.bottom));
+        this.img = await this.loadImage(ImgHelper.url(ImgHelper.BACKGROUND.barrier.bottom));
     }
 }

@@ -2,6 +2,10 @@ import { Barrier } from "../../abstract/barrier.js";
 import { GameConfig } from "../../game-config.js";
 import { ImgHelper } from "../../helper/img-helper.js";
 
+/** 
+ * It's the right barrier at the end of game.
+ * @extends Barrier
+ */
 export class RightBarrier extends Barrier {
     constructor() {
         const width = 441;
@@ -14,7 +18,11 @@ export class RightBarrier extends Barrier {
         })
     }
 
+    /**
+     * Loads the right barrier.
+     * @override
+     */
     async load() {
-        this.img = await this.loadImage(ImgHelper.url(ImgHelper.background.barrier.right));
+        this.img = await this.loadImage(ImgHelper.url(ImgHelper.BACKGROUND.barrier.right));
     }
 }
