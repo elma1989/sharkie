@@ -1,13 +1,14 @@
-import { GameConfig } from "../game-config.js";
 import { AnimatedObject } from "./animatad-object.js";
 
 /**
- * Respesents an object, which can move.
- * @typedef {import('../types.js').Offset} Offset
- * @typedef {import('../types.js').Animation} Animaiton
+ * An animated object, which can move.
+ * @extends AnimatedObject
  */
-
 export class MovableObject extends AnimatedObject {
+    /**
+     * State for mirror horizontally
+     * @type {boolean}
+     */
     #mirorHorizontally = false;
 
     /**
@@ -31,6 +32,10 @@ export class MovableObject extends AnimatedObject {
         this.#mirorHorizontally = state;
     }
 
+    /**
+     * Draws an object, witch can be mirrored.
+     * @param {CanvasRenderingContext2D} ctx - Context of canvas.
+     */
     draw(ctx) {
         if (this.mirrorHorzontally) {
             ctx.save();
@@ -41,6 +46,10 @@ export class MovableObject extends AnimatedObject {
         } else super.draw(ctx);
     }
 
+    /**
+     * Updates the moving object.
+     * @param {number} timedelta - Time to next frame in ms.
+     */
     update(timedelta) {
         this.updateMovement(timedelta);
         super.update(timedelta)
@@ -48,6 +57,7 @@ export class MovableObject extends AnimatedObject {
 
     /**
      * Updates movment of an object.
+     * Must be overridden by children.
      * @param {number} timedelta - Time to next frame in ms.
      */
     updateMovement(timedelta) {
