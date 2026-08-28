@@ -1,13 +1,10 @@
-import { SoundManager } from "../helper/snd-mgr.js";
 import { Sharkie } from "../model/sharkie.js";
 import { AnimatedObject } from "./animatad-object.js";
 
-/**
- * @typedef {import('../types.js'.Offset)} Offset
- * @typedef {import('../types.js'.Animation)} Animaiton
+/** 
+ * An Animated object, which can be collected.
+ * @extends AnimatedObject
  */
-
-/** An Animated object, which can be collected. */
 export class Collectable extends AnimatedObject {
     /**
      * Creates an collectable object.
@@ -22,6 +19,10 @@ export class Collectable extends AnimatedObject {
         super(x, y, width, height, offset, animations);
     }
 
+    /**
+     * Animation-loop for collectable objects.
+     * @override
+     */
     animationLoop() {
         this.playAnimation('idle');
     }

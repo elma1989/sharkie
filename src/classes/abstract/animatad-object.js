@@ -1,22 +1,36 @@
 import { HEALTH_STATE } from "../types.js";
 import { CollidingObject } from "./colliding-object.js";
 
-/**
- * @typedef {import('../types.js') Offset} Offset
- * @typedef {import('../types.js') Animation} Animation
- * @typedef {import('../types.js') HealthState} HealthState
+/** 
+ * Represents an movabele object, which has animation.
+ * @extends CollidingObject
  */
-
-
-/** Represents an movabele object, which has animation. */
 export class AnimatedObject extends CollidingObject {
 
-    /** @type {Object.<string, Animation>} */
+    /**
+     *  Map of animaitons.
+     * @type {Object.<string, Animation>}
+     */
     #animations;
+    /**
+     * Index for currant image in array-animaition.
+     * @type {number}
+     */
     #currentImg = 0;
+    /** 
+     * Name of current animation
+     * @type {string?}
+     */
     #currentAnimation = null;
+    /** 
+     * Timer for curreent animaition in ms.
+     * @type {number}
+     */
     animationTimer = 0;
-    /** @type {HealthState} */
+    /** 
+     * Current state of health from object.
+     * @type {HealthState} 
+     */
     #healthState = HEALTH_STATE.idle
     /**
      * Crates an animated object.
@@ -63,13 +77,17 @@ export class AnimatedObject extends CollidingObject {
         }
     }
 
+    /**
+     * Checks, if object is dead.
+     * @returns {boolean} True, if obejct is dead.
+     */
     deathState() {
         return this.healthState == HEALTH_STATE.dead || this.healthState == HEALTH_STATE["dead/poison"] || this.healthState == HEALTH_STATE["dead/electric"]
     }
 
     // #region Animaiton
     /** Changes to next image. */
-    #changeImage() {
+    changeImage() {
         if (!this.#currentAnimation) return;
         if (this.#currentImg >= this.#animations[this.#currentAnimation].frames.length) return;
         this.img = this.#animations[this.#currentAnimation].frames[this.curImg++];
@@ -90,7 +108,7 @@ export class AnimatedObject extends CollidingObject {
             this.curImg = 0;
             this.#currentAnimation = name;
         }
-        this.#changeImage();
+        this.changeImage();
         this.resetAnimation();
     }
     // #endregion
@@ -102,6 +120,10 @@ export class AnimatedObject extends CollidingObject {
      */
     updateState(timedelta) {}
 
+    /** 
+     * Repeat any animations in a loop.
+     * Must be overridden by children.
+     */
     animationLoop() {}
 
     /**
