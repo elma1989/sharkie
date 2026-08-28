@@ -4,27 +4,61 @@ import { SHAKIE } from '../helper/animation.js';
 import { NormalBubble } from './normal-bubble.js';
 import { PoisonousBubble } from './poison-bubble.js';
 import { HealthyObject } from '../abstract/healty-object.js';
-import { GameConfig } from '../game-config.js';
 import { Control } from '../helper/control.js';
 import { SoundManager } from '../helper/snd-mgr.js';
 import { Barrier } from '../abstract/barrier.js';
 
 /**
- * @typedef {import('../types.js').Direction} Direction
+ * It's the main character.
+ * @extends HealthyObject
  */
-
 export class Sharkie extends HealthyObject {
 
-    /** @type{Level} */
+    /**
+     * User inputs for movment.
+     * @type {Control}
+     */
     #ctrl;
+    /**
+     * Sound-maanger for Sharkie's sounds.
+     * @type {SoundManager}
+     */
     #sndMgr;
+    /**
+     * Timer in ms to trigger the long idle state.
+     * Time since normal idle.
+     * @type {number}
+     */
     #longIdleTimer = 0;
+    /**
+     * Number of allready collected poisonous jars.
+     * @type {number}
+     */
     #poisonousJars = 0;
+    /**
+     * Number of allready collected coins.
+     * @type {number}
+     */
     #coins = 0;
+    /**
+     * Bariers to check collison before swim.
+     * @type {Barrier[]}
+     */
     #barriers;
+    /**
+     * Bubble, which is just prepared.
+     * @type {Bubble?}
+     */
     #bubble = null;
-    #canThrowBubble = true;
+    /** 
+     * Flag for just thrown bubble.
+     * @type {boolean}
+     */
     #isBubbleThrown = false;
+    /**
+     * Flag for already called endboss once finsh of level has been reached.
+     * @type {boolean}
+     */
     #calledOrca = false;
 
     /**
@@ -77,30 +111,38 @@ export class Sharkie extends HealthyObject {
 
     set healthState(value) {
         const bubbleAttack = value == HEALTH_STATE['attack/bubble/normal'] || value == HEALTH_STATE['attack/bubble/poison'];
-        if (this.#isAttackBubble() && !bubbleAttack) this.#resetBubble();
+        if (this.isAttackBubble() && !bubbleAttack) this.#resetBubble();
         if (value == HEALTH_STATE.longIdle && this.healthState != HEALTH_STATE.longIdle
             || value != HEALTH_STATE.longIdle && this.healthState == HEALTH_STATE.longIdle
-        ) this.#changeOffset();
+        ) this.changeOffset();
         super.healthState = value;
     }
 
-    #urls() {
+    /**
+     * Gets all animations for Sharkie.
+     * @returns {string[][]} All animations.
+     */
+    urls() {
         return [
-            ImgHelper.urls(ImgHelper.sharkie.idle),
-            ImgHelper.urls(ImgHelper.sharkie.longIdle),
-            ImgHelper.urls(ImgHelper.sharkie.swim),
-            ImgHelper.urls(ImgHelper.sharkie['hurt/poison']),
-            ImgHelper.urls(ImgHelper.sharkie['hurt/electric']),
-            ImgHelper.urls(ImgHelper.sharkie['dead/poison']),
-            ImgHelper.urls(ImgHelper.sharkie['dead/electric']),
-            ImgHelper.urls(ImgHelper.sharkie['attack/slap']),
-            ImgHelper.urls(ImgHelper.sharkie['attack/bubble/normal']),
-            ImgHelper.urls(ImgHelper.sharkie['attack/bubble/poison'])
+            ImgHelper.urls(ImgHelper.SHARKIE.idle),
+            ImgHelper.urls(ImgHelper.SHARKIE.longIdle),
+            ImgHelper.urls(ImgHelper.SHARKIE.swim),
+            ImgHelper.urls(ImgHelper.SHARKIE['hurt/poison']),
+            ImgHelper.urls(ImgHelper.SHARKIE['hurt/electric']),
+            ImgHelper.urls(ImgHelper.SHARKIE['dead/poison']),
+            ImgHelper.urls(ImgHelper.SHARKIE['dead/electric']),
+            ImgHelper.urls(ImgHelper.SHARKIE['attack/slap']),
+            ImgHelper.urls(ImgHelper.SHARKIE['attack/bubble/normal']),
+            ImgHelper.urls(ImgHelper.SHARKIE['attack/bubble/poison'])
         ]
     }
 
+    /**
+     * Loads animations for Sharkie.
+     * @overload
+     */
     async load() {
-        const urls = this.#urls();
+        const urls = this.urls();
         const animations = Object.values(this.animations);
         const images = await Promise.all(urls.map(url => this.loadImages(url)));
         animations.forEach((animation, i) => animation.frames = images[i]);
@@ -111,32 +153,40 @@ export class Sharkie extends HealthyObject {
      * Checks, if sharkie is dead
      * @returns {boolean} True, if it is dead.
      */
-    #isDead() { return this.healthState == HEALTH_STATE['dead/poison'] || this.healthState == HEALTH_STATE['dead/electric']; }
+    isDead() { return this.healthState == HEALTH_STATE['dead/poison'] || this.healthState == HEALTH_STATE['dead/electric']; }
 
     /**
      * Checks if it is idle.
      * @returns {boolean} True if it is idle.
      */
-    #isIdle() { return this.healthState == HEALTH_STATE.idle || this.healthState == HEALTH_STATE.longIdle; }
+    isIdle() { return this.healthState == HEALTH_STATE.idle || this.healthState == HEALTH_STATE.longIdle; }
 
     /**
      * Checkes if it is injured.
      * @returns {boolean} True if it is injured.
      */
-    #isInjured() {return this.healthState == HEALTH_STATE['hurt/poison'] || this.healthState == HEALTH_STATE['hurt/electric']; }
+    isInjured() {return this.healthState == HEALTH_STATE['hurt/poison'] || this.healthState == HEALTH_STATE['hurt/electric']; }
 
-    #isAttackBubble() {return this.healthState == HEALTH_STATE['attack/bubble/normal'] || this.healthState == HEALTH_STATE['attack/bubble/poison']}
+    /**
+     * Checks, if Sharkie uses bubble-attack
+     * @returns {boolean} True, if Sharkie uses bubble-attack.
+     */
+    isAttackBubble() {return this.healthState == HEALTH_STATE['attack/bubble/normal'] || this.healthState == HEALTH_STATE['attack/bubble/poison']}
 
+    /**
+     * Checks, if Sharkie uses slap-attack.
+     * @returns {boolean} True, if Sharkie uses slap-attack.
+     */
     isAttackSlap() { return this.healthState == HEALTH_STATE['attack/slap']; }
 
     /**
      * Checks if it is attack.
      * @returns {boolean} True if it is attack.
      */
-    #isAttack() { return this.isAttackSlap() || this.#isAttackBubble()};
+    isAttack() { return this.isAttackSlap() || this.isAttackBubble()};
 
     /** Changes offet for long idle and leave long idle. */
-    #changeOffset() {
+    changeOffset() {
         this.offset = this.healthState == HEALTH_STATE.longIdle ? {
             top: 520,
             right: 160,
@@ -154,7 +204,7 @@ export class Sharkie extends HealthyObject {
      * Gets control-data.
      * @returns {{moveX:number,moveY:number, moving:boolean}} Data from control.
      */
-    #controlImput() {
+    controlImput() {
         let moveX = 0;
         let moveY = 0;
 
@@ -178,7 +228,7 @@ export class Sharkie extends HealthyObject {
      * @param {number} y - y-Pos to check.
      * @returns {boolean}
      */
-    #canMoveTo(x, y) {
+    canMoveTo(x, y) {
         return !this.#barriers.some(barrier => barrier.collidesAt(this.hitboxAt(x, y), barrier));
     }
 
@@ -188,45 +238,63 @@ export class Sharkie extends HealthyObject {
      * @param {number} inputY - Vertically input.
      * @param {number} timedelta - Time to next frame.
      */
-    #moveToNewPositon(inputX, inputY, timedelta) {
+    moveToNewPositon(inputX, inputY, timedelta) {
         const speed = 800;
         const newX = this.x + inputX * speed * timedelta / 1000;
         const newY = this.y + inputY * speed * timedelta / 1000;
-        if (this.#canMoveTo(newX, newY)) {
+        if (this.canMoveTo(newX, newY)) {
             this.x = newX;
             this.y = newY;
         }
     }
 
+    /**
+     * Updates the movement for Sharkie.
+     * @param {number} timedelta - Time to next frame.
+     * @override 
+     */
     updateMovement(timedelta) {
-        if (this.#isDead()) return;
-        const inputs = this.#controlImput();
-        this.#checkAttack();
+        if (this.isDead()) return;
+        const inputs = this.controlImput();
+        this.checkAttack();
         if (inputs.moving) {
             this.mirrorHorzontally = inputs.moveX < 0;
-            if (this.#isIdle()) this.healthState = HEALTH_STATE.swim;
-            this.#moveToNewPositon(inputs.moveX, inputs.moveY, timedelta);
+            if (this.isIdle()) this.healthState = HEALTH_STATE.swim;
+            this.moveToNewPositon(inputs.moveX, inputs.moveY, timedelta);
         } else if (this.healthState == HEALTH_STATE.swim) this.healthState = HEALTH_STATE.idle;
     }
 
+    /**
+     * Updates the health state for Sharkie.
+     * @param {number} timedelta - Time to next fame.
+     * @override
+     */
     updateState(timedelta) {
         super.updateState(timedelta);
-        if (this.#isAttack() && this.curImg == 8) {
+        if (this.isAttack() && this.curImg == 8) {
             this.healthState = HEALTH_STATE.idle;
         }
-        if (this.#isInjured() && !this.invulnerable) this.healthState = HEALTH_STATE.idle;
+        if (this.isInjured() && !this.invulnerable) this.healthState = HEALTH_STATE.idle;
         if (this.healthState != HEALTH_STATE.idle && this.healthState != HEALTH_STATE.longIdle) this.#longIdleTimer = 0;
         if (this.healthState == HEALTH_STATE.idle) this.#longIdleTimer += timedelta;
         if (this.healthState == HEALTH_STATE.idle && this.#longIdleTimer >= 5000) this.healthState = HEALTH_STATE.longIdle;
     }
 
+    /**
+     * Updates the anmation for Sharkie in a loop
+     * @override
+     */
     animationLoop() {
         this.playAnimation(this.healthState);
-        if (this.#isAttackBubble() && this.#bubble && this.curImg == 8 && !this.#isBubbleThrown) this.#shotBubble();
+        if (this.isAttackBubble() && this.#bubble && this.curImg == 8 && !this.#isBubbleThrown) this.#shotBubble();
         if (this.healthState == HEALTH_STATE['dead/poison'] && this.curImg == 12 || this.healthState == HEALTH_STATE['dead/electric'] && this.curImg == 10)
             this.onDead?.();
     }
 
+    /**
+     * Resets the animation for Sharkie.
+     * @override
+     */
     resetAnimation() {
         if (this.healthState == HEALTH_STATE.longIdle && this.curImg >= 13) this.curImg = 10;
         else super.resetAnimation();
@@ -249,13 +317,14 @@ export class Sharkie extends HealthyObject {
     // #endregion
 
     // #region Attack
-    #checkAttack() {
-        if (this.#ctrl.ctrl.attackSlap) this.#attackSlap();
-        if (this.#ctrl.ctrl.attackBubble) this.#attackBubble();
+    /** Checks, if uese any attack. */
+    checkAttack() {
+        if (this.#ctrl.ctrl.attackSlap) this.attackSlap();
+        if (this.#ctrl.ctrl.attackBubble) this.attackBubble();
     }
 
     /** Executes an attack for slap. */
-    #attackSlap() {
+    attackSlap() {
         if (this.healthState == HEALTH_STATE['dead/electric'] || this.healthState == HEALTH_STATE['dead/poison']) return;
         if (this.healthState != HEALTH_STATE['attack/slap']) this.healthState = HEALTH_STATE['attack/slap'];
     }
@@ -268,7 +337,7 @@ export class Sharkie extends HealthyObject {
 
     // #region Bubble
     /** Preperes a bubble for shot. */
-    async #attackBubble() {
+    async attackBubble() {
         const bubble = this.poison < 5 ? new NormalBubble() : new PoisonousBubble();
         this.healthState = this.poison < 5 ? HEALTH_STATE['attack/bubble/normal'] : HEALTH_STATE['attack/bubble/poison'];
         await bubble.load();
