@@ -9,36 +9,58 @@ import { SecondBottomBarrier } from './model/barrier/bottom-2.js';
 import { RightBarrier } from './model/barrier/right.js';
 import { TopBarrier } from './model/barrier/top.js';
 import { Coin } from './model/coin.js';
-import { DangerousJellyFish } from './model/jellyfish-danger.js';
-import { PurpleJellyFish } from './model/jellyfish-purple.js';
-import { YellowJellyFish } from './model/jellyfish-yellow.js';
-import { Orca } from './model/orca.js';
+import { DangerousJellyFish } from './model/enemy/jellyfish-danger.js';
+import { PurpleJellyFish } from './model/enemy/jellyfish-purple.js';
+import { YellowJellyFish } from './model/enemy/jellyfish-yellow.js';
+import { Orca } from './model/enemy/orca.js';
 import { PoisonousJar } from './model/poisonous-jar.js';
-import { GreenPufferFish } from './model/pufferfish-green.js';
-import { OrangePufferFish } from './model/pufferfish-orange.js';
-import { PinkPufferFish } from './model/pufferfish-pink.js';
+import { GreenPufferFish } from './model/enemy/pufferfish-green.js';
+import { OrangePufferFish } from './model/enemy/pufferfish-orange.js';
+import { PinkPufferFish } from './model/enemy/pufferfish-pink.js';
 import { Sharkie } from './model/sharkie.js';
 
-/**
- * @typedef {import('./helper/control.js').Control} Control
- * @typedef {import('./helper/snd-mgr.js').SoundManager} SoundManager
- * @typedef {import('./abstract/background.js').Background} Background
- * @typedef {import('./abstract/animatad-object.js').AnimatedObject} AnimatedObject
- * @typedef {import('./abstract/barrier.js').Barrier} Barrier
- * @typedef {import('./abstract/collectable.js').Collectable} Collectable
- * @typedef {import('./abstract/enemy.js').Enemy} Enemy
-*/
-
-/** All thing in the world. */
+/** All things in the world. */
 export class World {
 
+    /**
+     * List of all backgrounds
+     * @type {Background[]}
+     */
     #backgrounds;
+    /**
+     * List of all barriers.
+     * @type {Barrier[]}
+     */
     #barriers;
+    /**
+     * List of all collectables
+     * @type {Collectable[]}
+     */
     #collectables;
+    /**
+     * List of all enemies without orca
+     * @type {Enemy[]}
+     */
     #enemies;
+    /**
+     * Instnace for endboss.
+     * @type {Orca}
+     */
     #orca
+    /**
+     * Instance for main character.
+     * @type {Sharkie}
+     */
     #sharkie;
+    /**
+     * List of all drawing, which need to update.
+     * @type {DrawableObject[]}
+     */
     #updateables;
+    /**
+     * List of current bubbles in the world.
+     * @type {Bubble[]}
+     */
     #bubbles = [];
 
     /**
@@ -164,7 +186,7 @@ export class World {
     // #region Object Management
     /**
      * Loads the world.
-     * @returns {Promise<void>[]}
+     * @returns {Array<Promise<void>>}
      */
     loadWorld() {
         const loadings = [

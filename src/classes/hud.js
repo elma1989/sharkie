@@ -5,13 +5,36 @@ import { OrcaHealthBar } from "./model/status/health-orca.js";
 import { SharkieHealthBar } from "./model/status/health-sharkie.js";
 import { PoisonBar } from "./model/status/poison.js";
 
+/**
+ * @typedef {Object} BarCollection
+ * @property {SharkieHealthBar} sharkie - Bar for Sharkie's health.
+ * @property {OrcaHealthBar} orca - Bar for Orca's health.
+ * @property {CoinBar} coin - Bar for collected coins.
+ * @property {PoisonBar} poison - Bar for collected poisonous jars.
+ */
+
+/**
+ * @typedef {Object} ScreenCollection
+ * @property {WinScreen} win - Screen for show on win.
+ * @property {LoseScreen} lose - Screen for show on lose.
+ */
+
+/** Mangege all startus bars and screens. */
 export class HUD {
+    /**
+     * Collection for any status bars.
+     * @type {BarCollection}
+     */
     #bars = {
         sharkie: new SharkieHealthBar(),
         coin: new CoinBar(),
         poison: new PoisonBar(),
         orca: new OrcaHealthBar()
     };
+    /**
+     * Collection for screens.
+     * @type {ScreenCollection}
+     */
     #screens = {
         win: new WinScreen(),
         lose: new LoseScreen()
@@ -23,7 +46,7 @@ export class HUD {
 
     /**
      * Loads the HUD.
-     * @returns {Promise<void>[]}
+     * @returns {Array<Promise<void>>}
      */
     loadHud() {
         const loadings = [
@@ -33,6 +56,10 @@ export class HUD {
         return loadings.map(loading => loading.load());
     }
 
+    /**
+     * Moves statusbars dependent of camera positon.
+     * @param {number} xPos - New x-pos of status bars.
+     */
     moveBars(xPos) {
         Object.values(this.bars).forEach(bar => bar.x = xPos);
     }
