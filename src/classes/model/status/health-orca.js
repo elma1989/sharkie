@@ -2,15 +2,22 @@ import { Statusbar } from "../../abstract/statusbar.js";
 import { GameConfig } from "../../game-config.js";
 import { ImgHelper } from "../../helper/img-helper.js";
 
-/** A statusbar for Orca's health. */
+/**
+ * A statusbar for Orca's health.
+ * @extends Statusbar
+ */
 export class OrcaHealthBar extends Statusbar {
     constructor() {
         super(GameConfig.WIDTH - 595, 0, 100, false);
     }
 
+    /**
+     * Load Images for Orca's health bar.
+     * @override
+     */
     async load() {
-        this.img = await this.loadImage(ImgHelper.url(ImgHelper.STATUS["health/orca"][5]));
         this.stats = await this.loadImages(ImgHelper.urls(ImgHelper.STATUS["health/orca"]));
+        this.img = this.stats[5]
     }
 
     get x() { return super.x; }

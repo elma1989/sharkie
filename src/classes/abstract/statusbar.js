@@ -1,10 +1,19 @@
-import { GameConfig } from "../game-config.js";
 import { DrawableObject } from "./drawable-object.js";
 
-/** Shows user state of game. */
+/**
+ * Shows user state of game.
+ * @estends DrawableObject
+ */
 export class Statusbar extends DrawableObject {
-    #active;
+    /**
+     * Value of statusbar in percent.
+     * @type {number}
+     */
     #value;
+    /**
+     * Saves the images of statusbar.
+     * @type {Image[]}
+     */
     #stats = [];
 
     /**
@@ -12,15 +21,11 @@ export class Statusbar extends DrawableObject {
      * @param {number} x - X-Pos. of bar.
      * @param {number} y - Y-Pos. of bar.
      * @param {number} value - Start-Value of bar
-     * @param {boolean} active - True, shows bar on start (Default: true)
      */
-    constructor(x, y, value, active = true) {
+    constructor(x, y, value) {
         super(x, y, 595, 158);
         this.#value = value;
-        this.#active = active;
     }
-
-    get active() { return this.#active; }
 
     get stats() { return this.#stats; }
 
@@ -32,7 +37,7 @@ export class Statusbar extends DrawableObject {
 
     set value(value) {
         if (typeof value == 'number') {
-            this.img = this.stats[this.#indexOf(value)];
+            this.img = this.stats[this.indexOf(value)];
             this.#value = value;
         }
     }
@@ -42,15 +47,10 @@ export class Statusbar extends DrawableObject {
      * @param {number} value - Value of bar.
      * @returns {number} Index in stats-array.
      */
-    #indexOf(value) {
+    indexOf(value) {
         if (value <= 0) return 0;
         if (value <= 20) return 1;
         if (value >= 100) return 5;
         return Math.floor(value / 20);
-    }
-
-    /** Enables status bar. */
-    enable() {
-        this.#active = true;
     }
 }
