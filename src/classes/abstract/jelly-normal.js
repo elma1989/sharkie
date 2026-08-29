@@ -1,7 +1,10 @@
-import { DIRECTION, HEALTH_STATE } from "../types.js";
+import { DIRECTION } from "../types.js";
 import { JellyFish } from "./jelly-fish.js";
 
-/** A easy going jelly fish */
+/**
+ * It's a jelly fish, which is less danger the a dangerous jelly fish.
+ * @extends JellyFish
+ */
 export class NormalJellyFish extends JellyFish {
 
     /**

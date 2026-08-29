@@ -1,13 +1,27 @@
-import { Enemy } from "../abstract/enemy.js";
-import { GameConfig } from "../game-config.js";
-import { ORCA } from "../helper/animation.js";
-import { ImgHelper } from "../helper/img-helper.js";
-import { SoundManager } from "../helper/snd-mgr.js";
-import { DIRECTION, HEALTH_STATE } from "../types.js";
-import { PoisonousBubble } from "./poison-bubble.js";
+import { Bubble } from "../../abstract/bubble.js";
+import { Enemy } from "../../abstract/enemy.js";
+import { GameConfig } from "../../game-config.js";
+import { ORCA } from "../../helper/animation.js";
+import { ImgHelper } from "../../helper/img-helper.js";
+import { SoundManager } from "../../helper/snd-mgr.js";
+import { DIRECTION, HEALTH_STATE } from "../../types.js";
+import { PoisonousBubble } from "../poison-bubble.js";
+import { Sharkie } from "../sharkie.js";
 
+/**
+ * It's the endboss of the game.
+ * @extends Enemy
+ */
 export class Orca extends Enemy {
+    /**
+     * A timer for execte the attack procedure.
+     * @type {number}
+     */
     #attackTimer = 0;
+    /**
+     * Instance of SondManager for play Orca's sounds.
+     * @type {SoundManager}
+     */
     #sndMgr
 
     /**
@@ -36,6 +50,10 @@ export class Orca extends Enemy {
         if (value == HEALTH_STATE.attack) this.#sndMgr.play('attack/orca');
     }
 
+    /**
+     * Loads images for Orca.
+     * @override
+     */
     async load() {
         const [spawn, swim, attack, hurt, dead] = await Promise.all([
             this.loadImages(ImgHelper.urls(ImgHelper.ENEMY["orca/spawn"])),
@@ -52,17 +70,28 @@ export class Orca extends Enemy {
         this.img = spawn[0];
     }
 
+    /** Action, which will be executed once Sharkie calls Orca. */
     approach() {
         this.healthState = HEALTH_STATE.spawn;
         this.#sndMgr.play('approach');
     }
 
+    /**
+     * Updates healthState for Orca.
+     * @override
+     * @param {number} timedelta - Time to next frame in ms.
+     */
     updateState(timedelta) {
         super.updateState(timedelta);
         this.#attackTimer += timedelta;
         if (this.#attackTimer >= 5000 && this.healthState == HEALTH_STATE.swim) this.healthState = HEALTH_STATE.attack;
     }
 
+    /**
+     * Updates the movement for Orca.
+     * @override
+     * @param {number} timedelta - Time to next frame in ms.
+     */
     updateMovement(timedelta) {
         let movement = this.movement(400, timedelta);
         if (this.healthState == HEALTH_STATE.attack) {
@@ -78,7 +107,8 @@ export class Orca extends Enemy {
     }
 
     // #region Animation
-    #handleAtttack() {
+    /** Manages the attack procedure. */
+    handleAtttack() {
         this.playAnimation('attack');
         if (this.curImg == 6) {
             this.#attackTimer = 0;
@@ -86,14 +116,16 @@ export class Orca extends Enemy {
         }
     }
 
-    #handleHurt() {
+    /** Manages the hurt procedure. */
+    handleHurt() {
         this.playAnimation('hurt');
         if (this.curImg == 4) {
             this.healthState = HEALTH_STATE.swim;
         }
     }
 
-    #chooseAnimation() {
+    /** Swisches any animations depends on healthState. */
+    chooseAnimation() {
         switch(this.healthState) {
             case HEALTH_STATE.spawn:
                 this.playAnimation('spawn');
@@ -103,21 +135,30 @@ export class Orca extends Enemy {
                 this.playAnimation('swim');
                 break;
             case HEALTH_STATE.attack:
-                this.#handleAtttack();
+                this.handleAtttack();
                 break;
             case HEALTH_STATE.hurt:
-                this.#handleHurt();
+                this.handleHurt();
                 break;
             case HEALTH_STATE.dead:
                 this.playAnimation('dead');
         }
     }
 
+    /**
+     * Executes animations in a loop for Orca.
+     * @override
+     */
     animationLoop() {
-        this.#chooseAnimation();
+        this.chooseAnimation();
         if (this.deathState() && this.curImg == this.lengthAnimation) this.onDead?.();
     }
     // #endregion
+    /**
+     * Injures Orca.
+     * @override
+     * @param {number} damage - Value of injury in percent of helth.
+     */
     injure(damage) {
         const health = this.health;
         super.injure(damage);
@@ -130,14 +171,28 @@ export class Orca extends Enemy {
         else this.prepareDeath();
     }
 
+    /**
+     * Prepares death of Orca.
+     * @override
+     */
     prepareDeath() {
         this.healthState = HEALTH_STATE.dead;
     }
 
+    /**
+     * Action on Orca hits Sharkie.
+     * @overide
+     * @param {Sharkie} sharkie - Instance of main-character.
+     */
     hit(sharkie) {
         sharkie.injureBy('poison', 20);
     }
 
+    /**
+     * Action for collision bubble with Orca.
+     * @override
+     * @param {Bubble} bubble - Bubble of collision.
+     */
     blubb(bubble) {
         if (bubble instanceof PoisonousBubble) this.injure(20);
     }

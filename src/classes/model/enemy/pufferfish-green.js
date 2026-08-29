@@ -1,7 +1,10 @@
-import { PufferFish } from "../abstract/puffer-fish.js";
-import { ImgHelper } from "../helper/img-helper.js";
+import { PufferFish } from "../../abstract/puffer-fish.js";
+import { ImgHelper } from "../../helper/img-helper.js";
 
-/** A puffer fish, which is green. */
+/** 
+ * A puffer fish, which is green.
+ * @extends PufferFish
+ */
 export class GreenPufferFish extends PufferFish {
     
     /**
@@ -15,6 +18,10 @@ export class GreenPufferFish extends PufferFish {
         super(x, y, minX, maxX);
     }
 
+    /**
+     * Loads all images for green puffer fish.
+     * @override
+     */
     async load() {
         const [empty, transsition, full, ...dead] = await Promise.all([
             this.loadImages(ImgHelper.urls(ImgHelper.ENEMY["pufferfish/green/swim/empty"])),

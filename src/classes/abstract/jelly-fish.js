@@ -1,15 +1,12 @@
-import { SoundManager } from "../helper/snd-mgr.js";
 import { Sharkie } from "../model/sharkie.js";
-import { DIRECTION, HEALTH_STATE } from "../types.js";
+import { HEALTH_STATE } from "../types.js";
 import { Bubble } from "./bubble.js";
 import { Enemy } from "./enemy.js";
 
-/**
- * @typedef {import('../types.js').Limits} Limits
- * @typedef {import('../types.js').Direction} Direction
+/** 
+ * A enemy, who is a jelly fish.
+ * @extends Enemy
  */
-
-/** A enemy, who is a jelly fish. */
 export class JellyFish extends Enemy {
     /**
      * Creates a jelly fish.
@@ -38,14 +35,15 @@ export class JellyFish extends Enemy {
         }, direction, limits);
     }
 
+    /** Updated the animation in a loop for jelly fishes */
     animationLoop() {
         if (this.healthState == HEALTH_STATE.swim) this.playAnimation('swim');
         else if (this.healthState == HEALTH_STATE.dead) this.playAnimation('dead');
     }
 
     /**
+     * Action for jelly fish hits sharkie.
      * @override
-     * @inheritdoc
      * @param {Sharkie} sharkie
      */
     hit(sharkie) {
@@ -53,14 +51,19 @@ export class JellyFish extends Enemy {
     }
 
     /**
+     * Action for bubble collides jelly fish.
      * @override
-     * @inheritdoc
      * @param {Bubble} bubble
      */
     blubb(bubble) {
         this.injure(100);
     }
 
+    /**
+     * Manages the movement on dead
+     * @override
+     * @param {number} timedelta - Time to next frame in ms.
+     */
     moveDead(timedelta) {
         this.y -= 800 * timedelta / 1000;
         super.moveDead(timedelta);
