@@ -1,16 +1,14 @@
 import { DrawableObject } from './drawable-object.js';
 
-/** 
- * @typedef {import(../types.js).Offset} Offset
- * @typedef {import(../types.js).Hitbox} Hitbox
- * @typedef {import('./barrier.js').Barrier} Barrier
-/**
-
 /**
  * Represents an object, which has collision.
+ * @extends DrawableObject
  */
 export class CollidingObject extends DrawableObject {
-    /** @type {Offset} */
+    /**
+     * Padding for hitbox.
+     * @type {Offset}
+     */
     #offset;
     /**
      * Creates a colliding object.

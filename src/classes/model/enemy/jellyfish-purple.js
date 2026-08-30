@@ -1,7 +1,10 @@
-import { NormalJellyFish } from "../abstract/jelly-normal.js";
-import { ImgHelper } from "../helper/img-helper.js";
+import { NormalJellyFish } from "../../abstract/jelly-normal.js";
+import { ImgHelper } from "../../helper/img-helper.js";
 
-/** A jelly fish, which is purple */
+/**
+ * A jelly fish, which is purple.
+ * @extends NormalJellyFish
+ */
 export class PurpleJellyFish extends NormalJellyFish {
     /**
      * Creates a purple jelly fish.
@@ -14,6 +17,10 @@ export class PurpleJellyFish extends NormalJellyFish {
         super(x, y, minY, maxY);
     }
 
+    /**
+     * Loads images for purple yelly fish.
+     * @overide
+     */
     async load() {
         const [swim, dead] = await Promise.all([
             this.loadImages(ImgHelper.urls(ImgHelper.ENEMY["jellyfish/purple/swim"])),

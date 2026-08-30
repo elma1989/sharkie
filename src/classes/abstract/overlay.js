@@ -1,11 +1,23 @@
-/** A Element lays over the main content. */
+/**
+ * A Element lays over the main content.
+ * @extends HTMLElement
+ */
 export class Overlay extends HTMLElement {
+    /**
+     * Name of overlay.
+     * @type {string}
+     */
     #name
+    /**
+     * Visibility of overlay.
+     * @type {boolean}
+     */
     #visible;
 
     /**
      * Creates an overlay.
      * @param {string} name - Name of overlay.
+     * @param {boolean} visible - Visbility of overlay.
      */
     constructor(name, visible = false) {
         super();

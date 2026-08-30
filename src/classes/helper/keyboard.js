@@ -1,20 +1,25 @@
 import { Control } from "./control.js";
 
+/** Manages user inputs by keyboard. */
 export class Keyboard {
+    /**
+     * Map of all user inputs for control sharkie.
+     * @type {Object<string, boolean>}
+     */
     #ctrl;
 
     /**
-     * Creates a Keyboad
+     * Creates a Keyboad.
      * @param {Control} ctrl - Contorl for character.
      */
     constructor(ctrl) {
         this.#ctrl = ctrl;
-        this.#addKeyDownListener();
-        this.#addKeyUpListener();
+        this.addKeyDownListener();
+        this.addKeyUpListener();
     }
 
     /** Adds key-down-event. */
-    #addKeyDownListener() {
+    addKeyDownListener() {
         window.addEventListener('keydown', (e) => {
             switch(e.code) {
                 case 'ArrowLeft':
@@ -44,7 +49,7 @@ export class Keyboard {
     }
 
     /** Adds key-up-event. */
-    #addKeyUpListener() {
+    addKeyUpListener() {
         window.addEventListener('keyup', (e) => {
             switch(e.code) {
                 case 'ArrowLeft':

@@ -2,12 +2,10 @@ import { Collectable } from "../abstract/collectable.js";
 import { ImgHelper } from "../helper/img-helper.js";
 import { Sharkie } from "./sharkie.js";
 
-/**
- * @typedef {import('../types.js').Offset} Offset
- * @typedef {import('../types.js').Animation} Animation
+/** 
+ * Represents a coin to money on collect.
+ * @extends Collectable
  */
-
-/** Represents a coin to money on collect. */
 export class Coin extends Collectable {
     /**
      * Creates a coin.
@@ -29,13 +27,21 @@ export class Coin extends Collectable {
         });
     }
 
+    /**
+     * Loads a coin.
+     * @override
+     */
     async load() {
         this.animations.idle.frames = await this.loadImages(ImgHelper.urls(ImgHelper.COLLECTABLE.coin));
         this.img = this.animations.idle.frames[0];
     }
 
+    /**
+     * Actoins for collect of coin.
+     * @param {Sharkie} sharkie - Main-character for execute any actions.
+     */
     collect(sharkie) {
         if (!sharkie instanceof Sharkie) return;
         sharkie.addCoin();
     }
-}
+}   

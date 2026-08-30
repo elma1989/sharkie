@@ -49,7 +49,7 @@ export const HEALTH_STATE = Object.freeze({
 })
 
 /**
- * @typedef {typeof HEALTH_STATE[keyof typeof HEALTH_STATE]} HealthState
+ * @typedef {Object<string,string>} HealthState
  */
 
 export const DIRECTION = Object.freeze({
@@ -60,7 +60,7 @@ export const DIRECTION = Object.freeze({
 })
 
 /**
- * @typedef {typeof DIRECTION[keyof typeof DIRECTION]} Direction
+ * @typedef {Object<string,string>} Direction
  */
 
 export const PUFFER_STATE = Object.freeze({
@@ -70,5 +70,5 @@ export const PUFFER_STATE = Object.freeze({
 })
 
 /**
- * @typedef {typeof PUFFER_STATE[keyof typeof PUFFER_STATE]} PufferState
+ * @typedef {Object<string,string>} PufferState
  */

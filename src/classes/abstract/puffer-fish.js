@@ -1,17 +1,33 @@
+import { Sharkie } from "../model/sharkie.js";
 import { DIRECTION, HEALTH_STATE, PUFFER_STATE } from "../types.js";
 import { Enemy } from "./enemy.js";
 
 /**
- * @typedef {import('../types.js').Offset} Offset
- * @typedef {import('../types.js').Animation} Animaiton
- * @typedef {import('../types.js').Direction} Direction
- * @typedef {import('../types.js').Limits} Limits
- * @typedef {import('../types.js').PufferState} PufferState
+ * @typedef {Object} DeathImage
+ * @property {Image?} empty - Image for empty puffer state.
+ * @property {Image?} transition - Image for neither empty nor full state.
+ * @property {Image?} full - Image for full puffer state.
  */
 
+/**
+ * Represents a fish, which can blow up.
+ * @extends Enemy
+ */
 export class PufferFish extends Enemy {
+    /**
+     * Current state of body.
+     * @type {PufferState}
+     */
     #pufferState = PUFFER_STATE.EMPTY;
+    /**
+     * Timer for change of puffer state.
+     * @type {number}
+     */
     #pufferTimer = 0;
+    /**
+     * A map of images of dead dependens on puffer state.
+     * @type {DeathImage}
+     */
     #deathImg = {
         empty: null,
         transition: null,
@@ -97,6 +113,10 @@ export class PufferFish extends Enemy {
         }
     }
 
+    /**
+     * Updates the animation for puffer fishes
+     * @param {number} timedelta - Time to next frame in ms.
+     */
     updateAnimation(timedelta) {
         if (this.healthState == HEALTH_STATE.swim) {
             this.animationTimer += timedelta;
@@ -110,15 +130,20 @@ export class PufferFish extends Enemy {
     }
     // #endregion
 
-    playInjureSound(sndMgr) {
-        sndMgr.play('attack/slap');
-    }
-
+    /** 
+     * Prepares the death of puffer fishes.
+     * @override
+     */
     prepareDeath() {
         this.healthState = HEALTH_STATE.dead;
         this.img = this.#pufferState == PUFFER_STATE.EMPTY ? this.deathImg.empty : (this.#pufferState == PUFFER_STATE.FULL ? this.deathImg.full : this.deathImg.transition);
     }
 
+    /**
+     * Action for puffer fish hits Sharkie.
+     * @param {Sharkie} sharkie - Instanz of main-character.
+     * @override
+     */
     hit(sharkie) {
         if (sharkie.isAttackSlap()) {
             sharkie.playSlap(this);

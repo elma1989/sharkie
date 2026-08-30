@@ -1,5 +1,10 @@
+/** A collection of all images files. */
 export class ImgHelper {
-    static #BACKGROUND = {
+    /**
+     * All background images of the world.
+     * @type {Object<string, string[]>}
+     */
+    static BACKGROUND = {
         water: [
             '00_Background/00_water/D1.png',
             '00_Background/00_water/D2.png'
@@ -27,7 +32,11 @@ export class ImgHelper {
         }
     }
 
-    static #SHARKIE = {
+    /**
+     * All images for sharkie.
+     * @type {Object<string, string[]>}
+     */
+    static SHARKIE = {
         idle: [
             '01_Sharkie/00_idle/1.png',
             '01_Sharkie/00_idle/2.png',
@@ -142,6 +151,10 @@ export class ImgHelper {
         'bubble/poison': '01_Sharkie/05_attack/bubble/poison/bubble.png'
     }
 
+    /** 
+     * All images for enemies.
+     * @type {Object<string, string[]>}
+     */
     static ENEMY = {
         'pufferfish/green/swim/empty': [
             '02_Enemy/01_puffer_fish/green/swim/empty/1.png',
@@ -302,6 +315,10 @@ export class ImgHelper {
         ]
     }
 
+    /**
+     *  All images for collecables.
+     *  @type {Object<string, string[]>} 
+     */
     static COLLECTABLE = {
         poison: [
             '03_Collectable/01_poison/1.png',
@@ -321,12 +338,19 @@ export class ImgHelper {
         ]
     }
 
+    /**
+     * Images for win- and lose-screen. 
+     * @type {Object<string,string>}
+     */
     static SCREEN = {
         win: '04_Screen/win.png',
-        lose: '04_Screen/lose.png',
-        title: '04_Screen/title.png'
+        lose: '04_Screen/lose.png'
     }
 
+    /**
+     * All images for status bars.
+     * @type {Object<string, string[]>}
+     */
     static STATUS = {
         'health/sharkie': [
             '05_Status/01_health_sharkie/00.png',
@@ -361,45 +385,6 @@ export class ImgHelper {
             '05_Status/04_poison/100.png'
         ]
     }
-
-    static ICONS = {
-        music: [
-            'music-on.svg',
-            'music-off.svg'
-        ],
-        sfx: [
-            'sfx-on.svg',
-            'sfx-off.svg'
-        ],
-        right: [
-            'right-on.svg',
-            'right-off.svg'
-        ],
-        left: [
-            'left-on.svg',
-            'left-off.svg'
-        ],
-        up: [
-            'up-on.svg',
-            'up-off.svg'
-        ],
-        down: [
-            'down-on.svg',
-            'down-off.svg'
-        ],
-        attackBubble: [
-            'bubble-on.svg',
-            'bubble-off.svg'
-        ],
-        attackSlap: [
-            'slap-on.svg',
-            'slap-off.svg'
-        ]
-    }
-
-    static get background() { return this.#BACKGROUND; }
-
-    static get sharkie() { return this.#SHARKIE; }
 
     /**
      * Gets url from file.

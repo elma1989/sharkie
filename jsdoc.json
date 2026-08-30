@@ -1,0 +1,16 @@
+{
+    "source": {
+        "include": ["src"],
+        "includePattern": ".+\\.js$",
+        "excludePattern": "(^|\\/|\\\\)_"
+    },
+    "opts": {
+        "destination": "./docs/html",
+        "recurse": true,
+        "private": true,
+        "template": "node_modules/better-docs"
+    },
+    "plugins": [
+        "plugins/markdown"
+    ]
+}

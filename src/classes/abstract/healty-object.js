@@ -1,14 +1,11 @@
-import { SoundManager } from "../helper/snd-mgr.js";
 import { Sharkie } from "../model/sharkie.js";
 import { HEALTH_STATE } from "../types.js";
 import { MovableObject } from "./moveable-object.js";
 
-/**
- * @typedef {import('../types.js').Offset} Offset
- * @typedef {import('../types.js').Animation} Animation
+/** 
+ * An animattaed object alive.
+ * @extends MovableObject
  */
-
-/** An animattaed object alive. */
 export class HealthyObject extends MovableObject {
     #health = 100;
     #invulnerable = false;
@@ -59,6 +56,10 @@ export class HealthyObject extends MovableObject {
         opponent.injure(10);
     }
 
+    /**
+     * Updates the health state.
+     * @param {number} timedelta - Time to next frame.
+     */
     updateState(timedelta) {
         this.#invulnerableTimer += timedelta;
         if (this.#invulnerableTimer >= 700) this.#invulnerable = false;

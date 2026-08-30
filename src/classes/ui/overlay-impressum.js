@@ -1,6 +1,9 @@
 import { TitleOverlay } from "../abstract/overlay-title.js";
 
-/** An overlay for impressum */
+/**
+ * An overlay for impressum.
+ * @extends TitleOverlay
+ */
 export class ImpressumOverlay extends TitleOverlay {
     constructor() {
         super('inprint', 'Impressum');

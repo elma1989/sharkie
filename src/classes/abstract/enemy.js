@@ -1,18 +1,21 @@
-import { SoundManager } from "../helper/snd-mgr.js";
 import { DIRECTION, HEALTH_STATE } from "../types.js";
 import { Bubble } from "./bubble.js";
 import { HealthyObject } from "./healty-object.js";
 
-/**
- * @typedef {import('../types.js').Offset} Offset
- * @typedef {import('../types.js').Animation} Animaiton
- * @typedef {import('../types.js').Direction} Direction
- * @typedef {import('../types.js').Limits} Limits
+/** 
+ * An evil healthy object.
+ * @extends HealthyObject
  */
-
-/** An evil healthy object. */
 export class Enemy extends HealthyObject {
+    /**
+     * Direction, in which if will be move.
+     * @type {Direction}
+     */
     #direction;
+    /** 
+     * Limits for movement.
+     * @type {Limits}
+     */
     #limits;
 
     /**
@@ -129,6 +132,7 @@ export class Enemy extends HealthyObject {
 
     /**
      * Will be executed on collision width bubble and enemy.
+     * Must be overridden by children.
      * @param {Bubble} bubble - Bubble from collision.
      */
     blubb(bubble) {}

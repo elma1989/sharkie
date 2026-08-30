@@ -1,4 +1,6 @@
+/** Manages all user inputs. */
 export class Control {
+    /** @type{Object<string, boolean>} Map of user inputs.*/
     #controls = {
         up: false,
         right: false,
@@ -8,6 +10,10 @@ export class Control {
         attackBubble: false
     }
 
+    /**
+     * Gets a map for all input state.
+     * @returns {Object<string, boolean>} Map of input state.
+     */
     get ctrl() { return this.#controls; }
 
     /**

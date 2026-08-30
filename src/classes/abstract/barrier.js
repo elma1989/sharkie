@@ -1,8 +1,9 @@
-import { Canvas } from "../ui/canvas.js";
 import { CollidingObject } from "./colliding-object.js";
 
-/** @typedef {import('../types.js').Offset} Offset */
-
+/** 
+ * Represents a barrier, where Sharkie can never swim.
+ * @extends CollidingObject
+ */
 export class Barrier extends CollidingObject {
     
     /**

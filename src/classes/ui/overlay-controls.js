@@ -1,6 +1,9 @@
 import { TitleOverlay } from "../abstract/overlay-title.js";
 
-/** An overlay for controls. */
+/**
+ * An overlay for controls.
+ * @extends TitleOverlay
+ */
 export class ControlsOverlay extends TitleOverlay {
     constructor() {
         super('ctrl', 'Controls');

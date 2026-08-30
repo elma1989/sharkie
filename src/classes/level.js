@@ -2,26 +2,57 @@ import { GameConfig } from "./game-config.js";
 import { HUD } from "./hud.js";
 import { World } from "./world.js";
 
-/**
- * @typedef {import('./helper/control.js').Control} Control
- * @typedef {import('./helper/snd-mgr.js').SoundManager} SoundManager
- * @typedef {import('./abstract/drawable-object.js').DrawableObject} DrawableObject
- * @typedef {import('./abstract/collectable.js').Collectable} Collectable
- * @typedef {import('./abstract/enemy.js').Enemy} Enemy
- * @typedef {import('./abstract/bubble.js').Bubble} Bubble
- */
-
-/** Manges inner cnavas objects. */
+/** Manages inner cnavas objects. */
 export class Level {
+    /**
+     * Instance of world.
+     * @type {World}
+     */
     #world;
+    /**
+     * Instance of HUD.
+     * @type {HUD}
+     */
     #hud = new HUD();
+    /**
+     * A List of all drawings.
+     * @type {DrawableObject}
+     */
     #drawings;
+    /**
+     * Contrext to draw.
+     * @type {CanvasRenderingContext2D}
+     */
     #ctx;
+    /**
+     * Flag for running of game.
+     * @type {boolean}
+     */
     #running = false;
+    /**
+     * Flag for full loading process.
+     * @type {boolean}
+     */
     #ready = false;
+    /**
+     * Timestamp from last frame before current frame.
+     * @type {number}
+     */
     #lastTime = 0;
+    /**
+     * ID for number of loops in game loop.
+     * @type {nuumber}
+     */
     #frameId = 0;
+    /**
+     * Sound manager for playing sounds.
+     * @type {SoundManager}
+     */
     #sndMgr;
+    /**
+     * X-Posiiton of camera dependdet of x-position of sharkie.
+     * @type {number}
+     */
     #translationX = 0;
 
     /**
@@ -32,7 +63,7 @@ export class Level {
      */
     constructor(ctrl, sndMgr, ctx) {
         this.#world = new World(ctrl, sndMgr);
-        this.#drawings = this.#createDrawings();
+        this.#drawings = this.createDrawings();
         this.#ctx = ctx;
         this.#sndMgr = sndMgr;
         this.#addEvents();
@@ -63,7 +94,7 @@ export class Level {
      * Creates a list for all Drawings.
      * @returns {DrawableObject[]}
      */
-    #createDrawings() {
+    createDrawings() {
         return [
             ...this.#world.backgrounds,
             ...this.#world.collectables,
@@ -80,7 +111,7 @@ export class Level {
      * Removes an object.
      * @param {DrawableObject} obj - Object to remove
      */
-    #removeObject(obj) {
+    removeObject(obj) {
         const index = this.#drawings.indexOf(obj);
         if (index != -1) this.#drawings.splice(index, 1);
     }
@@ -89,13 +120,13 @@ export class Level {
      * Removes a object after collect.
      * @param {Collectable} col - Collectable object to remove.
      */
-    #removeCollectable(col) {
+    removeCollectable(col) {
         const collectables = this.#world.collectables;
         const index = collectables.indexOf(col);
         if (index >= 0) {
             collectables.splice(index, 1);
             this.#world.removeUpate(col);
-            this.#removeObject(col);
+            this.removeObject(col);
         }
     }
 
@@ -103,18 +134,18 @@ export class Level {
      * Removes an enemy after dead.
      * @param {Enemy} enemy - Enemy to remove.
      */
-    #removeEnemy(enemy) {
+    removeEnemy(enemy) {
         const enemies = this.#world.enemies;
         const index = enemies.indexOf(enemy);
         if (index >= 0) {
             enemies.splice(index, 1);
             this.#world.removeUpate(enemy);
-            this.#removeObject(enemy);
+            this.removeObject(enemy);
         }
     }
 
     /**
-     * Adds a bubble.
+     * Adds a bubble to the world..
      * @param {Bubble} bubble - Bubble for add.
      */
     #addBubble(bubble) {
@@ -137,7 +168,7 @@ export class Level {
         if (index >= 0) {
             bubbles.splice(index, 1);
             this.#world.removeUpate(bubble);
-            this.#removeObject(bubble);
+            this.removeObject(bubble);
             this.#sndMgr.play('hurt/bubble');
         }
     }
@@ -145,20 +176,20 @@ export class Level {
 
     // #region Collison
     /** Checks collision for collectabels. */
-    #checkCollisionCollectable() {
+    checkCollisionCollectable() {
         const sharkie = this.#world.sharkie;
         this.#world.collectables.forEach(col => {
             if (sharkie.isColliding(col)) {
                 col.collect(sharkie);
                 this.#hud.bars.coin.value = sharkie.coin / 20 * 100;
                 this.#hud.bars.poison.value = sharkie.poison / 5 * 100;
-                this.#removeCollectable(col);
+                this.removeCollectable(col);
             }
         });
     }
 
     /** Checks collisoin Sharkie with enemy. */
-    #checkCollisonEnemy() {
+    checkCollisonEnemy() {
         const shark = this.#world.sharkie;
         this.#world.enemies.forEach(enemy => {
             if (shark.isColliding(enemy)) {
@@ -169,7 +200,7 @@ export class Level {
     }
 
     /** Checks collision bubble with barrier. */
-    #checkCollisionBubbleBarrier() {
+    checkCollisionBubbleBarrier() {
         this.#world.barriers.forEach(barrier => {
             this.#world.bubbles.forEach(bubble => {
                 if (bubble.isColliding(barrier)) this.#remvoeBubble(bubble);
@@ -178,7 +209,7 @@ export class Level {
     }
 
     /** Checks collison bubble with enemy. */
-    #checkCollisionBubbleEnemy() {
+    checkCollisionBubbleEnemy() {
         this.#world.enemies.forEach(enemy => {
             this.#world.bubbles.forEach(bubble => {
                 if (bubble.isColliding(enemy)) {
@@ -190,46 +221,49 @@ export class Level {
     }
 
     /** Checks all collsions. */
-    #checkCollision() {
-        this.#checkCollisionCollectable();
-        this.#checkCollisonEnemy();
-        this.#checkCollisionBubbleBarrier();
-        this.#checkCollisionBubbleEnemy();
+    checkCollision() {
+        this.checkCollisionCollectable();
+        this.checkCollisonEnemy();
+        this.checkCollisionBubbleBarrier();
+        this.checkCollisionBubbleEnemy();
     }
     // #endregion
 
     // #region Game-Loop
     /** Draws all objects. */
-    #drawAll() {
+    drawAll() {
         this.#ctx.clearRect(0, 0, GameConfig.WIDTH, GameConfig.HEIGHT);
         this.#ctx.translate(-this.translationX, 0);
         this.#drawings.forEach(drawing => drawing.draw(this.#ctx));
         this.#ctx.translate(this.translationX, 0);
     }
 
-    /** Procedure to repeat in loop. */
-    #gameLoop = (timestamp) => {
+    /**
+     * Game loop for repeating any procedures during the game.
+     * @param {number} timestamp - Time in ms since start.
+     */
+    gameLoop = (timestamp) => {
         if (!this.#running) return;
         const timedelta = Math.min(100, timestamp - this.#lastTime);
         this.#lastTime = timestamp;
 
         if (this.#ready) {
             this.#world.updateAll(timedelta);
-            this.#checkCollision();
-            this.#drawAll();
+            this.checkCollision();
+            this.drawAll();
         }
-        this.#frameId = requestAnimationFrame(this.#gameLoop);
+        this.#frameId = requestAnimationFrame(this.gameLoop);
     }
 
     /** Starts game loop. */
     start() {
         this.#running = true;
         this.#lastTime = performance.now();
-        this.#frameId = requestAnimationFrame(this.#gameLoop);
+        this.#frameId = requestAnimationFrame(this.gameLoop);
     }
 
     /** Stops gaame loop. */
-    #stop() {
+    stop() {
         this.#running = false;
         cancelAnimationFrame(this.#frameId);
     }
@@ -237,7 +271,7 @@ export class Level {
 
     // #region Events
     /** Event to spawn orca. */
-    #approachOrca() {
+    approachOrca() {
         const orca = this.#world.orca;
         const iSharkie = this.#drawings.indexOf(this.#world.sharkie);
         orca.approach();
@@ -251,38 +285,38 @@ export class Level {
      * Event for finish of game.
      * @param {"win" | "lose"} state - Result of game.
      */
-    #finish(state) {
+    finish(state) {
         const screen = this.#hud.screens[state];
         screen.setMiddle(this.#world.sharkie.x - 500);
         this.#drawings.push(screen);
-        this.#drawAll();
-        this.#stop();
+        this.drawAll();
+        this.stop();
         this.onEndGame?.();
     }
 
     /** Adds events for Sharkie. */
-    #addSharkieEvents() {
+    addSharkieEvents() {
         const sharkie = this.#world.sharkie;
         sharkie.onMoveX = (xPos) => this.translationX = xPos - 500;
         sharkie.onShotBubble = (bubble) => this.#addBubble(bubble);
-        sharkie.onCallOrca = () => this.#approachOrca();
-        sharkie.onDead = () => this.#finish('lose');
+        sharkie.onCallOrca = () => this.approachOrca();
+        sharkie.onDead = () => this.finish('lose');
     }
 
     /** Adds events for all enemies. */
-    #addEnemyEvents() {
+    addEnemyEvents() {
         const orca = this.#world.orca;
         this.#world.enemies.forEach(enemy => {
-            enemy.onDead = () => this.#removeEnemy(enemy);
+            enemy.onDead = () => this.removeEnemy(enemy);
         });
         orca.onInjure = (health) => this.#hud.bars.orca.value = health;
-        orca.onDead = () => this.#finish('win');
+        orca.onDead = () => this.finish('win');
     }
 
     /** Adds all events. */
     #addEvents() {
-        this.#addSharkieEvents();
-        this.#addEnemyEvents();
+        this.addSharkieEvents();
+        this.addEnemyEvents();
     }
     // #endregion
     // #endregion

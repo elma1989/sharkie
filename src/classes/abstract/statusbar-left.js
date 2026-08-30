@@ -1,7 +1,10 @@
 import { GameConfig } from "../game-config.js";
 import { Statusbar } from "./statusbar.js";
 
-/** A statusbar on the left of canvas */
+/** 
+ * A statusbar on the left of canvas.
+ * @extends Statusbar
+ */
 export class LeftStatusbar extends Statusbar {
     /**
      * Creates a left status bar.

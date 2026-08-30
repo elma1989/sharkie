@@ -1,8 +1,16 @@
 import { Template } from "../helper/template.js";
 import { Overlay } from "./overlay.js";
 
-/** An overlay with headline. */
+/**
+ * An overlay with headline and close button.
+ * @extends Overlay
+ */
 export class TitleOverlay extends Overlay {
+
+    /**
+     * Title for headline of overlay
+     * @type {string}
+     */
     #title;
 
     /**
@@ -15,12 +23,9 @@ export class TitleOverlay extends Overlay {
         this.#title = title;
     }
 
-    #render() {
+    /** Will be execute after load. */
+    connectedCallback() {
         const children = this.innerHTML;
         this.innerHTML = Template.overlay(this.name, this.#title, children);
-    }
-
-    connectedCallback() {
-        this.#render();
     }
 }
