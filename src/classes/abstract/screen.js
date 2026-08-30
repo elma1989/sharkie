@@ -1,7 +1,10 @@
 import { GameConfig } from "../game-config.js";
 import { DrawableObject } from "./drawable-object.js";
 
-/** A view the show to the user. */
+/**
+ * A view the show to the user.
+ * @estends DrawableObject
+ */
 export class Screen extends DrawableObject {
     /**
      * Creates a screen.
