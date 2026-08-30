@@ -1,22 +1,72 @@
 import { Canvas } from "./canvas.js";
+import { ControlsOverlay } from "./overlay-controls.js";
+import { HeroOverlay } from "./overlay-hero.js";
+import { ImpressumOverlay } from "./overlay-impressum.js";
+import { RulesOverlay } from "./overlay-rules.js";
 
+/**
+ * @typedef {Object} ButtonMap
+ * @property {Object} main - Collection main control buttons.
+ * @property {Object} close - Collection for close overlay buttons.
+ * @property {Object} snd - Collection for sound control buttons.
+ * @property {Object} mobctrl - Collection for mobile control buttons.
+ */
+
+/**
+ * @typedef {Object} OvelrayMap
+ * @property {HeroOverlay} hero - Overlay for title screen.
+ * @property {ControlsOverlay} ctrl - Overlay for show the controls.
+ * @property {RulesOverlay} rules - Overlay for show game rules.
+ * @property {ImpressumOverlay} inprint - Overlay for show impressum.
+ * @property {LandscapeOverlay} landscape - Overlay for device on portrait.
+ */
+
+/** Manage total user interface. */
 export class UI {
+    /**
+     * Canvas for drwawijng
+     * @type {Canvas}
+     */
     #canvas;
+    /**
+     * Elements which includes mobile control buttons.
+     * @type {NodeListOf<Element>}
+     */
     #mobControlAreas;
+    /**
+     * Collection of all buttons.
+     * @type {ButtonMap}
+     */
     #btns;
+    /**
+     * Colleecion of all overlays
+     * @type {OvelrayMap}
+     */
     #overlays;
+    /**
+     * Element, which includes sound control buttons.
+     * @type {Element?}
+     */
     #sndCtrl;
+    /**
+     * Flag for running game.
+     * @type {boolean}
+     */
     #running = false;
-    #resizeTimer;
+    /**
+     * Timer in ms after resize-event for time out.
+     * @type {number}
+     */
+    #resizeTimer = 0;
 
     constructor() {
         this.#canvas = new Canvas();
         this.#mobControlAreas = document.querySelectorAll('.mob-ctrl');
-        this.#btns = this.#createButtons();
-        this.#overlays = this.#createOverlays();
+        this.#btns = this.createButtons();
+        this.#overlays = this.createOverlays();
         this.#sndCtrl = document.querySelector('.snd-ctrl');
-        this.#checkPortait();
-        this.#addEvents();
+        this.checkPortait();
+        this.addEvents();
     }
 
     get canvas() { return this.#canvas; }
@@ -25,7 +75,11 @@ export class UI {
 
     get overlays() { return this.#overlays; }
 
-    #createButtons() {
+    /**
+     * Creates a collection for all buttons.
+     * @returns {ButtonMap} Map of buttons.
+     */
+    createButtons() {
         return {
             main: {
                 rules: document.getElementById('btn-rules'),
@@ -54,7 +108,11 @@ export class UI {
         }
     }
 
-    #createOverlays() {
+    /**
+     * Creates a collesct of all overlays.
+     * @returns {OvelrayMap} Map with overlays.
+     */
+    createOverlays() {
         return {
             hero: document.querySelector('overlay-hero'),
             ctrl: document.querySelector('overlay-controls'),
@@ -163,7 +221,7 @@ export class UI {
     }
 
     /** Goes to main page. */
-    #goToMenue() {
+    goToMenue() {
         const btnMenu = this.btns.main.menu;
         this.openOverlay('hero');
         this.showMainButtons();
@@ -172,44 +230,44 @@ export class UI {
 
     /**
      * Checkes if user has Portait-Mode.
-     * @returns {boolean}
+     * @returns {boolean} True, if user has portait.
      */
-    #isPortrait() {
+    isPortrait() {
         return window.innerWidth / window.innerHeight <= 1;
     }
 
     /** Opens and closes landscape overlay. */
-    #checkPortait() {
-        if (this.#isPortrait()) this.openOverlay('landscape');
+    checkPortait() {
+        if (this.isPortrait()) this.openOverlay('landscape');
         else this.closeOverlay('landscape');
     }
     // #endregion
 
     // #region Events
     /** Adds events for buttons */
-    #addButtonEvents() {
+    addButtonEvents() {
         this.btns.main.rules.addEventListener('pointerdown', () => this.openOverlay('rules'));
         this.btns.close.rules.addEventListener('pointerdown', () => this.closeOverlay('rules'));
         this.btns.main.ctrl.addEventListener('pointerdown', () => this.openOverlay('ctrl'));
         this.btns.close.ctrl.addEventListener('pointerdown', () => this.closeOverlay('ctrl'));
         this.btns.main.inprint.addEventListener('pointerdown', () => this.openOverlay('inprint'));
         this.btns.close.inprint.addEventListener('pointerdown', () => this.closeOverlay('inprint'));
-        this.btns.main.menu.addEventListener('pointerdown', () => this.#goToMenue());
+        this.btns.main.menu.addEventListener('pointerdown', () => this.goToMenue());
     }
 
     /** Addds events vor resize. */
-    #addResizeEvent() {
+    addResizeEvent() {
         window.addEventListener('resize', () => {
             clearTimeout(this.#resizeTimer);
             this.#resizeTimer = setTimeout(() => {
-                this.#checkPortait();
+                this.checkPortait();
             }, 700);
         });
     }
 
     /** Adds all events. */
-    #addEvents() {
-        this.#addButtonEvents();
-        this.#addResizeEvent();
+    addEvents() {
+        this.addButtonEvents();
+        this.addResizeEvent();
     }
 }

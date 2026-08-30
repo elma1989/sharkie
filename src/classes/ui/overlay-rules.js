@@ -1,6 +1,9 @@
 import { TitleOverlay } from "../abstract/overlay-title.js";
 
-/** An overlay for the game rules */
+/**
+ * An overlay for the game rules.
+ * @extends TitleOverlay
+ */
 export class RulesOverlay extends TitleOverlay {
     constructor() {
         super('rules', 'Game-Rules');
