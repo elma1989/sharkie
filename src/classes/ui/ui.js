@@ -15,6 +15,7 @@ import { RulesOverlay } from "./overlay-rules.js";
 /**
  * @typedef {Object} OvelrayMap
  * @property {HeroOverlay} hero - Overlay for title screen.
+ * @property {LoadingSpinner} loading - Overlay for data loading.
  * @property {ControlsOverlay} ctrl - Overlay for show the controls.
  * @property {RulesOverlay} rules - Overlay for show game rules.
  * @property {ImpressumOverlay} inprint - Overlay for show impressum.
@@ -115,6 +116,7 @@ export class UI {
     createOverlays() {
         return {
             hero: document.querySelector('overlay-hero'),
+            loading: document.querySelector('overlay-loading'),
             ctrl: document.querySelector('overlay-controls'),
             rules: document.querySelector('overlay-rules'),
             inprint: document.querySelector('overlay-inprint'),
