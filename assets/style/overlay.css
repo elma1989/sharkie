@@ -1,4 +1,11 @@
-    overlay-hero {
+:root {
+    --width-move: 37%;
+    @media (max-height: 667px) {
+        --width-move: 50%;
+    }
+}
+
+overlay-hero {
     background: url(../img/04_Screen/title.png) center / cover;
 }
 
@@ -31,6 +38,10 @@
 
 .z-1 {
     z-index: 1;
+}
+
+.waiting {
+    cursor: wait;
 }
 
 .overlay-content {
@@ -100,6 +111,36 @@
     }
 }
 
+.loading-content {
+    flex: 1;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    width: 100%;
+}
+
+.move-area {
+    width: 100%;
+    transform-origin: right center;
+    animation: move 3s linear infinite;
+}
+
+.animal-container {
+    display: flex;
+    align-items: center;
+    width: 21rem;
+    gap: 2rem;
+}
+
+.orca {
+    height: 150px;
+    transform: scale(-1, 1);
+}
+
+.sharkie {
+    height: 75px;
+}
+
 @media (min-height: 1800px) {
     .overlay {
         padding: 4rem;
@@ -130,6 +171,18 @@
     .wide-key {
         width: 8rem;
     }
+
+    .animal-container {
+        gap: 4rem;
+    }
+
+    .orca {
+        height: 300px;
+    }
+
+    .sharkie {
+        height: 150px;
+    }
 }
 
 @media (max-width: 450px) {
@@ -149,5 +202,19 @@
 
     100% {
         transform: rotate(90deg);
+    }
+}
+
+@keyframes move {
+    0% {
+        width: 100%;
+    }
+
+    66% {
+        width: var(--width-move);
+    }
+
+    100% {
+        width: var(--width-move);
     }
 }
