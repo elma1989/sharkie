@@ -37,6 +37,18 @@ export class Game {
      */
     #music;
 
+    /**
+     * Flag for full load state.
+     * @type {boolean}
+     */
+    #ready = false;
+
+    /**
+     * Fleg for loading spinner is open
+     * @type {boolean}
+     */
+    #laodingOpen = false;
+
     constructor() {
         this.#ctrl = new Control();
         new Keyboard(this.#ctrl);
@@ -48,6 +60,16 @@ export class Game {
         this.addEvents();
     }
 
+    get ready() { return this.#ready; }
+
+    set ready(state) {
+        if (state && this.#laodingOpen) {
+            this.#ui.closeOverlay('loading');
+            if (this.#sndMgr.music) this.#music = this.#sndMgr.play('music');
+        }
+        this.#ready = state;
+    }
+
     // #region Methods
     /** Will be executed after create of game. */
     async init() {
@@ -55,6 +77,7 @@ export class Game {
             this.#level.loadLevel(),
             this.#sndMgr.preloadAllSounds()
         ]);
+        this.ready = true;
     }
 
     /** Prepares the second or more run. */
@@ -73,6 +96,10 @@ export class Game {
         this.#ui.hideMainButtons();
         this.#ui.showMobCtrlButtons();
         this.#ui.closeOverlay('hero');
+        if (!this.#laodingOpen && !this.ready) {
+            this.#ui.openOverlay('loading');
+            this.#laodingOpen = true;
+        }
         this.#ui.showSndBtns();
         this.#level.start();
     }

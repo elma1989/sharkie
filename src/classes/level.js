@@ -148,7 +148,7 @@ export class Level {
      * Adds a bubble to the world..
      * @param {Bubble} bubble - Bubble for add.
      */
-    #addBubble(bubble) {
+    addBubble(bubble) {
         const iSharkie = this.#drawings.indexOf(this.#world.sharkie);
         if (iSharkie >= 0) {
             this.#world.bubbles.push(bubble);
@@ -162,7 +162,7 @@ export class Level {
      * Removes a bubble.
      * @param {Bubble} bubble - Bubble to remove.
      */
-    #remvoeBubble(bubble) {
+    remvoeBubble(bubble) {
         const bubbles = this.#world.bubbles;
         const index = bubbles.indexOf(bubble);
         if (index >= 0) {
@@ -203,7 +203,7 @@ export class Level {
     checkCollisionBubbleBarrier() {
         this.#world.barriers.forEach(barrier => {
             this.#world.bubbles.forEach(bubble => {
-                if (bubble.isColliding(barrier)) this.#remvoeBubble(bubble);
+                if (bubble.isColliding(barrier)) this.remvoeBubble(bubble);
             });
         });
     }
@@ -214,7 +214,7 @@ export class Level {
             this.#world.bubbles.forEach(bubble => {
                 if (bubble.isColliding(enemy)) {
                     enemy.blubb(bubble);
-                    this.#remvoeBubble(bubble);
+                    this.remvoeBubble(bubble);
                 }
             });
         });
@@ -298,7 +298,7 @@ export class Level {
     addSharkieEvents() {
         const sharkie = this.#world.sharkie;
         sharkie.onMoveX = (xPos) => this.translationX = xPos - 500;
-        sharkie.onShotBubble = (bubble) => this.#addBubble(bubble);
+        sharkie.onShotBubble = (bubble) => this.addBubble(bubble);
         sharkie.onCallOrca = () => this.approachOrca();
         sharkie.onDead = () => this.finish('lose');
     }
