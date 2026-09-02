@@ -25,6 +25,12 @@ export class Orca extends Enemy {
     #sndMgr
 
     /**
+     * Posibility to top hurt sound.
+     * @type {SoundOff}
+     */
+    #hurtSound = null;
+
+    /**
      * Creates Oraca.
      * @param {SoundManager} sndMgr - Sound-Manger for control of sound.
      */
@@ -164,7 +170,8 @@ export class Orca extends Enemy {
         super.injure(damage);
         if (this.health < health) {
             this.#attackTimer = 0;
-            this.#sndMgr.play('hurt/orca');
+            this.#hurtSound?.stop();
+            this.#hurtSound = this.#sndMgr.play('hurt/orca');
             this.onInjure?.(this.health);
         }
         if (this.health >= 0) this.healthState = HEALTH_STATE.hurt;

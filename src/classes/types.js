@@ -29,6 +29,11 @@
  * @property {number} maxY - Bigges y-Pos.
  */
 
+/**
+ * @typedef {Object} SoundOff
+ * @property {function():void} stop - Function to stop music.
+ */
+
 export {}
 
 export const HEALTH_STATE = Object.freeze({

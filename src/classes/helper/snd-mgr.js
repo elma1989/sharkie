@@ -1,5 +1,6 @@
 import { sounds } from "./sounds.js";
 
+/** Manages the sound. */
 export class SoundManager {
     #ctx;
     #masterGain;
@@ -12,9 +13,9 @@ export class SoundManager {
     constructor() {
         this.#ctx = new AudioContext();
         this.#buffers = {};
-        this.#music = this.#loadStorage('music');
-        this.#sfx = this.#loadStorage('sfx');
-        this.#initGain();
+        this.#music = this.loadStorage('music');
+        this.#sfx = this.loadStorage('sfx');
+        this.initGain();
     }
 
     get music() { return this.#music; }
@@ -22,7 +23,7 @@ export class SoundManager {
     set music(state) {
         if (typeof state != 'boolean') return;
         this.#music = state;
-        this.#saveStorage();
+        this.saveStorage();
         this.onChangeMusic?.(state);
     }
 
@@ -31,11 +32,12 @@ export class SoundManager {
     set sfx(state) {
         if (typeof state != 'boolean') return;
         this.#sfx = state;
-        this.#saveStorage();
+        this.saveStorage();
         this.onChangeSfx?.(state);
     }
 
-    #initGain() {
+    /** Sets default values for gain. */
+    initGain() {
         this.#masterGain = this.#ctx.createGain();
         this.#musicGain = this.#ctx.createGain();
         this.#sfxGain = this.#ctx.createGain();
@@ -49,7 +51,7 @@ export class SoundManager {
 
     // #region Storage
     /** Saves in local storage. */
-    #saveStorage() {
+    saveStorage() {
         localStorage.setItem('sound', JSON.stringify({music: this.music, sfx: this.sfx}));
     }
 
@@ -58,7 +60,7 @@ export class SoundManager {
      * @param {string} name - Name of entrie
      * @returns {boolean} True, if enabled
      */
-    #loadStorage(name) {
+    loadStorage(name) {
         const sound = JSON.parse(localStorage.getItem('sound'));
         if (!sound || !Object.keys(sound).includes(name)) return true;
         return sound[name];
@@ -71,7 +73,7 @@ export class SoundManager {
      * @param {string} file - Name of file
      * @returns {string} Url for host.
      */
-    #url(file) {
+    url(file) {
         const host = window.location.hostname;
         const path = '/assets/sounds/';
         if (host == 'localhost' || host == '127.0.0.1' ) return path + file;
@@ -97,7 +99,7 @@ export class SoundManager {
     async preloadAllSounds() {
         const entries = await Promise.all(Object.entries(sounds).map(async ([key, url]) => [
             key,
-            await this.preloadSound(this.#url(url))
+            await this.preloadSound(this.url(url))
         ]));
         this.#buffers = Object.fromEntries(entries);
     }
