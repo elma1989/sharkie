@@ -1,7 +1,7 @@
 :root {
     --width-move: 37%;
     @media (max-height: 667px) {
-        --width-move: 50%;
+        --width-move: 55%;
     }
 }
 
@@ -188,6 +188,10 @@ overlay-hero {
 @media (max-width: 450px) {
     .overlay {
         padding: 0;
+    }
+
+    .loading-content {
+        display: none;
     }
 }
 
