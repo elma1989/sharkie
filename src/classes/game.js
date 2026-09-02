@@ -4,11 +4,6 @@ import { SoundManager } from "./helper/snd-mgr.js";
 import { Level } from "./level.js";
 import { UI } from "./ui/ui.js";
 
-/**
- * @typedef {Object} MusicControl
- * @property {function():void} stop - Function to stop music.
- */
-
 /** Manages the full game. */
 export class Game {
     /**
@@ -33,7 +28,7 @@ export class Game {
     #sndMgr;
     /**
      * Posibility to stop the music.
-     * @type {MusicControl?}
+     * @type {SoundOff?}
      */
     #music;
 
