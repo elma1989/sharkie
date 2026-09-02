@@ -53,6 +53,17 @@ export class Level {
      * X-Posiiton of camera dependdet of x-position of sharkie.
      * @type {number}
      */
+
+    /**
+     * Posibility to stop bubble start sound.
+     * @type {SoundOff?}
+     */
+    #bubbleStart = null;
+
+    /**
+     * Current camera position in px.
+     * @type {number]}
+     */
     #translationX = 0;
 
     /**
@@ -104,9 +115,7 @@ export class Level {
             ...Object.values(this.#hud.bars).slice(0, 3)
         ]
     }
-    // #endregion
 
-    // #region Object-Management
     /**
      * Removes an object.
      * @param {DrawableObject} obj - Object to remove
@@ -154,7 +163,7 @@ export class Level {
             this.#world.bubbles.push(bubble);
             this.#world.addUpdate(bubble);
             this.#drawings.splice(iSharkie + 1, 0, bubble);
-            this.#sndMgr.play('attack/bubble');
+            this.#bubbleStart = this.#sndMgr.play('attack/bubble');
         }
     }
 
@@ -169,6 +178,10 @@ export class Level {
             bubbles.splice(index, 1);
             this.#world.removeUpate(bubble);
             this.removeObject(bubble);
+            if (this.#bubbleStart) {
+                this.#bubbleStart.stop();
+                this.#bubbleStart = null;
+            }
             this.#sndMgr.play('hurt/bubble');
         }
     }
