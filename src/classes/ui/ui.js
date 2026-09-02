@@ -219,7 +219,7 @@ export class UI {
         if (name != 'hero' && !this.#running) {
             this.openOverlay('hero');
             this.showMainButtons();
-        } else if (name == 'landscape') this.showMobCtrlButtons();
+        } else if (name == 'landscape' || name == 'loading') this.showMobCtrlButtons();
     }
 
     /** Goes to main page. */
