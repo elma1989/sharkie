@@ -25,6 +25,6 @@ export class Background extends DrawableObject {
      * @returns {number} X-Pos for background.
      */
     static calcX(offset) {
-        return offset * GameConfig.WIDTH;
+        return offset * GameConfig.WIDTH - offset;
     }
 }
