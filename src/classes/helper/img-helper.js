@@ -394,9 +394,14 @@ export class ImgHelper {
      */
     static url(file, icon = false) {
         const host = location.hostname;
+        const port = location.port;
+        const liveServer = port == '8080';
         const local = host == 'localhost' || host == '127.0.0.1';
         const daServer = host.endsWith('developerakademie.net');
-        const prefix = local ? '/' : (daServer ? '/sharkie/' : '/static/sharkie/');
+        const flaskPrefix = '/projects/sharkie/'
+        const prefix = local
+            ? (liveServer ? '/' : flaskPrefix)
+            : (daServer ? '/sharkie/' : flaskPrefix);
         const base = 'assets/' + (icon ? 'icons/' : 'img/');
         return prefix + base + file;
     }

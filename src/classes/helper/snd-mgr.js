@@ -74,11 +74,15 @@ export class SoundManager {
      * @returns {string} Url for host.
      */
     url(file) {
-        const host = window.location.hostname;
+        const host = location.hostname;
         const path = '/assets/sounds/';
-        if (host == 'localhost' || host == '127.0.0.1' ) return path + file;
+        const flaskPath = '/projects/sharkie' + path;
+        if (host == 'localhost' || host == '127.0.0.1' ) {
+            if (location.port == '8080') return path + file;
+            return flaskPath + file;
+        }
         if (host.endsWith('developerakademie.net')) return '/sharkie' + path + file;
-        return '/static/sharkie' + path + file;
+        return flaskPath + file;
     }
 
     /**
