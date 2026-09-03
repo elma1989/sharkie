@@ -55,6 +55,11 @@ export class UI {
      */
     #running = false;
     /**
+     * Flag for end of game.
+     * @type {boolean}
+     */
+    #endGame = false;
+    /**
      * Timer in ms after resize-event for time out.
      * @type {number}
      */
@@ -189,12 +194,14 @@ export class UI {
     // #region Overlay-Control
     /** Action after start game. */
     start() {
+        this.#endGame = false;
         this.#running = true;
     }
 
     /** Actions after end game. */
     stop() {
         this.#running = false;
+        this.#endGame = true;
     }
 
     /**
@@ -218,15 +225,20 @@ export class UI {
     closeOverlay(name) {
         if (!Object.keys(this.overlays).includes(name)) return;
         this.overlays[name].hide();
-        if (name != 'hero' && !this.#running) {
+        if (name != 'hero' && !this.#running && !this.#endGame) {
             this.openOverlay('hero');
             this.showMainButtons();
-        } else if (name == 'landscape' || name == 'loading') this.showMobCtrlButtons();
+        }
+        if (name == 'landscape') {
+            if (this.#running) this.showMobCtrlButtons();
+            if (this.#endGame) this.showAfterGameButtons();
+        }
     }
 
     /** Goes to main page. */
     goToMenue() {
         const btnMenu = this.btns.main.menu;
+        this.#endGame = false;
         this.openOverlay('hero');
         this.showMainButtons();
         btnMenu.classList.add('d-none');
