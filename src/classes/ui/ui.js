@@ -148,7 +148,9 @@ export class UI {
     /** Shows main buttons. */
     showMainButtons() {
         const mainBtns = Object.values(this.btns.main);
-        mainBtns.forEach(btn => btn.classList.remove('d-none'));
+        mainBtns.forEach(btn => {
+            if (btn.id != 'btn-menu') btn.classList.remove('d-none')
+        });
     }
 
     /** Hides the main control buttons. */
