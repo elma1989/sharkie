@@ -62,7 +62,7 @@ export class Level {
 
     /**
      * Current camera position in px.
-     * @type {number]}
+     * @type {number}
      */
     #translationX = 0;
 
