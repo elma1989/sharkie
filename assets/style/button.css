@@ -10,13 +10,14 @@ button {
 
 .btn-control {
     width: 80%;
+    height: 75%;
     z-index: 1;
     font-size: 2rem;
     background: #8f067f;
     color: white;
     border: 3px solid white;
     border-radius: 1.5rem;
-    padding: 1rem 2rem;
+    padding: 1.5rem 2rem 1rem 2rem;
     transition: color 300ms linear, border-color 300ms linear;
     @media (max-height: 500px) or (max-width: 900px) {
         font-size: 1.5rem;
