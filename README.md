@@ -5,3 +5,7 @@ Implemented the following classses:
 ![class-diagram](docs/classes.svg)
 
 See [full-development](https://github.com/users/elma1989/projects/4/views/1)
+
+See [app](https://sharkie.marco-elste.dev)
+
+See [documentation](https://sharkie.marco-elste.dev/docs)
